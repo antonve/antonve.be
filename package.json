@@ -1,8 +1,17 @@
 {
   "name": "resume",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "git@github.com:antonve/resume.git",
   "author": "Anton Van Eechaute <974796+antonve@users.noreply.github.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^9.0.5",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
 }
