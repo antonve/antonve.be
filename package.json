@@ -1,0 +1,8 @@
+{
+  "name": "resume",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:antonve/resume.git",
+  "author": "Anton Van Eechaute <974796+antonve@users.noreply.github.com>",
+  "license": "MIT"
+}
