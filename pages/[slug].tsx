@@ -1,10 +1,10 @@
 import { NextPageContext } from 'next'
 import fetch from 'isomorphic-unfetch'
 
-import constants from '../constants'
-import { Resume } from '../domain'
+import constants from '../app/constants'
+import { Resume } from '../app/domain'
 import styled from 'styled-components'
-import { SingleColumnTemplate } from '../templates'
+import { SingleColumnTemplate } from '../app/templates'
 
 interface Props {
   resume: Resume
