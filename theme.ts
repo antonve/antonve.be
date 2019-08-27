@@ -1,4 +1,4 @@
-export default {
+const theme = {
   colors: {
     light: `#fff`,
     light2: `#fcfafa`,
@@ -13,3 +13,7 @@ export default {
   },
   baseFontSize: 62.5,
 }
+
+export default theme
+
+export type ThemeType = typeof theme
