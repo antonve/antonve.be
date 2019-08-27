@@ -1,3 +1,4 @@
+import React from 'react'
 import { NextPageContext } from 'next'
 import fetch from 'isomorphic-unfetch'
 
