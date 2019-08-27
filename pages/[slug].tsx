@@ -4,16 +4,17 @@ import fetch from 'isomorphic-unfetch'
 import constants from '../constants'
 import { Resume } from '../domain'
 import styled from 'styled-components'
+import { SingleColumnTemplate } from '../templates'
 
 interface Props {
   resume: Resume
 }
 
 const ResumePage = ({ resume }: Props) => (
-  <Wrapper>
+  <SingleColumnTemplate>
     personal
     <Separator />
-  </Wrapper>
+  </SingleColumnTemplate>
 )
 
 ResumePage.getInitialProps = async ({ query }: NextPageContext) => {
@@ -25,12 +26,6 @@ ResumePage.getInitialProps = async ({ query }: NextPageContext) => {
 }
 
 export default ResumePage
-
-const Wrapper = styled.div`
-  max-width: 784px;
-  box-sizing: border-box;
-  padding: 60px 20px;
-`
 
 const Separator = styled.hr`
   margin: 50px auto;
