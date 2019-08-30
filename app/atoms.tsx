@@ -1,5 +1,10 @@
 import styled from 'styled-components'
 
+const Paragraph = styled.p`
+  font-size: 1.8em;
+  line-height: 1.4em;
+`
+
 const H1 = styled.h1`
   font-size: 3.4em;
   font-weight: bold;
@@ -9,7 +14,20 @@ const H1 = styled.h1`
 const H2 = styled.h1`
   font-size: 2.8em;
   font-weight: bold;
-  margin: 0 0 20px 0;
+  margin: 0 0 15px 0;
+`
+
+const H3 = styled.h1`
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+`
+
+const H4 = styled.h1`
+  font-size: 1.7em;
+  opacity: 0.7;
+  font-weight: bold;
+  margin: 0 0 7px 0;
 `
 
 const Link = styled.a`
@@ -58,4 +76,4 @@ const Link = styled.a`
   }
 `
 
-export { H1, H2, Link }
+export { Paragraph, H1, H2, H3, H4, Link }
