@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { WorkExperienceEntry } from '../domain'
 import { H3, H4, Paragraph } from '../atoms'
+import { Tags } from './Tags'
 
 interface Props {
   entry: WorkExperienceEntry
@@ -16,6 +17,7 @@ const WorkExperienceView = ({ entry }: Props) => (
       {entry.location} &mdash; {entry.when}
     </Meta>
     <Description>{entry.description.join('\n')}</Description>
+    <Tags list={entry.tags}></Tags>
   </Wrapper>
 )
 
