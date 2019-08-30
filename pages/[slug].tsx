@@ -7,6 +7,7 @@ import constants from '../app/constants'
 import { Resume } from '../app/domain'
 import { SingleColumnTemplate } from '../app/templates'
 import { Introduction } from '../app/molecules'
+import { WorkExperience } from '../app/organisms'
 
 interface Props {
   resume: Resume
@@ -16,6 +17,7 @@ const ResumePage = ({ resume }: Props) => (
   <SingleColumnTemplate>
     <Introduction />
     <Separator />
+    <WorkExperience entries={resume.experience} />
   </SingleColumnTemplate>
 )
 

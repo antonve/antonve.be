@@ -1,7 +1,7 @@
 export interface Resume {
   skills: SkillCategory[]
   education: EducationEntry[]
-  experience: ExperienceEntry[]
+  experience: WorkExperienceEntry[]
   certificates: Certificate[]
 }
 
@@ -17,7 +17,7 @@ export interface EducationEntry {
   notes: string
 }
 
-export interface ExperienceEntry {
+export interface WorkExperienceEntry {
   company: string
   title: string
   location: string
