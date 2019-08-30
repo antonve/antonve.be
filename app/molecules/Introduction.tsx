@@ -1,5 +1,6 @@
+import React from 'react'
 import styled from 'styled-components'
-import { H1, Link } from './atoms'
+import { H1, Link } from '../atoms'
 
 const Introduction = () => {
   const email = 'mail@antonve.be'
