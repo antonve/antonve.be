@@ -1,3 +1,3 @@
 export { Introduction } from './Introduction'
-export { WorkExperienceView } from './WorkExperienceView'
+export { WorkExperienceDetails } from './WorkExperienceDetails'
 export { Tags } from './Tags'

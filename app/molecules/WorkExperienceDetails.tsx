@@ -8,7 +8,7 @@ interface Props {
   entry: WorkExperienceEntry
 }
 
-const WorkExperienceView = ({ entry }: Props) => (
+const WorkExperienceDetails = ({ entry }: Props) => (
   <Wrapper>
     <Title>
       {entry.company} / {entry.title}
@@ -21,7 +21,7 @@ const WorkExperienceView = ({ entry }: Props) => (
   </Wrapper>
 )
 
-export { WorkExperienceView }
+export { WorkExperienceDetails }
 
 const Wrapper = styled.li`
   & + & {
