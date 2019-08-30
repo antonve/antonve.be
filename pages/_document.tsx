@@ -31,7 +31,7 @@ export default class MyDocument extends Document {
         <Head>
           {this.props.styles}
           <link
-            href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,600"
+            href="https://fonts.google.com/specimen/Josefin+Sans?selection.family=Josefin+Sans:400,700&display=swap"
             rel="stylesheet"
           />
         </Head>
