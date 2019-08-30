@@ -1,11 +1,12 @@
 import React from 'react'
 import { NextPageContext } from 'next'
 import fetch from 'isomorphic-unfetch'
+import styled from 'styled-components'
 
 import constants from '../app/constants'
 import { Resume } from '../app/domain'
-import styled from 'styled-components'
 import { SingleColumnTemplate } from '../app/templates'
+import { Introduction } from '../app/molecules'
 
 interface Props {
   resume: Resume
@@ -13,7 +14,7 @@ interface Props {
 
 const ResumePage = ({ resume }: Props) => (
   <SingleColumnTemplate>
-    personal
+    <Introduction />
     <Separator />
   </SingleColumnTemplate>
 )
