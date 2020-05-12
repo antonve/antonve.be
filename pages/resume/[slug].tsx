@@ -15,7 +15,6 @@ interface Props {
 const ResumePage = ({ resume }: Props) => (
   <SingleColumnTemplate>
     <Introduction />
-    <Separator />
     <WorkExperience entries={resume.experience} />
   </SingleColumnTemplate>
 )

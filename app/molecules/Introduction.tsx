@@ -7,7 +7,7 @@ const Introduction = () => {
 
   return (
     <Wrapper>
-      <H1>Anton Van Eechaute</H1>
+      <Name>Anton Van Eechaute</Name>
       <Body>
         Tokyo, Japan
         <br />
@@ -20,12 +20,20 @@ const Introduction = () => {
 export { Introduction }
 
 const Wrapper = styled.div`
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+`
+
+const Name = styled(H1)`
+  margin: 0;
 `
 
 const Body = styled.p`
-  font-size: 2.8em;
+  font-size: 1.6em;
   line-height: 1.4em;
   margin: 0;
   padding: 0;
+  text-align: right;
 `
