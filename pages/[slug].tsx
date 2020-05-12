@@ -2,11 +2,11 @@ import React from 'react'
 import { NextPageContext } from 'next'
 import styled from 'styled-components'
 
-import constants from '../app/constants'
-import { Resume } from '../app/domain'
-import { SingleColumnTemplate } from '../app/templates'
-import { Introduction } from '../app/molecules'
-import { WorkExperience } from '../app/organisms'
+import constants from 'app/constants'
+import { Resume } from 'app/domain'
+import { SingleColumnTemplate } from 'app/templates'
+import { Introduction } from 'app/molecules'
+import { WorkExperience } from 'app/organisms'
 
 interface Props {
   resume: Resume

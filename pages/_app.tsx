@@ -2,7 +2,7 @@ import React from 'react'
 import App, { AppContext } from 'next/app'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 
-import theme, { ThemeType } from '../app/theme'
+import theme, { ThemeType } from 'app/theme'
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }: AppContext) {

@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { H2 } from '../atoms'
-import { WorkExperienceDetails } from '../molecules'
-import { WorkExperienceEntry } from '../domain'
+import { H2 } from 'app/atoms'
+import { WorkExperienceDetails } from 'app/molecules'
+import { WorkExperienceEntry } from 'app/domain'
 
 interface Props {
   entries: WorkExperienceEntry[]

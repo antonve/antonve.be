@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { WorkExperienceEntry } from '../domain'
-import { H3, H4, Paragraph } from '../atoms'
+import { WorkExperienceEntry } from 'app/domain'
+import { H3, H4, Paragraph } from 'app/atoms'
 import { Tags } from './Tags'
 
 interface Props {
