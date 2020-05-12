@@ -23,7 +23,7 @@ const Education = ({ entries }: Props) => (
 export { Education }
 
 const List = styled.ul`
-  margin: 0;
+  margin: 0 0 32px 0;
   padding: 0;
   list-style-type: none;
 `

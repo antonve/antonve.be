@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { EducationEntry } from 'app/domain'
 import { H3, Paragraph } from 'app/atoms'
-import { Tags } from './Tags'
 
 interface Props {
   entry: EducationEntry
