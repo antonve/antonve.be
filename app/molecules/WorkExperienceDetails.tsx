@@ -14,7 +14,7 @@ const WorkExperienceDetails = ({ entry }: Props) => (
       {entry.company} / {entry.title}
     </Title>
     <Meta>
-      {entry.location} &mdash; {entry.when}
+      {entry.location} &nbsp; {entry.when}
     </Meta>
     <Description>{entry.description.join('\n')}</Description>
     <Tags list={entry.tags}></Tags>
@@ -25,20 +25,21 @@ export { WorkExperienceDetails }
 
 const Wrapper = styled.li`
   & + & {
-    margin-top: 45px;
+    margin-top: 32px;
   }
 `
 
 const Title = styled(H3)`
-  margin: 0;
+  margin: 0 0 4px 0;
 `
 
 const Meta = styled(H4)`
-  margin: 8px 0 15px 0;
+  margin: 0;
 `
 
 const Description = styled(Paragraph)`
   padding: 0;
-  margin: 0;
+  margin: 16px 0 0 0;
   white-space: pre-wrap;
+  font-size: 1.5em;
 `

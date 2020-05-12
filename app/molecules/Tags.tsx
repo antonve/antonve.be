@@ -17,7 +17,7 @@ export { Tags }
 
 const List = styled.ul`
   padding: 0;
-  margin: 5px 0 0 0;
+  margin: 4px 0 0 0;
   list-style-type: none;
   display: flex;
   flex-wrap: wrap;
@@ -30,16 +30,24 @@ const List = styled.ul`
 `
 
 const Tag = styled.li`
-  min-height: 15px;
-  background: ${props => props.theme.colors.light};
-  color: ${props => props.theme.colors.dark};
-  font-size: 1.5em;
-  line-height: 1.5em;
-  padding: 4px 10px 0;
+  color: ${props => props.theme.colors.foreground};
+  position: relative;
+  font-size: 1.3em;
   display: block;
-  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.05);
   margin-right: 10px;
-  margin-top: 10px;
+  margin-top: 4px;
+
+  &::after {
+    background: ${props => props.theme.colors.secondary};
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0.7em;
+    left: 0.3em;
+    width: 99%;
+    height: 0.7em;
+    opacity: 0.2;
+  }
 
   &:last-child {
     margin-right: 0;

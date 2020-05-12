@@ -31,13 +31,16 @@ class MyApp extends App {
 
 const Styles = createGlobalStyle<{ theme: ThemeType }>`
   body {
-    font-family: 'Josefin Sans', 'Helvetica Neue', Helvetica, Arial,
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial,
       'Hiragino Sans', 'ヒラギノ角ゴシック', 'Hiragino Kaku Gothic ProN',
       'ヒラギノ角ゴ Pro W3', Roboto, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
       sans-serif;
     font-weight: 300;
     font-size: ${props => `${props.theme.baseFontSize}%`};
-    background: ${props => props.theme.colors.light2};
+    background: ${props => props.theme.colors.background};
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Merriweather', serif;
   }
 `
 

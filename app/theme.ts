@@ -1,9 +1,9 @@
 const theme = {
   colors: {
-    light: `#fff`,
-    light2: `#fcfafa`,
-    dark: `#000`,
-    accent: `#2996EE`,
+    primary: '#FF225A',
+    secondary: '#18D6CC',
+    foreground: '#222020',
+    background: '#FCFAFA',
   },
   screenSizes: {
     mobileLarge: 784,
