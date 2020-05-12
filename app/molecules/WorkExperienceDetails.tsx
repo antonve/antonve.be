@@ -16,8 +16,12 @@ const WorkExperienceDetails = ({ entry }: Props) => (
     <Meta>
       {entry.location} &nbsp; {entry.when}
     </Meta>
-    <Description>{entry.description.join('\n')}</Description>
-    <Tags list={entry.tags}></Tags>
+    {entry.description.length > 0 && (
+      <Description>{entry.description.join('\n')}</Description>
+    )}
+    <TagContainer>
+      <Tags list={entry.tags} />
+    </TagContainer>
   </Wrapper>
 )
 
@@ -25,21 +29,29 @@ export { WorkExperienceDetails }
 
 const Wrapper = styled.li`
   & + & {
-    margin-top: 32px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid ${props => props.theme.colors.foreground}11;
   }
 `
 
 const Title = styled(H3)`
   margin: 0 0 4px 0;
+  opacity: 0.7;
 `
 
 const Meta = styled(H4)`
   margin: 0;
+  opacity: 0.5;
 `
 
 const Description = styled(Paragraph)`
   padding: 0;
-  margin: 16px 0 0 0;
+  margin: 16px 0 8px 0;
   white-space: pre-wrap;
   font-size: 1.5em;
+`
+
+const TagContainer = styled.div`
+  opacity: 0.8;
 `

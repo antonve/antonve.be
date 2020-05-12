@@ -25,7 +25,6 @@ const H3 = styled.h1`
 
 const H4 = styled.h1`
   font-size: 1.2em;
-  opacity: 0.7;
   font-weight: bold;
   margin: 0 0 7px 0;
 `
