@@ -1,7 +1,7 @@
 import React from 'react'
 import Router from 'next/router'
 
-const defaultRoute = '/public'
+const defaultRoute = '/resume/public'
 
 export default class extends React.Component {
   static async getInitialProps({ res }) {
