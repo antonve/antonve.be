@@ -42,6 +42,11 @@ const Styles = createGlobalStyle<{ theme: ThemeType }>`
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Merriweather', serif;
   }
+  @media print{
+    body {
+      font-size: calc(${props => `${props.theme.baseFontSize}%`}*0.8);
+    }
+  }
 `
 
 export default MyApp
