@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Certificate } from 'app/domain'
-import { H3, Paragraph } from 'app/atoms'
+import { H3 } from 'app/atoms'
 
 interface Props {
   certificate: Certificate

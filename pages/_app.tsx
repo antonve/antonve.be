@@ -44,7 +44,7 @@ const Styles = createGlobalStyle<{ theme: ThemeType }>`
   }
   @media print{
     body {
-      font-size: calc(${props => `${props.theme.baseFontSize}%`}*0.8);
+      font-size: calc(${props => `${props.theme.baseFontSize}%`}*0.9);
     }
   }
 `

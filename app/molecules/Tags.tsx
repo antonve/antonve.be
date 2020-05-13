@@ -27,6 +27,10 @@ const List = styled.ul`
   & + & {
     margin-top: 45px;
   }
+
+  @media print {
+    margin: 0;
+  }
 `
 
 const Tag = styled.li`
@@ -36,6 +40,14 @@ const Tag = styled.li`
   display: block;
   margin-right: 10px;
   margin-top: 4px;
+
+  @media print {
+    margin-top: 0;
+
+    &::after {
+      display: none;
+    }
+  }
 
   &::after {
     background: ${props => props.theme.colors.secondary};
@@ -51,6 +63,5 @@ const Tag = styled.li`
 
   &:last-child {
     margin-right: 0;
-    border: none;
   }
 `

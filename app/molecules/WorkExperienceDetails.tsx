@@ -19,9 +19,11 @@ const WorkExperienceDetails = ({ entry }: Props) => (
     {entry.description.length > 0 && (
       <Description>{entry.description.join('\n')}</Description>
     )}
-    <TagContainer>
-      <Tags list={entry.tags} />
-    </TagContainer>
+    {entry.tags.length > 0 && (
+      <TagContainer>
+        <Tags list={entry.tags} />
+      </TagContainer>
+    )}
   </Wrapper>
 )
 
@@ -29,9 +31,15 @@ export { WorkExperienceDetails }
 
 const Wrapper = styled.li`
   & + & {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid ${props => props.theme.colors.foreground}11;
+    margin-top: 16px;
+  }
+
+  @media screen {
+    & + & {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid ${props => props.theme.colors.foreground}11;
+    }
   }
 `
 
@@ -50,8 +58,16 @@ const Description = styled(Paragraph)`
   margin: 16px 0 8px 0;
   white-space: pre-wrap;
   font-size: 1.5em;
+
+  @media print {
+    margin: 4px 0 0;
+  }
 `
 
 const TagContainer = styled.div`
   opacity: 0.8;
+
+  @media print {
+    margin-top: 4px;
+  }
 `
