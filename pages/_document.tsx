@@ -34,6 +34,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Open+Sans:400,700&display=swap"
             rel="stylesheet"
           />
+          <link rel="icon" href="/favicon.png" type="image/x-icon" />
         </Head>
         <body>
           <Main />
