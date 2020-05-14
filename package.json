@@ -5,7 +5,7 @@
   "author": "Anton Van Eechaute <974796+antonve@users.noreply.github.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "dev": "next --port 4432",
     "build": "next build",
     "start": "next start"
   },
