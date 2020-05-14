@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { H1, Link } from 'app/atoms'
+import { H1, StyledLink } from 'app/atoms'
 
 const Introduction = () => {
   const email = 'mail@antonve.be'
@@ -11,7 +11,7 @@ const Introduction = () => {
       <Body>
         Tokyo, Japan
         <br />
-        <Link href={`mailto:${email}`}>{email}</Link>
+        <StyledLink href={`mailto:${email}`}>{email}</StyledLink>
       </Body>
     </Wrapper>
   )

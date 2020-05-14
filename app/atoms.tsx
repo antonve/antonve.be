@@ -29,7 +29,7 @@ const H4 = styled.h1`
   margin: 0 0 7px 0;
 `
 
-const Link = styled.a`
+const StyledLink = styled.a`
   color: ${props => props.theme.colors.primary};
   position: relative;
   z-index: 1;
@@ -72,4 +72,4 @@ const Link = styled.a`
   }
 `
 
-export { Paragraph, H1, H2, H3, H4, Link }
+export { Paragraph, H1, H2, H3, H4, StyledLink }
