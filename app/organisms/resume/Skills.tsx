@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { H2 } from 'app/atoms'
 import { SkillCategory } from 'app/domain'
-import { SkillCategoryDetails } from 'app/molecules'
+import { SkillCategoryDetails } from 'app/molecules/resume'
 
 interface Props {
   skillCategories: SkillCategory[]

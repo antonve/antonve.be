@@ -5,8 +5,13 @@ import styled from 'styled-components'
 import constants from 'app/constants'
 import { Resume } from 'app/domain'
 import { SingleColumnTemplate } from 'app/templates'
-import { Introduction } from 'app/molecules'
-import { WorkExperience, Education, Certificates, Skills } from 'app/organisms'
+import { Introduction } from 'app/molecules/resume'
+import {
+  WorkExperience,
+  Education,
+  Certificates,
+  Skills,
+} from 'app/organisms/resume'
 
 interface Props {
   resume: Resume

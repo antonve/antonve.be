@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { H2 } from 'app/atoms'
-import { School } from 'app/molecules'
+import { School } from 'app/molecules/resume'
 import { EducationEntry } from 'app/domain'
 
 interface Props {
