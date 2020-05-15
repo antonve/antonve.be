@@ -72,4 +72,11 @@ const StyledLink = styled.a`
   }
 `
 
-export { Paragraph, H1, H2, H3, H4, StyledLink }
+const Logo = styled.img.attrs(() => ({
+  src: '/img/logo.svg',
+  alt: 'Anton Van Eechaute',
+}))`
+  display: block;
+`
+
+export { Paragraph, H1, H2, H3, H4, StyledLink, Logo }
