@@ -18,7 +18,7 @@ interface Props {
 }
 
 const ResumePage = ({ resume }: Props) => (
-  <SingleColumnTemplate>
+  <SingleColumnTemplate width="784px">
     <Introduction />
     <WorkExperience entries={resume.experience} />
     <Skills skillCategories={resume.skills} />
