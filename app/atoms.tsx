@@ -29,7 +29,7 @@ const H4 = styled.h1`
   margin: 0 0 7px 0;
 `
 
-const StyledLink = styled.a`
+const StyledLink = styled.a<{ active?: boolean }>`
   color: ${props => props.theme.colors.primary};
   position: relative;
   z-index: 1;
@@ -70,6 +70,16 @@ const StyledLink = styled.a`
   &.active:hover::after {
     background: ${props => props.theme.colors.primary};
   }
+
+  ${props =>
+    props.active &&
+    `
+    color: ${props.theme.colors.foreground};
+    text-decoration: none;
+    outline: none;
+
+    &::after { transform: scaleX(1); }
+  `}
 `
 
 const Logo = styled.img.attrs(() => ({
