@@ -37,4 +37,6 @@ export interface Project {
   when: string
   description: string[]
   tags: string[]
+  url: string
+  source?: string
 }
