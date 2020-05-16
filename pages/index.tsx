@@ -2,14 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { SingleColumnTemplate } from 'app/templates'
-import Bio from 'app/molecules/Bio'
-import { Logo } from 'app/atoms'
+import { Bio } from 'app/molecules'
+import { Logo, H2 } from 'app/atoms'
 
 interface Props {}
 
 const Home = ({}: Props) => (
   <SingleColumnTemplate>
     <StyledLogo />
+    <Intro>
+      Hello! I’m <strong>Anton Van Eechaute</strong>.
+    </Intro>
     <Bio />
   </SingleColumnTemplate>
 )
@@ -17,7 +20,14 @@ const Home = ({}: Props) => (
 const StyledLogo = styled(Logo)`
   max-width: 400px;
   width: 100%;
-  margin: 0 auto 6rem;
+  margin: 3rem auto 6rem;
+`
+
+const Intro = styled(H2)`
+  margin: 0 auto 1.75rem;
+  font-size: 1.8rem;
+  line-height: 2.625rem;
+  font-weight: 400;
 `
 
 export default Home

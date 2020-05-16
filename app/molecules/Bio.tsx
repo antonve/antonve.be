@@ -57,4 +57,4 @@ const ImageContainer = styled.div`
   }
 `
 
-export default Bio
+export { Bio }
