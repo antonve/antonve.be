@@ -4,6 +4,7 @@ import { H1, StyledLink } from 'app/atoms'
 
 const Introduction = () => {
   const email = 'mail@antonve.be'
+  const github = 'https://github.com/antonve'
 
   return (
     <Wrapper>
@@ -12,6 +13,10 @@ const Introduction = () => {
         Tokyo, Japan
         <br />
         <StyledLink href={`mailto:${email}`}>{email}</StyledLink>
+        <br />
+        <StyledLink href={github} target="_blank" rel="noopener noreferrer">
+          {github}
+        </StyledLink>
       </Body>
     </Wrapper>
   )
