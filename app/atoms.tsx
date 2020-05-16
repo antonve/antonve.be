@@ -11,19 +11,19 @@ const H1 = styled.h1`
   margin: 0 0 20px 0;
 `
 
-const H2 = styled.h1`
+const H2 = styled.h2`
   font-size: 2.2em;
   font-weight: bold;
   margin: 0 0 15px 0;
 `
 
-const H3 = styled.h1`
+const H3 = styled.h3`
   font-size: 1.7em;
   font-weight: bold;
   margin: 0 0 10px 0;
 `
 
-const H4 = styled.h1`
+const H4 = styled.h4`
   font-size: 1.2em;
   font-weight: bold;
   margin: 0 0 7px 0;

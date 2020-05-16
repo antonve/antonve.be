@@ -7,7 +7,9 @@ import { useRouter } from 'next/router'
 const Header = () => {
   return (
     <StyledHeader>
-      <Logo width="232" height="38" />
+      <LogoLink href="/">
+        <Logo width="232" height="38" />
+      </LogoLink>
       <Nav>
         <NavLink href={'/'}>Home</NavLink>
         <NavLink href={'/projects'}>Projects</NavLink>
@@ -21,12 +23,43 @@ export { Header }
 const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 90px;
+  margin: 90px 0;
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+    text-align: center;
+    margin: 30px 0;
+  }
+`
+
+const LogoLink = styled.a`
+  transition: opacity 0.25s ease-out;
+
+  &:hover,
+  &:active,
+  &:focus {
+    opacity: 0.5;
+  }
+
+  @media only screen and (max-width: 600px) {
+    margin: 0 auto 30px;
+  }
 `
 
 const Nav = styled.nav`
   a + a {
     margin-left: 30px;
+  }
+
+  @media only screen and (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+
+    a + a {
+      margin: 10px 0 0 0;
+    }
   }
 `
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import App, { AppContext } from 'next/app'
-import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 
 import theme, { ThemeType } from 'app/theme'
 
@@ -20,10 +20,10 @@ class MyApp extends App {
 
     return (
       <ThemeProvider theme={theme}>
-        <>
+        <Container>
           <Component {...pageProps} />
           <Styles />
-        </>
+        </Container>
       </ThemeProvider>
     )
   }
@@ -47,6 +47,12 @@ const Styles = createGlobalStyle<{ theme: ThemeType }>`
       font-size: calc(${props => `${props.theme.baseFontSize}%`}*0.9);
     }
   }
+`
+
+const Container = styled.div`
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 10px;
 `
 
 export default MyApp

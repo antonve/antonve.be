@@ -15,13 +15,13 @@ const ProjectDetails = ({ project }: Props) => (
     </Preview>
     <Content>
       <Title>
-        <StyledLink
+        <StyledTitleLink
           href={project.url}
           target="_blank"
           rel="noopener noreferrer"
         >
           {project.title}
-        </StyledLink>
+        </StyledTitleLink>
       </Title>
       <Meta>{project.when}</Meta>
       {project.description.length > 0 &&
@@ -39,11 +39,7 @@ const ProjectDetails = ({ project }: Props) => (
           </StyledLink>
         </Description>
       )}
-      {project.tags.length > 0 && (
-        <TagContainer>
-          <Tags list={project.tags} />
-        </TagContainer>
-      )}
+      {project.tags.length > 0 && <Tags list={project.tags} />}
     </Content>
   </Wrapper>
 )
@@ -74,7 +70,6 @@ const Content = styled.div`
 
 const Title = styled(H3)`
   margin: 0 0 4px 0;
-  opacity: 0.7;
 `
 
 const Meta = styled(H4)`
@@ -89,6 +84,6 @@ const Description = styled(Paragraph)`
   font-size: 1.5em;
 `
 
-const TagContainer = styled.div`
-  opacity: 0.8;
+const StyledTitleLink = styled(StyledLink)`
+  color: ${props => props.theme.colors.foreground};
 `

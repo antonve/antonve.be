@@ -4,17 +4,20 @@ import styled from 'styled-components'
 import { SingleColumnTemplate } from 'app/templates'
 import { Bio } from 'app/molecules'
 import { Logo, H2 } from 'app/atoms'
+import { Header } from 'app/molecules'
 
 interface Props {}
 
 const Home = ({}: Props) => (
-  <SingleColumnTemplate>
-    <StyledLogo />
-    <Intro>
-      Hello! I’m <strong>Anton Van Eechaute</strong>.
-    </Intro>
-    <Bio />
-  </SingleColumnTemplate>
+  <>
+    <Header />
+    <SingleColumnTemplate>
+      <Intro>
+        Hello! I’m <strong>Anton Van Eechaute</strong>.
+      </Intro>
+      <Bio />
+    </SingleColumnTemplate>
+  </>
 )
 
 const StyledLogo = styled(Logo)`
