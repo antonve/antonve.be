@@ -1,9 +1,10 @@
 import React from 'react'
 
 import { SingleColumnTemplate } from 'app/templates'
-import { H1 } from 'app/atoms'
+import { H1, Paragraph, StyledLink } from 'app/atoms'
 import { Project } from 'app/domain'
 import { ProjectsList } from 'app/organisms'
+import styled from 'styled-components'
 
 const projects: Project[] = [
   {
@@ -88,7 +89,20 @@ const Projects = () => (
   <SingleColumnTemplate width="1100px">
     <H1>Projects</H1>
     <ProjectsList projects={projects} />
+    <Contact>
+      Want to see more? Let's have a{' '}
+      <strong>
+        <StyledLink href={`mailto:mail@antonve.be`}>chat</StyledLink>
+      </strong>
+      !
+    </Contact>
   </SingleColumnTemplate>
 )
+
+const Contact = styled(Paragraph)`
+  text-align: center;
+  margin-top: 90px;
+  font-size: 3em;
+`
 
 export default Projects
