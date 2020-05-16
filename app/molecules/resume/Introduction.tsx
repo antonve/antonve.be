@@ -5,6 +5,7 @@ import { H1, StyledLink } from 'app/atoms'
 const Introduction = () => {
   const email = 'mail@antonve.be'
   const github = 'https://github.com/antonve'
+  const projects = 'https://antonve.be/projects'
 
   return (
     <Wrapper>
@@ -16,6 +17,10 @@ const Introduction = () => {
         <br />
         <StyledLink href={github} target="_blank" rel="noopener noreferrer">
           {github}
+        </StyledLink>
+        <br />
+        <StyledLink href={projects} target="_blank" rel="noopener noreferrer">
+          {projects}
         </StyledLink>
       </Body>
     </Wrapper>
@@ -33,6 +38,7 @@ const Wrapper = styled.div`
 
 const Name = styled(H1)`
   margin: 0;
+  white-space: nowrap;
 `
 
 const Body = styled.p`

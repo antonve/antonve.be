@@ -27,9 +27,16 @@ const ResumePage = ({ resume }: Props) => (
   </SingleColumnTemplate>
 )
 
-ResumePage.getInitialProps = async ({ query }: NextPageContext) => {
+ResumePage.getInitialProps = async ({ query, res }: NextPageContext) => {
   const url = `${constants.apiRoot}/resume/${query.slug}`
   const response = await fetch(url)
+
+  if (!response.ok) {
+    res.statusCode = 404
+    res.end('Not found')
+    return
+  }
+
   const json = await response.json()
 
   return { resume: json }
