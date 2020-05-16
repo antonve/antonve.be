@@ -52,6 +52,10 @@ const Wrapper = styled.li`
   & + & {
     margin-top: 90px;
   }
+
+  @media only screen and (max-width: 800px) {
+    flex-direction: column;
+  }
 `
 
 const Preview = styled.div`
@@ -61,11 +65,19 @@ const Preview = styled.div`
     display: block;
     width: 100%;
   }
+
+  @media only screen and (max-width: 800px) {
+    width: 100%;
+  }
 `
 
 const Content = styled.div`
   margin-left: 60px;
   flex: 1;
+
+  @media only screen and (max-width: 800px) {
+    margin: 20px 0 0;
+  }
 `
 
 const Title = styled(H3)`

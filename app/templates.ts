@@ -9,4 +9,8 @@ export const SingleColumnTemplate = styled.div<{ width?: string }>`
   @media print {
     padding: 0;
   }
+
+  @media only screen and (max-width: 600px) {
+    padding: 20px;
+  }
 `

@@ -28,7 +28,7 @@ const StyledHeader = styled.header`
   @media only screen and (max-width: 600px) {
     flex-direction: column;
     text-align: center;
-    margin: 30px 0;
+    margin: 30px 0 60px;
   }
 `
 
