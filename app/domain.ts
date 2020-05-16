@@ -30,3 +30,11 @@ export interface Certificate {
   name: string
   when: string
 }
+
+export interface Project {
+  title: string
+  preview: string
+  when: string
+  description: string[]
+  tags: string[]
+}
