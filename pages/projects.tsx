@@ -38,7 +38,7 @@ const projects: Project[] = [
   {
     title: 'Wantedly Visit iOS',
     when: '2018',
-    preview: 'visit_ios.png',
+    preview: 'visit_ios.jpg',
     description: [
       'Wantedly is a technology company which offers a social recruiting and employer branding platform.',
       'In 2018 they wanted to revamp their iOS app in order to increase the monthly active users. I was part of the team that built the new Visit app.',
@@ -60,7 +60,7 @@ const projects: Project[] = [
   {
     title: 'Wantedly Visit',
     when: '2016-2018',
-    preview: 'visit.png',
+    preview: 'visit.jpg',
     description: [
       'Wantedly is a technology company which offers a social recruiting and employer branding platform.',
       'I was the first engineer on the international expansion product team. I was responsible for the growth of the product in Singapore, Indonesia, Hong Kong, and Germany.',
