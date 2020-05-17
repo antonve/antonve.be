@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import Head from 'next/head'
 
 import { SingleColumnTemplate } from 'app/templates'
 import { Bio } from 'app/molecules'
@@ -10,6 +11,9 @@ interface Props {}
 
 const Home = ({}: Props) => (
   <>
+    <Head>
+      <title>Anton Van Eechaute</title>
+    </Head>
     <Header />
     <SingleColumnTemplate>
       <Intro>

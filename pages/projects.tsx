@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 
 import { H1, Paragraph, StyledLink } from 'app/atoms'
 import { Project } from 'app/domain'
@@ -87,6 +88,9 @@ const projects: Project[] = [
 
 const Projects = () => (
   <>
+    <Head>
+      <title>Anton Van Eechaute :: Projects</title>
+    </Head>
     <Header />
     <H1>Projects</H1>
     <ProjectsList projects={projects} />

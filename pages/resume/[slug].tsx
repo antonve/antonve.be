@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import { NextPageContext } from 'next'
 import styled from 'styled-components'
 
@@ -19,6 +20,9 @@ interface Props {
 
 const ResumePage = ({ resume }: Props) => (
   <SingleColumnTemplate width="784px">
+    <Head>
+      <title>Anton Van Eechaute :: Resume</title>
+    </Head>
     <Introduction />
     <WorkExperience entries={resume.experience} />
     <Skills skillCategories={resume.skills} />
