@@ -14,8 +14,8 @@ const projects: Project[] = [
     preview: 'tadoku.png',
     description: [
       'Tadoku is a friendly foreign-language reading contest aimed at building a habit of reading in your non-native languages.',
-      'A minimal viable product was tested in 2019 and it officially launched in 2020. About 50 people participate per round and is steadily growing.',
-      'It is single page application written in Next.js on the frontend. The backend is a RESTful Golang API with a PostgreSQL database.  The content is managed through Ghost, a headless CMS.',
+      'A minimal viable product was tested in 2019 and the website officially launched in 2020. About 50 people participate per round, a number which is steadily growing.',
+      'The frontend is a single page application built with Next.js. The backend is a RESTful Golang API using a PostgreSQL database. The content is managed through Ghost, a headless CMS.',
       'The next challenge would be to improve the infrastructure. I plan to migrate it over to code with Terraform & Kubernetes, but this is still a work in progress.',
     ],
     tags: [
@@ -64,7 +64,7 @@ const projects: Project[] = [
     description: [
       'Wantedly is a technology company which offers a social recruiting and employer branding platform.',
       'I was the first engineer on the international expansion product team. I was responsible for the growth of the product in Singapore, Indonesia, Hong Kong, and Germany.',
-      'I built a variety of features to support our international growth such as an email template manager for marketers in local markets, online payments in Singapore with Stripe, a new onboarding flow, and more... A chunk of my time was spent analyzing user behavior. Those results were then used to figure out what to focus on next.',
+      'I built a variety of features to support our international growth such as an email template manager for marketers in local markets, online payments in Singapore with Stripe, a new onboarding flow, and more. A chunk of my time was spent analyzing user behavior. Those results were then used to figure out what to focus on next.',
       'Wantedly Visit is originally built as a monolithic Ruby on Rails application. During my time there we slowly migrated to a microservice architecture running on Kubernetes.',
     ],
     tags: [
