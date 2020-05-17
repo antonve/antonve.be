@@ -1,3 +1,3 @@
 export default {
-  apiRoot: 'https://api.antonve.be',
+  apiRoot: process.env.API_ROOT ?? 'https://api.antonve.be',
 }
