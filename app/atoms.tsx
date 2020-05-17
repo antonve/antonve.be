@@ -83,7 +83,7 @@ const StyledLink = styled.a<{ active?: boolean }>`
 `
 
 const Logo = styled.img.attrs(() => ({
-  src: '/img/logo.svg',
+  src: '/img/logo.png',
   alt: 'Anton Van Eechaute',
 }))`
   display: block;
