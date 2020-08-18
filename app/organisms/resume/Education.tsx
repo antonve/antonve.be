@@ -14,7 +14,7 @@ const Education = ({ entries }: Props) => (
     <H2>Education</H2>
     <List>
       {entries.map(entry => (
-        <School entry={entry} key={entry.name} />
+        <School entry={entry} key={entry.degree} />
       ))}
     </List>
   </>
