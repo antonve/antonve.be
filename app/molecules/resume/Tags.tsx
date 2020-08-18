@@ -58,7 +58,7 @@ const Tag = styled.li`
     left: 0.3em;
     width: 99%;
     height: 0.7em;
-    opacity: 0.2;
+    opacity: 0.1;
   }
 
   &:last-child {

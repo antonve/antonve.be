@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import constants from 'app/constants'
 import { Resume } from 'app/domain'
-import { SingleColumnTemplate } from 'app/templates'
+import { SingleColumnTemplate, TwoColumnTemplate } from 'app/templates'
 import { Introduction } from 'app/molecules/resume'
 import {
   WorkExperience,
@@ -24,10 +24,16 @@ const ResumePage = ({ resume }: Props) => (
       <title>Anton Van Eechaute :: Resume</title>
     </Head>
     <Introduction />
-    <WorkExperience entries={resume.experience} />
-    <Skills skillCategories={resume.skills} />
-    <Education entries={resume.education} />
-    <Certificates certificates={resume.certificates} />
+    <TwoColumnTemplate>
+      <div>
+        <WorkExperience entries={resume.experience} />
+      </div>
+      <div style={{ maxWidth: '260px' }}>
+        <Skills skillCategories={resume.skills} />
+        <Education entries={resume.education} />
+        <Certificates certificates={resume.certificates} />
+      </div>
+    </TwoColumnTemplate>
   </SingleColumnTemplate>
 )
 

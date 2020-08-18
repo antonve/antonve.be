@@ -20,22 +20,20 @@ const SkillCategoryDetails = ({ skillCategory }: Props) => (
 export { SkillCategoryDetails }
 
 const Wrapper = styled.li`
-  display: flex;
-  align-items: center;
-
   & + & {
-    margin-top: 8px;
+    margin-top: 16px;
   }
 `
 
 const Title = styled(H4)`
   margin: 0;
-  opacity: 0.7;
   width: 100px;
+  display: block;
 `
 
 const TagContainer = styled.div`
   opacity: 0.8;
+  margin-top: 4px;
 
   ul,
   li {

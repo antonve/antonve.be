@@ -14,3 +14,17 @@ export const SingleColumnTemplate = styled.div<{ width?: string }>`
     padding: 20px;
   }
 `
+
+export const TwoColumnTemplate = styled.div`
+  display: flex;
+
+  > div {
+    margin: 0 20px;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+`

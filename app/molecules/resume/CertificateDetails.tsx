@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Certificate } from 'app/domain'
-import { H3 } from 'app/atoms'
+import { H4 } from 'app/atoms'
 
 interface Props {
   certificate: Certificate
@@ -23,7 +23,7 @@ const Wrapper = styled.li`
   }
 `
 
-const Title = styled(H3)`
+const Title = styled(H4)`
   margin: 0 0 4px 0;
-  opacity: 0.7;
+  opacity: 0.8;
 `

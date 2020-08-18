@@ -57,7 +57,8 @@ const Description = styled(Paragraph)`
   padding: 0;
   margin: 16px 0 8px 0;
   white-space: pre-wrap;
-  font-size: 1.5em;
+  font-size: 1.4em;
+  line-height: 1.5em;
 
   @media print {
     margin: 4px 0 0;
