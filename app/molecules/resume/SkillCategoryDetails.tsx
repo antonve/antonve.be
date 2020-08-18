@@ -22,6 +22,10 @@ export { SkillCategoryDetails }
 const Wrapper = styled.li`
   & + & {
     margin-top: 16px;
+
+    @media print {
+      margin-top: 8px;
+    }
   }
 `
 
@@ -34,6 +38,10 @@ const Title = styled(H4)`
 const TagContainer = styled.div`
   opacity: 0.8;
   margin-top: 4px;
+
+  @media print {
+    margin-top: 0;
+  }
 
   ul,
   li {

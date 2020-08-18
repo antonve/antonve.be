@@ -10,9 +10,13 @@ interface Props {
 const School = ({ entry }: Props) => (
   <Wrapper>
     <Title>
-      {entry.name} / {entry.when}
+      {entry.school} / {entry.when}
     </Title>
-    <Description>{entry.notes}</Description>
+    <Description>
+      {entry.degree}
+      <br />
+      {entry.notes}
+    </Description>
   </Wrapper>
 )
 

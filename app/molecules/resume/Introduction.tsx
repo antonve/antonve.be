@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { H1, StyledLink } from 'app/atoms'
+import { H2, StyledLink } from 'app/atoms'
 
 const Introduction = () => {
   const email = 'mail@antonve.be'
@@ -8,8 +8,8 @@ const Introduction = () => {
   const projects = 'https://antonve.be/projects'
 
   return (
-    <Wrapper>
-      <Name>Anton Van Eechaute</Name>
+    <>
+      <H2>About me</H2>
       <Body>
         Tokyo, Japan
         <br />
@@ -23,28 +23,15 @@ const Introduction = () => {
           {projects}
         </StyledLink>
       </Body>
-    </Wrapper>
+    </>
   )
 }
 
 export { Introduction }
 
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 32px;
-`
-
-const Name = styled(H1)`
-  margin: 0;
-  white-space: nowrap;
-`
-
 const Body = styled.p`
-  font-size: 1.6em;
-  line-height: 1.4em;
-  margin: 0;
-  padding: 0;
-  text-align: right;
+  margin: 0 0 32px;
+  font-size: 1.4em;
+  line-height: 1.5em;
+  width: 260px;
 `

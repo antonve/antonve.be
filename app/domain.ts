@@ -12,7 +12,8 @@ export interface SkillCategory {
 }
 
 export interface EducationEntry {
-  name: string
+  school: string
+  degree: string
   when: string
   notes: string
 }

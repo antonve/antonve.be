@@ -13,6 +13,7 @@ import {
   Certificates,
   Skills,
 } from 'app/organisms/resume'
+import { H1 } from 'app/atoms'
 
 interface Props {
   resume: Resume
@@ -23,12 +24,13 @@ const ResumePage = ({ resume }: Props) => (
     <Head>
       <title>Anton Van Eechaute :: Resume</title>
     </Head>
-    <Introduction />
+    <Header />
     <TwoColumnTemplate>
-      <div>
+      <div style={{ flex: '1' }}>
         <WorkExperience entries={resume.experience} />
       </div>
-      <div style={{ maxWidth: '260px' }}>
+      <div style={{ width: '260px' }}>
+        <Introduction />
         <Skills skillCategories={resume.skills} />
         <Education entries={resume.education} />
         <Certificates certificates={resume.certificates} />
@@ -60,4 +62,22 @@ const Separator = styled.hr`
   height: 1px;
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
+`
+
+const Header = () => (
+  <HeaderWrapper>
+    <Name>Anton Van Eechaute</Name>
+  </HeaderWrapper>
+)
+
+const HeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+`
+
+const Name = styled(H1)`
+  margin: 0;
+  white-space: nowrap;
 `

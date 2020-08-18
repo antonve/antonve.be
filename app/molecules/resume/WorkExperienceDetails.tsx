@@ -17,7 +17,11 @@ const WorkExperienceDetails = ({ entry }: Props) => (
       {entry.location} &nbsp; {entry.when}
     </Meta>
     {entry.description.length > 0 && (
-      <Description>{entry.description.join('\n')}</Description>
+      <Description
+        dangerouslySetInnerHTML={{
+          __html: entry.description.map(format).join('<br/>'),
+        }}
+      />
     )}
     {entry.tags.length > 0 && (
       <TagContainer>
@@ -56,9 +60,20 @@ const Meta = styled(H4)`
 const Description = styled(Paragraph)`
   padding: 0;
   margin: 16px 0 8px 0;
-  white-space: pre-wrap;
   font-size: 1.4em;
   line-height: 1.5em;
+
+  strong {
+    margin-top: 10px;
+    display: inline-block;
+    text-transform: uppercase;
+    opacity: 0.7;
+    font-size: 0.9em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 
   @media print {
     margin: 4px 0 0;
@@ -72,3 +87,8 @@ const TagContainer = styled.div`
     margin-top: 4px;
   }
 `
+
+const format = (html: string): string =>
+  html
+    .replace(/\*\*(.*?)\*\*/gm, '<strong>$1</strong>')
+    .replace(/(?:\r\n|\r|\n)/g, '<br />')
