@@ -27,4 +27,12 @@ export const TwoColumnTemplate = styled.div`
       margin-right: 0;
     }
   }
+
+  @media only screen and (max-width: 800px) {
+    flex-direction: column;
+
+    > div {
+      margin: 0;
+    }
+  }
 `

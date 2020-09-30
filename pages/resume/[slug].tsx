@@ -56,14 +56,6 @@ ResumePage.getInitialProps = async ({ query, res }: NextPageContext) => {
 
 export default ResumePage
 
-const Separator = styled.hr`
-  margin: 50px auto;
-  max-width: 500px;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-`
-
 const Header = () => (
   <HeaderWrapper>
     <Name>Anton Van Eechaute</Name>
@@ -79,5 +71,4 @@ const HeaderWrapper = styled.div`
 
 const Name = styled(H1)`
   margin: 0;
-  white-space: nowrap;
 `
