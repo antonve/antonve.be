@@ -11,8 +11,8 @@ const Bio = () => (
     <Description>
       A full-stack software engineer from Belgium. <br />
       Currently stationed in {` `}
-      <StyledLink href={`https://reaktor.com`}>
-        <strong>Tokyo @ Reaktor</strong>
+      <StyledLink href={`https://www.drivemode.com`}>
+        <strong>Tokyo @ Drivemode</strong>
       </StyledLink>
       .
     </Description>
