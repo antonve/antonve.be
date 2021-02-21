@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/antonve.be
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: Create environment
+          command: cp .env{.sample,}
+      - run:
+          name: Build production
+          command: yarn build
+      - setup_remote_docker
+      - run:
+          name: Deploy image to Docker hub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+            IMAGE_NAME=antonve/antonve.be
+            docker build -t $IMAGE_NAME:latest .
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:${CIRCLE_SHA1}
+            docker push $IMAGE_NAME
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
