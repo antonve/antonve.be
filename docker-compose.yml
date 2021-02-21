@@ -3,11 +3,5 @@ services:
   web:
     container_name: antonve.be-web
     build: .
-    environment:
-      VIRTUAL_HOST: antonve.be,www.antonve.be
-      LETSENCRYPT_HOST: antonve.be,www.antonve.be
-      LETSENCRYPT_EMAIL: mail+encrypt@antonve.be
-    restart: always
-    expose:
-      - 3000
-    network_mode: bridge
+    ports:
+      - "3000:3000"
