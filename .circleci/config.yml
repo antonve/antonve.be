@@ -24,6 +24,12 @@ jobs:
       - run:
           name: Build production
           command: yarn build
+  publish:
+    working_directory: ~/antonve.be
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
       - setup_remote_docker
       - run:
           name: Deploy image to Docker hub
@@ -40,3 +46,9 @@ workflows:
   build-and-deploy:
     jobs:
       - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

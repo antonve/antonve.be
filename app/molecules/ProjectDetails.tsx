@@ -26,7 +26,7 @@ const ProjectDetails = ({ project }: Props) => (
       <Meta>{project.when}</Meta>
       {project.description.length > 0 &&
         project.description.map(content => (
-          <Description>{content}</Description>
+          <Description key={content}>{content}</Description>
         ))}
       {project.source && (
         <Description>
