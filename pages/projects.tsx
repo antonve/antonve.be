@@ -16,7 +16,6 @@ const projects: Project[] = [
       'Tadoku is a friendly foreign-language reading contest aimed at building a habit of reading in your non-native languages.',
       'A minimal viable product was tested in 2019 and the website officially launched in 2020. About 50 people participate per round, a number which is steadily growing.',
       "The frontend is a single page application built with Next.js. The backend is a RESTful Golang API using a PostgreSQL database. The content is managed through Ghost, a headless CMS. It's hosted on a Linode Kubernetes cluster.",
-      'The next challenge would be to migrate to a monorepo which contains the code for all services. I want to expand Tadoku to be more than just a reading contest. Having solid infrastructure in place would allow me to do this with minimal overhead.',
     ],
     tags: [
       'Go',
@@ -28,7 +27,7 @@ const projects: Project[] = [
       'React',
       'Redux',
       'Next.js',
-      'Ghost',
+      'Bazel',
       'styled components',
       'Data visualization',
     ],
