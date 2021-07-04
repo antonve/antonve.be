@@ -1,5 +1,5 @@
 # Install deps
-FROM node:10 AS base
+FROM node:12 AS base
 WORKDIR /base
 COPY . .
 RUN yarn install
@@ -13,7 +13,7 @@ ENV NODE_ENV=production
 RUN yarn run build
 
 # Create production container
-FROM node:10 AS production
+FROM node:12 AS production
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /build/package.json /build/yarn.lock ./

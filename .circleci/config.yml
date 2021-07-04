@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/antonve.be
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
     steps:
       - checkout
       - restore_cache:
@@ -27,7 +27,7 @@ jobs:
   publish:
     working_directory: ~/antonve.be
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
     steps:
       - checkout
       - setup_remote_docker
