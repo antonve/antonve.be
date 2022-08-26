@@ -10,20 +10,32 @@ import Document, {
 import { ServerStyleSheet } from 'styled-components'
 
 export default class MyDocument extends Document {
-  static getInitialProps({
-    renderPage,
-  }: DocumentContext): Promise<DocumentInitialProps> {
+  static async getInitialProps(
+    ctx: DocumentContext,
+  ): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet()
+    const originalRenderPage = ctx.renderPage
 
-    const page = renderPage(App => props =>
-      sheet.collectStyles(<App {...props} />),
-    )
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+        })
 
-    const styles = sheet.getStyleElement()
+      const initialProps = await Document.getInitialProps(ctx)
 
-    return new Promise(resolve => {
-      resolve({ ...page, styles })
-    })
+      return {
+        ...initialProps,
+        styles: [
+          <>
+            {initialProps.styles}
+            {sheet.getStyleElement()}
+          </>,
+        ],
+      }
+    } finally {
+      sheet.seal()
+    }
   }
 
   render() {
