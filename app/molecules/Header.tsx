@@ -1,4 +1,4 @@
-import React, { SFC } from 'react'
+import React, { FC } from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { Logo, StyledLink } from 'app/atoms'
@@ -63,7 +63,7 @@ const Nav = styled.nav`
   }
 `
 
-const NavLink: SFC<{ href: string }> = ({ href, children }) => {
+const NavLink: FC<{ href: string }> = ({ href, children }) => {
   const router = useRouter()
 
   return (
