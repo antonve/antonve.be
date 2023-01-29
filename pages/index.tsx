@@ -1,40 +1,34 @@
-import React from 'react'
-import styled from 'styled-components'
-import Head from 'next/head'
+import { usePostList } from '@/app/api'
+import { Bio } from '@/app/Bio'
+import { Header } from '@/app/Header'
+import Link from 'next/link'
 
-import { SingleColumnTemplate } from 'app/templates'
-import { Bio } from 'app/molecules'
-import { Logo, H2 } from 'app/atoms'
-import { Header } from 'app/molecules'
+export default function Home() {
+  const posts = usePostList({ pageSize: 10, page: 0 })
 
-interface Props {}
-
-const Home = ({}: Props) => (
-  <>
-    <Head>
-      <title>Anton Van Eechaute</title>
-    </Head>
-    <Header />
-    <SingleColumnTemplate>
-      <Intro>
-        Hello! I’m <strong>Anton Van Eechaute</strong>.
-      </Intro>
-      <Bio />
-    </SingleColumnTemplate>
-  </>
-)
-
-const StyledLogo = styled(Logo)`
-  max-width: 400px;
-  width: 100%;
-  margin: 3rem auto 6rem;
-`
-
-const Intro = styled(H2)`
-  margin: 0 auto 1.75rem;
-  font-size: 1.8rem;
-  line-height: 2.625rem;
-  font-weight: 400;
-`
-
-export default Home
+  return (
+    <div>
+      <Header />
+      <div className="h-stack space-x-16">
+        <Bio />
+        <div className="flex-grow">
+          <h2 className="title mb-4">Recent posts</h2>
+          {posts.isLoading ? 'Loading...' : null}
+          {posts.isError ? 'Failed to load recent posts.' : null}
+          {posts.data && posts.data.total_size === 0 ? (
+            <p>No posts published</p>
+          ) : null}
+          {posts.data ? (
+            <ul>
+              {posts.data.posts.map(post => (
+                <li key={post.id}>
+                  <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  )
+}

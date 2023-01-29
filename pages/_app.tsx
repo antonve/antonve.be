@@ -1,48 +1,15 @@
-import React from 'react'
-import App, { AppContext } from 'next/app'
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
+import '@/styles/globals.css'
+import type { AppProps } from 'next/app'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-import theme, { ThemeType } from 'app/theme'
+const queryClient = new QueryClient()
 
-class MyApp extends App {
-  render() {
-    const { Component, pageProps } = this.props
-
-    return (
-      <ThemeProvider theme={theme}>
-        <Container>
-          <Component {...pageProps} />
-          <Styles />
-        </Container>
-      </ThemeProvider>
-    )
-  }
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div className="max-w-4xl mx-auto">
+        <Component {...pageProps} />
+      </div>
+    </QueryClientProvider>
+  )
 }
-
-const Styles = createGlobalStyle<{ theme: ThemeType }>`
-  body {
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial,
-      'Hiragino Sans', 'ヒラギノ角ゴシック', 'Hiragino Kaku Gothic ProN',
-      'ヒラギノ角ゴ Pro W3', Roboto, 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
-      sans-serif;
-    font-weight: 300;
-    font-size: ${props => `${props.theme.baseFontSize}%`};
-    background: ${props => props.theme.colors.background};
-  }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Merriweather', serif;
-  }
-  @media print{
-    body {
-      font-size: calc(${props => `${props.theme.baseFontSize}%`}*0.9);
-    }
-  }
-`
-
-const Container = styled.div`
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 10px;
-`
-
-export default MyApp
