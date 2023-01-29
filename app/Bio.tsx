@@ -9,7 +9,7 @@ export function Bio() {
         alt="Headshot"
         width={70}
         height={70}
-        className="rounded-full mr-10 my-auto"
+        className="rounded-full mr-7 my-auto"
       />
       <div className="">
         <h1 className="text-xl mb-2">

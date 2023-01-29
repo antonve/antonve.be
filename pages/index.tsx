@@ -9,11 +9,11 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <div className="h-stack space-x-10">
-        <div className="">
+      <div className="h-stack space-x-16">
+        <div className="bg-stone-200 p-4">
           <Bio />
         </div>
-        <div className="flex-grow border-l-2 pl-10">
+        <div className="flex-grow">
           <h2 className="title mb-4">Recent posts</h2>
           {posts.isLoading ? 'Loading...' : null}
           {posts.isError ? 'Failed to load recent posts.' : null}
