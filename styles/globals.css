@@ -18,7 +18,7 @@
   }
 
   body {
-    background: theme('colors.zinc.50');
+    background: rgb(252, 250, 250);
     font-family: theme('fontFamily.sans');
     margin: 0;
     padding: 0;
@@ -116,7 +116,7 @@
   }
 
   .subtitle {
-    @apply font-sans text-slate-500 text-base uppercase font-bold tracking-wide;
+    @apply font-serif text-zinc-500 text-base font-bold tracking-wide;
   }
 
   /* templates */
@@ -155,6 +155,15 @@
 
   .btn.small > svg {
     @apply h-4 w-4;
+  }
+
+  .highlighted {
+    @apply relative z-10 text-neutral-800;
+  }
+
+  .highlighted::after {
+    content: '';
+    @apply bg-secondary absolute -z-10 top-[0.7em] left-[0.3em] w-[99%] h-[0.7em] opacity-10;
   }
 
   a.btn {
