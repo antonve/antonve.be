@@ -10,9 +10,7 @@ export default function Home() {
     <div>
       <Header />
       <div className="h-stack space-x-16">
-        <div className="bg-stone-200 p-4">
-          <Bio />
-        </div>
+        <Bio />
         <div className="flex-grow">
           <h2 className="title mb-4">Recent posts</h2>
           {posts.isLoading ? 'Loading...' : null}

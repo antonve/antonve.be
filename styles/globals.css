@@ -42,6 +42,36 @@
     @apply my-3;
   }
 
+  a.fancy {
+    @apply font-bold text-primary relative z-10 transition-colors;
+  }
+
+  a.fancy:hover,
+  a.fancy:active,
+  a.fancy:focus,
+  a.fancy.active {
+    @apply !text-neutral-800 !no-underline !outline-none;
+  }
+
+  a.fancy::after {
+    content: '';
+    transition: transform 0.25s ease-out 0s, background 0.25s ease-out;
+    transform-origin: right bottom;
+    transform: scaleX(0);
+
+    @apply bg-secondary absolute -z-10 top-[0.7em] left-[0.3em] w-[99%] h-[0.7em] opacity-50;
+  }
+
+
+  a.fancy:hover::after,
+  a.fancy:active::after,
+  a.fancy:focus::after,
+  a.fancy.active::after {
+    transform: scaleX(1);
+    transform-origin: left bottom;
+  }
+
+
   p > code {
     @apply border border-slate-300 bg-slate-100 rounded-sm p-1 text-indigo-700;
   }

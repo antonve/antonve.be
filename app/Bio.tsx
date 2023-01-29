@@ -18,7 +18,9 @@ export function Bio() {
         <p className="my-auto text-base">
           A full-stack software engineer from Belgium. <br />
           Currently stationed in {` `}
-          <Link href="https://www.indeed.com">Tokyo @ Indeed</Link>
+          <Link href="https://www.indeed.com" className="fancy">
+            Tokyo @ Indeed
+          </Link>
         </p>
       </div>
     </div>

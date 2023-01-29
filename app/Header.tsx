@@ -11,9 +11,13 @@ export function Header() {
         height={38}
         unoptimized={true}
       />
-      <nav>
-        <Link href={'/'}>Home</Link>
-        <Link href={'/projects'}>Projects</Link>
+      <nav className="text-2xl space-x-7">
+        <Link href={'/'} className="fancy !text-neutral-800">
+          Home
+        </Link>
+        <Link href={'/projects'} className="fancy !text-neutral-800">
+          Projects
+        </Link>
       </nav>
     </header>
   )
