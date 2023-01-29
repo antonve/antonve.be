@@ -9,13 +9,18 @@ export function Bio() {
         alt="Headshot"
         width={70}
         height={70}
-        className="rounded-full mr-10"
+        className="rounded-full mr-10 my-auto"
       />
-      <p className="my-auto text-xl">
-        A full-stack software engineer from Belgium. <br />
-        Currently stationed in {` `}
-        <Link href="https://www.indeed.com">Tokyo @ Indeed</Link>
-      </p>
+      <div className="">
+        <h1 className="text-xl mb-2">
+          Hello! I&apos;m <strong>Anton Van Eechaute</strong>.
+        </h1>
+        <p className="my-auto text-base">
+          A full-stack software engineer from Belgium. <br />
+          Currently stationed in {` `}
+          <Link href="https://www.indeed.com">Tokyo @ Indeed</Link>
+        </p>
+      </div>
     </div>
   )
 }

@@ -1,17 +1,16 @@
 import { Bio } from '@/app/Bio'
 import { Header } from '@/app/Header'
-import Head from 'next/head'
 
 export default function Home() {
   return (
     <div>
       <Header />
-      <div className="h-stack">
+      <div className="h-stack space-x-10">
         <div className="">
-          <h1 className="text-3xl mb-5">
-            Hello! I&apos;m <strong>Anton Van Eechaute</strong>.
-          </h1>
           <Bio />
+        </div>
+        <div className="flex-grow border-l-2 pl-10">
+          <h2 className="title">Recent posts</h2>
         </div>
       </div>
     </div>
