@@ -15,6 +15,9 @@ export default function Home() {
           <h2 className="title mb-4">Recent posts</h2>
           {posts.isLoading ? 'Loading...' : null}
           {posts.isError ? 'Failed to load recent posts.' : null}
+          {posts.data && posts.data.total_size === 0 ? (
+            <p>No posts published</p>
+          ) : null}
           {posts.data ? (
             <ul>
               {posts.data.posts.map(post => (
