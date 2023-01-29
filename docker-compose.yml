@@ -1,7 +1,0 @@
-version: "3"
-services:
-  web:
-    container_name: antonve.be-web
-    build: .
-    ports:
-      - "3000:3000"
