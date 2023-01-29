@@ -1,3 +1,229 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:400,700|Open+Sans:400,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer base {
+  html,
+  body {
+    position: relative;
+  }
+
+  html {
+    height: 100%;
+    overflow-x: hidden;
+    margin-right: calc(-1 * (100vw - 100%));
+  }
+
+  body {
+    background: theme('colors.zinc.50');
+    font-family: theme('fontFamily.sans');
+    margin: 0;
+    padding: 0;
+  }
+
+  ::selection {
+    background: theme('colors.secondary');
+    color: theme('colors.neutral.50');
+  }
+
+  a:not(.reset):not(.btn) {
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  p a:not(.reset):not(.btn) {
+    text-decoration: underline;
+  }
+
+  p {
+    @apply my-3;
+  }
+
+  p > code {
+    @apply border border-slate-300 bg-slate-100 rounded-sm p-1 text-indigo-700;
+  }
+
+  a:not(.reset):not(.btn):hover,
+  a:not(.reset):not(.btn):active,
+  a:not(.reset):not(.btn):focus {
+    color: theme('colors.primary');
+  }
+
+  h1, h2, h3, h4, h5, h6, h7 {
+    font-family: theme('fontFamily.serif');
+  }
+
+  button {
+    font-family: theme('fontFamily.sans');
+  }
+
+  a[href],
+  input[type='submit']:not([disabled]),
+  input[type='image']:not([disabled]),
+  label:not([disabled]),
+  select:not([disabled]),
+  button:not([disabled]) {
+    cursor: pointer;
+  }
+
+  table {
+    @apply bg-white shadow shadow-slate-500/10;
+  }
+}
+
+@layer components {
+  /* typography */
+
+  .text-link {
+    @apply underline text-primary hover:text-black;
+  }
+
+  .title {
+    @apply font-serif text-3xl font-bold;
+  }
+
+  .subtitle {
+    @apply font-sans text-slate-500 text-base uppercase font-bold tracking-wide;
+  }
+
+  /* templates */
+
+  .v-stack {
+    @apply flex flex-col;
+  }
+
+  .v-stack > * {
+    @apply mx-0 box-border;
+  }
+
+  .h-stack {
+    @apply flex flex-row;
+  }
+
+  .h-stack > * {
+    @apply my-0 box-border;
+  }
+
+  .h-stack > .btn {
+    @apply !w-fit;
+  }
+
+  .btn {
+    @apply border border-b-2 border-black/10 bg-white transition ease-in-out;
+    @apply py-1 px-2 h-10 text-sm;
+    @apply focus:border-black/40 focus:ring-black/10 focus:ring-2;
+    @apply hover:border-black/40 font-bold hover:bg-black/5;
+    @apply md:px-4 md:h-11 md:text-base;
+  }
+
+  .btn > svg {
+    @apply h-5 w-5 inline;
+  }
+
+  .btn.small > svg {
+    @apply h-4 w-4;
+  }
+
+  a.btn {
+    @apply inline-flex items-center justify-center w-fit hover:text-inherit active:text-inherit focus:text-inherit;
+  }
+
+  .btn:disabled {
+    @apply hover:border-black/10 hover:bg-inherit focus:ring-0 cursor-not-allowed text-black/40;
+  }
+
+  .card {
+    @apply shadow-md shadow-slate-500/10 bg-white;
+  }
+
+  .card:not(.narrow):not(.p-0) {
+    @apply p-4 md:p-7;
+  }
+
+  .card.narrow {
+    @apply p-4;
+  }
+
+  ul.list {
+    @apply list-disc pl-7 my-2;
+  }
+}
+
+@layer utilities {
+  .input-frame {
+      @apply border border-b-2 border-black/10 focus:border-primary focus:ring-primary/40 focus:ring-2;
+      @apply bg-white transition ease-in-out placeholder-gray-400;
+      @apply aria-disabled:focus:ring-0 aria-disabled:focus:ring-offset-0 aria-disabled:focus:border-black/10;
+  }
+
+  .label.error input, .label.error textarea {
+    @apply border-red-600 focus:ring-red-600/40;
+  }
+
+  .label .error {
+    @apply hidden w-full text-red-700 transition duration-200 ease-out;
+  }
+
+  .label.error .error {
+    @apply block text-xs;
+  }
+
+  .btn.small {
+    @apply px-2 py-1 h-8;
+  }
+
+  .btn.primary {
+    @apply text-white hover:text-white active:text-white focus:text-white bg-primary hover:bg-primary/90 focus:ring-primary/40;
+  }
+
+  .btn.primary:disabled {
+    @apply bg-primary/40;
+  }
+
+  .kratos-form .btn.primary + .btn.primary {
+    @apply absolute right-0 text-secondary bg-transparent border-0 focus:ring-0 hover:bg-secondary/5 group-hover:bg-secondary/5 focus:bg-secondary/5 ;
+  }
+
+  .btn.secondary {
+    @apply text-white hover:text-white active:text-white focus:text-white bg-secondary hover:bg-secondary/90 focus:ring-secondary/40;
+  }
+
+  .btn.secondary:disabled {
+    @apply bg-secondary/40;
+  }
+
+  .btn.danger {
+    @apply text-white hover:text-white active:text-white focus:text-white bg-red-600 hover:bg-red-600/80 focus:ring-red-600/40;
+  }
+
+  .btn.danger:disabled {
+    @apply bg-red-600/40;
+  }
+
+  .btn.ghost {
+    @apply bg-transparent border-0 focus:ring-0 hover:bg-secondary/5 group-hover:bg-secondary/5 focus:bg-secondary/5 ;
+  }
+
+  .btn.ghost:disabled {
+    @apply hover:bg-inherit;
+  }
+
+  .btn.disabled {
+    @apply opacity-50 select-none pointer-events-none;
+  }
+
+  .v-stack.spaced {
+    @apply space-y-3 space-x-0;
+  }
+
+  .h-stack.spaced {
+    @apply space-x-3 space-y-0;
+  }
+
+  .h-stack.fill > * {
+    @apply flex-1;
+  }
+}
