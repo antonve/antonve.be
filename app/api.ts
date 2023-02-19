@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { useQuery } from 'react-query'
 
-const root = `https://staging.tadoku.app/api/internal/content`
+const root = `https://tadoku.app/api/internal/content`
 const namespace = 'antonve'
 
 const Post = z.object({
