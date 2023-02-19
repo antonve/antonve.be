@@ -192,6 +192,30 @@
 }
 
 @layer utilities {
+  .auto-format table {
+    @apply border-collapse w-full;
+  }
+
+  .auto-format .table-container {
+    @apply my-4 w-full;
+  }
+
+  .auto-format ul {
+    @apply list-disc ml-5 my-2 space-y-1;
+  }
+
+  .auto-format a {
+    @apply !underline;
+  }
+
+  .auto-format h2 {
+    @apply text-lg mt-8 mb-3;
+  }
+
+  .auto-format h3 {
+    @apply subtitle mt-5 mb-2;
+  }
+
   .input-frame {
       @apply border border-b-2 border-black/10 focus:border-primary focus:ring-primary/40 focus:ring-2;
       @apply bg-white transition ease-in-out placeholder-gray-400;
