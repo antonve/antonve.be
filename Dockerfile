@@ -14,7 +14,7 @@ RUN pnpm fetch
 COPY . .
 RUN pnpm install --frozen-lockfile --offline --ignore-scripts
 RUN pnpm run build
-RUN pnpm install --prod --frozen-lockfile --offline --shamefully-hoist
+RUN CI=true pnpm install --prod --frozen-lockfile --offline --shamefully-hoist
 
 # Runtime image
 FROM docker.io/node:20-alpine AS release
