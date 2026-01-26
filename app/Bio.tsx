@@ -3,15 +3,15 @@ import Link from 'next/link'
 
 export function Bio() {
   return (
-    <div className="h-stack">
+    <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
       <Image
         src={'/img/profile-pic.jpg'}
         alt="Headshot"
         width={70}
         height={70}
-        className="rounded-full mr-7 my-auto"
+        className="rounded-full mb-4 md:mb-0 md:mr-7 md:my-auto"
       />
-      <div className="">
+      <div>
         <h1 className="text-xl mb-2">
           Hello! I&apos;m <strong>Anton Van Eechaute</strong>.
         </h1>

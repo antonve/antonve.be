@@ -177,16 +177,16 @@ const Page = () => (
       <title>Anton Van Eechaute :: Projects</title>
     </Head>
     <Header />
-    <h1 className="title mb-8">Projects</h1>
-    <ul className="space-y-20">
+    <h1 className="title mb-6 md:mb-8">Projects</h1>
+    <ul className="space-y-16 md:space-y-20">
       {projects.map(p => (
-        <li className="flex space-x-16" key={p.title}>
+        <li className="flex flex-col md:flex-row md:space-x-16 space-y-4 md:space-y-0" key={p.title}>
           <Image
             src={`/img/projects/${p.preview}`}
             width={376}
             height={240}
             alt={`Screenshot - ${p.title}`}
-            className="mb-auto"
+            className="mb-auto w-full md:w-[376px] h-auto"
           />
           <div className="flex-1">
             <Link
@@ -209,7 +209,7 @@ const Page = () => (
         </li>
       ))}
     </ul>
-    <p className="text-center my-20 text-3xl">
+    <p className="text-center my-12 md:my-20 text-xl md:text-3xl">
       Want to see more? Let's have a{' '}
       <strong>
         <Link className="fancy" href={`mailto:mail@antonve.be`}>

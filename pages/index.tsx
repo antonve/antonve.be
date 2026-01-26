@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <div className="h-stack space-x-16">
+      <div className="flex flex-col md:flex-row md:space-x-16 space-y-12 md:space-y-0">
         <Bio />
         <div className="flex-grow">
           <h2 className="title mb-4">Recent posts</h2>
