@@ -6,13 +6,13 @@ ARG PROJECT_NAME
 WORKDIR /app
 
 # Set up pnpm
-RUN npm install -g pnpm && pnpm config set store-dir .pnpm-store
-COPY pnpm-lock.yaml .npmrc* ./
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm config set store-dir .pnpm-store
 RUN pnpm fetch
 
 # Build
 COPY . .
-RUN pnpm install --frozen-lockfile --offline --ignore-scripts
+RUN pnpm install --frozen-lockfile --offline
 RUN pnpm run build
 RUN CI=true pnpm install --prod --frozen-lockfile --offline --shamefully-hoist
 
