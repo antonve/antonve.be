@@ -6,26 +6,6 @@ import Link from 'next/link'
 
 const projects = [
   {
-    title: 'hsfp.tokyo',
-    when: '2026',
-    preview: 'hsfp.png',
-    description: (
-      <>
-        <p>
-          A calculator to estimate your points for the Highly Skilled Foreign
-          Professional visa in Japan.
-        </p>
-        <p>
-          Available in four languages: English, Japanese, Simplified Chinese,
-          and Traditional Chinese.
-        </p>
-      </>
-    ),
-    tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS', 'next-i18n'],
-    source: 'https://github.com/antonve/hsfp.tokyo',
-    url: 'https://hsfp.tokyo/',
-  },
-  {
     title: 'Tadoku',
     when: '2019 — present',
     preview: 'tadoku.png',
@@ -85,6 +65,26 @@ const projects = [
     ],
     source: 'https://github.com/tadoku',
     url: 'https://tadoku.app',
+  },
+  {
+    title: 'hsfp.tokyo',
+    when: '2026',
+    preview: 'hsfp.png',
+    description: (
+      <>
+        <p>
+          A calculator to estimate your points for the Highly Skilled Foreign
+          Professional visa in Japan.
+        </p>
+        <p>
+          Available in four languages: English, Japanese, Simplified Chinese,
+          and Traditional Chinese.
+        </p>
+      </>
+    ),
+    tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS', 'next-i18n'],
+    source: 'https://github.com/antonve/hsfp.tokyo',
+    url: 'https://hsfp.tokyo/',
   },
   {
     title: 'Wantedly Visit iOS',
