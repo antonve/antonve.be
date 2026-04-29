@@ -6,14 +6,45 @@ type Book = {
   yearRead: number | 'Unknown'
   title: string
   url: string
+  status?: 'reading'
   reviewUrl?: string
 }
 
 const books: Book[] = [
   {
     yearRead: 2026,
+    title: 'AI Engineering: Building Applications with Foundation Models',
+    url: 'https://openlibrary.org/isbn/9781098166304',
+    status: 'reading',
+  },
+  {
+    yearRead: 2026,
+    title: 'Inference Engineering',
+    url: 'https://www.baseten.co/inference-engineering/',
+    status: 'reading',
+  },
+  {
+    yearRead: 2026,
+    title: 'Mastering Behavioral Interviews: The Guide to Storytelling in Tech',
+    url: 'https://thebehavioral.tech/',
+    status: 'reading',
+  },
+  {
+    yearRead: 2026,
+    title: 'Code Health Guardian: The Old-New Role of a Human Programmer in the AI Era',
+    url: 'https://codehealthguardian.com/',
+    status: 'reading',
+  },
+  {
+    yearRead: 2026,
+    title: 'エンジニアのキャリア地図 「技術」と「やりたいこと」から見つける最適解',
+    url: 'https://www.hanmoto.com/bd/isbn/9784802615433',
+    status: 'reading',
+  },
+  {
+    yearRead: 2026,
     title: 'Generative AI on Kubernetes: Operationalizing Large Language Models',
-    url: 'https://openlibrary.org/isbn/9781098171926',
+    url: 'https://www.oreilly.com/library/view/generative-ai-on/9781098171919/',
   },
   {
     yearRead: 2026,
@@ -33,7 +64,7 @@ const books: Book[] = [
   {
     yearRead: 2025,
     title: 'Vibe Coding: Building Production-Grade Software With GenAI, Chat, Agents, and Beyond',
-    url: 'https://openlibrary.org/isbn/9781966280026',
+    url: 'https://www.simonandschuster.com/books/Vibe-Coding/Steve-Yegge/9781966280026',
   },
   {
     yearRead: 2025,
@@ -82,8 +113,33 @@ const books: Book[] = [
   },
   {
     yearRead: 2022,
-    title: '東京で家を買うなら',
-    url: 'https://openlibrary.org/isbn/9784426126124',
+    title: 'System Design Interview - An Insider\'s Guide: Volume 2',
+    url: 'https://openlibrary.org/isbn/9781736049112',
+  },
+  {
+    yearRead: 2022,
+    title: 'System Design Interview - An insider\'s guide',
+    url: 'https://bytebytego.com/courses/system-design-interview',
+  },
+  {
+    yearRead: 2022,
+    title: 'Algorithms',
+    url: 'https://openlibrary.org/isbn/9780321573513',
+  },
+  {
+    yearRead: 2022,
+    title: 'Designing Distributed Systems: Patterns and Paradigms for Scalable, Reliable Services',
+    url: 'https://openlibrary.org/isbn/9781491983645',
+  },
+  {
+    yearRead: 2022,
+    title: 'キャリアロジック 誰でも年収1000万円を超えるための28のルール',
+    url: 'https://www.books.or.jp/book-details/9784408339313',
+  },
+  {
+    yearRead: 2022,
+    title: '転職2.0　日本人のキャリアの新・ルール',
+    url: 'https://www.sbcr.jp/product/4815608033/',
   },
   {
     yearRead: 2022,
@@ -93,22 +149,12 @@ const books: Book[] = [
   {
     yearRead: 2022,
     title: '学び効率が最大化するインプット大全',
-    url: 'https://openlibrary.org/isbn/9784801400696',
+    url: 'https://www.hanmoto.com/bd/isbn/9784801400696',
   },
   {
     yearRead: 2022,
     title: '１％の努力',
-    url: 'https://openlibrary.org/isbn/9784478108499',
-  },
-  {
-    yearRead: 2022,
-    title: 'キャリアロジック 誰でも年収1000万円を超えるための28のルール',
-    url: 'https://openlibrary.org/isbn/9784408339313',
-  },
-  {
-    yearRead: 2022,
-    title: '転職2.0　日本人のキャリアの新・ルール',
-    url: 'https://www.sbcr.jp/product/4815608033/',
+    url: 'https://shopping.jreast.co.jp/products/detail/s521/s521-9784478108499',
   },
   {
     yearRead: 2022,
@@ -117,23 +163,8 @@ const books: Book[] = [
   },
   {
     yearRead: 2022,
-    title: 'System Design Interview - An Insider\'s Guide: Volume 2',
-    url: 'https://openlibrary.org/isbn/9781736049112',
-  },
-  {
-    yearRead: 2022,
-    title: 'Algorithms',
-    url: 'https://openlibrary.org/isbn/9780321573513',
-  },
-  {
-    yearRead: 2022,
-    title: 'System Design Interview - An insider\'s guide',
-    url: 'https://bytebytego.com/courses/system-design-interview',
-  },
-  {
-    yearRead: 2022,
-    title: 'Designing Distributed Systems: Patterns and Paradigms for Scalable, Reliable Services',
-    url: 'https://openlibrary.org/isbn/9781491983645',
+    title: '東京で家を買うなら',
+    url: 'https://www.hanmoto.com/bd/isbn/9784426126124',
   },
   {
     yearRead: 2021,
@@ -143,7 +174,7 @@ const books: Book[] = [
   {
     yearRead: 2021,
     title: '学びを結果に変えるアウトプット大全',
-    url: 'https://www.sanctuarybooks.jp/book-details/book1051.html',
+    url: 'https://www.sanctuarybooks.jp/book-details/book1018.html',
   },
   {
     yearRead: 2021,
@@ -223,7 +254,7 @@ const books: Book[] = [
   {
     yearRead: 2021,
     title: 'The Product Book: How to Become a Great Product Manager',
-    url: 'https://openlibrary.org/isbn/9780998973838',
+    url: 'https://productschool.com/resources/ebooks/the-product-book',
   },
   {
     yearRead: 2021,
@@ -278,7 +309,7 @@ const books: Book[] = [
   {
     yearRead: 2019,
     title: '一番やさしい！　一番くわしい！ 個人型確定拠出年金ｉＤｅＣｏ（イデコ）活用入門',
-    url: 'https://openlibrary.org/isbn/9784478100578',
+    url: 'https://bookmeter.com/books/11180497',
   },
   {
     yearRead: 2019,
@@ -298,7 +329,7 @@ const books: Book[] = [
   {
     yearRead: 2019,
     title: 'Refactoring: Improving the Design of Existing Code',
-    url: 'https://openlibrary.org/isbn/9780134757681',
+    url: 'https://martinfowler.com/books/refactoring.html',
   },
   {
     yearRead: 2019,
@@ -388,7 +419,7 @@ const books: Book[] = [
   {
     yearRead: 2018,
     title: 'Radical Focus',
-    url: 'https://www.radicalfocus.com/',
+    url: 'https://openlibrary.org/isbn/9780996006026',
   },
   {
     yearRead: 2018,
@@ -468,51 +499,65 @@ const years = books.reduce<Book['yearRead'][]>((result, book) => {
 const Page = () => (
   <>
     <Head>
-      <title>Anton Van Eechaute :: Books</title>
+      <title>Anton Van Eechaute :: Bookshelf</title>
     </Head>
     <Header />
-    <h1 className="title mb-3">Books</h1>
-    <p className="mb-3 text-neutral-700">
-      A reading log of books that have helped shape how I think about building
-      software, running teams, career, and personal finance. I mostly read in
-      English, with some Japanese mixed in.
-    </p>
-    <p className="mb-8 text-neutral-700">
-      This page is limited to non-fiction. Most of the fiction I read is in
-      Japanese, and I track that separately on{' '}
-      <Link href="https://bookmeter.com/users/445442/books/read">Bookmeter</Link>
-      .
-    </p>
-    <div className="space-y-10">
-      {years.map(year => (
-        <section key={year}>
-          <h2 className="subtitle mb-3">{year}</h2>
-          <ul className="list-disc pl-6 space-y-2">
-            {books
-              .filter(book => book.yearRead === year)
-              .map(book => (
-                <li key={`${year}-${book.title}`} className="leading-relaxed">
-                  <Link
-                    href={book.url}
-                    className="text-neutral-800 hover:text-primary"
-                  >
-                    {book.title}
-                  </Link>
-                  {book.reviewUrl ? (
-                    <>
-                      {' '}
-                      <span className="text-neutral-400">/</span>{' '}
-                      <Link href={book.reviewUrl} className="fancy text-sm">
-                        Review
-                      </Link>
-                    </>
-                  ) : null}
-                </li>
-              ))}
-          </ul>
-        </section>
-      ))}
-    </div>
+    <main className="pb-16">
+      <h1 className="title mb-3">Bookshelf</h1>
+      <p className="mb-3 text-neutral-700">
+        A reading log of books that have helped shape how I think about building
+        software, running teams, career, and personal finance. I mostly read in
+        English, with some Japanese mixed in.
+      </p>
+      <p className="mb-3 text-neutral-700">
+        Inclusion here is not an endorsement. It is a log of what I read, and my
+        views have changed over time; some books may no longer reflect what I
+        recommend, or may simply be outdated now.
+      </p>
+      <p className="mb-8 text-neutral-700">
+        This page is limited to non-fiction. Most of the fiction I read is in
+        Japanese, and I track that separately on{' '}
+        <Link href="https://bookmeter.com/users/445442/books/read">
+          Bookmeter
+        </Link>
+        .
+      </p>
+      <div className="space-y-10">
+        {years.map(year => (
+          <section key={year}>
+            <h2 className="subtitle mb-3">{year}</h2>
+            <ul className="list-disc pl-6 space-y-2">
+              {books
+                .filter(book => book.yearRead === year)
+                .map(book => (
+                  <li key={`${year}-${book.title}`} className="leading-relaxed">
+                    <Link
+                      href={book.url}
+                      className="text-neutral-800 hover:text-primary"
+                    >
+                      {book.title}
+                    </Link>
+                    {book.status === 'reading' ? (
+                      <span className="ml-2 text-sm text-neutral-500">
+                        [reading]
+                      </span>
+                    ) : null}
+                    {book.reviewUrl ? (
+                      <>
+                        {' '}
+                        <span className="text-neutral-400">/</span>{' '}
+                        <Link href={book.reviewUrl} className="fancy text-sm">
+                          Review
+                        </Link>
+                      </>
+                    ) : null}
+                  </li>
+                ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </main>
   </>
 )
 

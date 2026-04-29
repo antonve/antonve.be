@@ -19,6 +19,9 @@ export function Header() {
         <Link href={'/projects'} className="fancy !text-neutral-800">
           Projects
         </Link>
+        <Link href={'/books'} className="fancy !text-neutral-800">
+          Bookshelf
+        </Link>
       </nav>
     </header>
   )
