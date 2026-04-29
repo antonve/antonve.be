@@ -9,9 +9,11 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <div className="flex flex-col md:flex-row md:space-x-16 space-y-12 md:space-y-0">
-        <Bio />
-        <div className="flex-grow">
+      <div className="max-w-2xl space-y-12">
+        <section className="card">
+          <Bio />
+        </section>
+        <section>
           <h2 className="title mb-4">Recent posts</h2>
           {posts.isLoading ? 'Loading...' : null}
           {posts.isError ? 'Failed to load recent posts.' : null}
@@ -27,7 +29,7 @@ export default function Home() {
               ))}
             </ul>
           ) : null}
-        </div>
+        </section>
       </div>
     </div>
   )

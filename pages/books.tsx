@@ -517,7 +517,11 @@ const Page = () => (
       <p className="mb-8 text-neutral-700">
         This page is limited to non-fiction. Most of the fiction I read is in
         Japanese, and I track that separately on{' '}
-        <Link href="https://bookmeter.com/users/445442/books/read">
+        <Link
+          href="https://bookmeter.com/users/445442/books/read"
+          target="_blank"
+          rel="noreferrer"
+        >
           Bookmeter
         </Link>
         .
@@ -533,6 +537,8 @@ const Page = () => (
                   <li key={`${year}-${book.title}`} className="leading-relaxed">
                     <Link
                       href={book.url}
+                      target="_blank"
+                      rel="noreferrer"
                       className="text-neutral-800 hover:text-primary"
                     >
                       {book.title}
@@ -546,7 +552,12 @@ const Page = () => (
                       <>
                         {' '}
                         <span className="text-neutral-400">/</span>{' '}
-                        <Link href={book.reviewUrl} className="fancy text-sm">
+                        <Link
+                          href={book.reviewUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="fancy text-sm"
+                        >
                           Review
                         </Link>
                       </>
