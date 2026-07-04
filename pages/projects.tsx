@@ -1,14 +1,12 @@
 import { Header } from '@/app/Header'
 import { Tags } from '@/app/Tags'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 
 const projects = [
   {
     title: 'Tadoku',
     when: '2019 — present',
-    preview: 'tadoku.png',
     description: (
       <>
         <p>
@@ -69,7 +67,6 @@ const projects = [
   {
     title: 'hsfp.tokyo',
     when: '2026',
-    preview: 'hsfp.png',
     description: (
       <>
         <p>
@@ -89,7 +86,6 @@ const projects = [
   {
     title: 'Wantedly Visit iOS',
     when: '2018',
-    preview: 'visit_ios.jpg',
     description: (
       <>
         <p>
@@ -126,7 +122,6 @@ const projects = [
   {
     title: 'Wantedly Visit',
     when: '2016-2018',
-    preview: 'visit.jpg',
     description: (
       <>
         <p>
@@ -180,15 +175,8 @@ const Page = () => (
     <h1 className="title mb-6 md:mb-8">Projects</h1>
     <ul className="space-y-16 md:space-y-20">
       {projects.map(p => (
-        <li className="flex flex-col md:flex-row md:space-x-16 space-y-4 md:space-y-0" key={p.title}>
-          <Image
-            src={`/img/projects/${p.preview}`}
-            width={376}
-            height={240}
-            alt={`Screenshot - ${p.title}`}
-            className="mb-auto w-full md:w-[376px] h-auto"
-          />
-          <div className="flex-1">
+        <li key={p.title}>
+          <div>
             <Link
               href={p.url}
               className="fancy font-serif !text-neutral-800 text-xl !underline"

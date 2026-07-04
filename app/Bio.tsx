@@ -26,19 +26,7 @@ export function Bio() {
           . Language learning enthusiast.
         </p>
 
-        <p className="mt-6 mb-2 text-xs font-bold uppercase tracking-widest text-black/40">
-          Previously
-        </p>
-        <div className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm text-left mx-auto w-fit md:mx-0 md:w-auto">
-          {workHistory.map(({ company, role }) => (
-            <Fragment key={company}>
-              <span className="font-bold">{company}</span>
-              <span className="text-black/60">{role}</span>
-            </Fragment>
-          ))}
-        </div>
-
-        <p className="mt-6 text-sm text-black/60">
+        <p className="mt-3 text-base text-neutral-700">
           Find me on{' '}
           <Link
             href="https://x.com/antonve_be"
@@ -68,6 +56,18 @@ export function Bio() {
           </Link>
           .
         </p>
+
+        <p className="mt-6 mb-2 text-xs font-bold uppercase tracking-widest text-black/40">
+          Previously
+        </p>
+        <div className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm text-left mx-auto w-fit md:mx-0 md:w-auto">
+          {workHistory.map(({ company, role }) => (
+            <Fragment key={company}>
+              <span className="font-bold">{company}</span>
+              <span className="text-neutral-700">{role}</span>
+            </Fragment>
+          ))}
+        </div>
       </div>
       <Image
         src={'/img/profile-pic.jpg'}
