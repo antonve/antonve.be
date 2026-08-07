@@ -1,21 +1,23 @@
 name: build
 on:
   push:
+    branches: [master]
+  pull_request:
 jobs:
   build:
-    name: Build
+    name: Verify
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: pnpm
@@ -23,17 +25,67 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Typecheck
+        run: pnpm run typecheck
+
       - name: Build project
         run: pnpm run build
 
+      - name: Run browser smoke tests
+        run: |
+          docker run --rm --ipc=host \
+            --volume "$GITHUB_WORKSPACE:/work" \
+            --workdir /work \
+            mcr.microsoft.com/playwright:v1.62.1-noble \
+            bash -lc 'corepack enable && corepack prepare pnpm@10.30.3 --activate >/dev/null && pnpm run test:e2e'
+
+      - name: Record production audit
+        if: always()
+        run: pnpm audit --prod --json > production-audit.json || true
+
+      - name: Upload browser and audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: migration-baseline
+          path: |
+            playwright-report/
+            test-results/
+            production-audit.json
+          if-no-files-found: ignore
+
+  container:
+    name: Container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build image
+        run: docker build --tag antonve-site:test .
+
+      - name: Smoke test non-root runtime
+        run: |
+          container_id=$(docker run --detach --publish 3000:3000 antonve-site:test)
+          trap 'docker logs "$container_id"; docker rm --force "$container_id"' EXIT
+          test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = nextjs
+          test "$(docker exec "$container_id" id -u)" = 1001
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
+
   publish:
     name: Publish Image
-    needs: build
+    needs: [build, container]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Push images
         run: |
@@ -43,4 +95,5 @@ jobs:
           IMAGE_NAME=ghcr.io/antonve/antonve.be/web
           docker build -t $IMAGE_NAME:latest .
           docker tag $IMAGE_NAME:latest $IMAGE_NAME:$GITHUB_SHA
-          docker push $IMAGE_NAME
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$GITHUB_SHA
