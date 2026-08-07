@@ -58,6 +58,49 @@ test.afterEach(async ({ page }, testInfo) => {
   expect(unexpected, 'unexpected browser console/page errors').toEqual([])
 })
 
+test('self-hosts Open Sans and Merriweather', async ({ page }) => {
+  const externalFontRequests: string[] = []
+  page.on('request', request => {
+    if (/fonts\.(googleapis|gstatic)\.com/.test(request.url())) {
+      externalFontRequests.push(request.url())
+    }
+  })
+
+  await page.goto('/')
+
+  const fontState = await page.evaluate(async () => {
+    await document.fonts.ready
+
+    const app = document.querySelector<HTMLElement>('#__next > div')
+    const heading = document.querySelector<HTMLElement>('h1')
+    const resources = performance
+      .getEntriesByType('resource')
+      .map(entry => entry.name)
+      .filter(url => /\/_next\/static\/media\/.*\.woff2(?:\?|$)/.test(url))
+
+    return {
+      appFamily: app ? getComputedStyle(app).fontFamily : '',
+      headingFamily: heading ? getComputedStyle(heading).fontFamily : '',
+      faces: Array.from(document.fonts).map(font => ({
+        family: font.family.replaceAll('"', ''),
+        status: font.status,
+      })),
+      resources,
+    }
+  })
+
+  expect(fontState.appFamily).toContain('Open Sans')
+  expect(fontState.headingFamily).toContain('Merriweather')
+  expect(fontState.faces).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ family: 'Open Sans', status: 'loaded' }),
+      expect.objectContaining({ family: 'Merriweather', status: 'loaded' }),
+    ]),
+  )
+  expect(fontState.resources.length).toBeGreaterThanOrEqual(2)
+  expect(externalFontRequests).toEqual([])
+})
+
 test('home renders content, local images, and working navigation', async ({
   page,
 }) => {
@@ -69,10 +112,6 @@ test('home renders content, local images, and working navigation', async ({
   await expect(
     page.getByRole('link', { name: 'A deterministic test post' }),
   ).toBeVisible()
-  await expect(page).toHaveScreenshot('home.png', {
-    animations: 'disabled',
-    fullPage: true,
-  })
 
   for (const name of ['Anton Van Eechaute', 'Headshot']) {
     const image = page.getByRole('img', { name })
@@ -80,6 +119,11 @@ test('home renders content, local images, and working navigation', async ({
     await expect(image).toHaveJSProperty('complete', true)
     expect(await image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
   }
+
+  await expect(page).toHaveScreenshot('home.png', {
+    animations: 'disabled',
+    fullPage: true,
+  })
 
   await page.getByRole('link', { name: 'Projects', exact: true }).click()
   await expect(page).toHaveURL(/\/projects$/)
