@@ -1,14 +1,12 @@
 import { Header } from '@/app/Header'
 import { Tags } from '@/app/Tags'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 
 const projects = [
   {
     title: 'Tadoku',
     when: '2019 — present',
-    preview: 'tadoku.png',
     description: (
       <>
         <p>
@@ -67,87 +65,23 @@ const projects = [
     url: 'https://tadoku.app',
   },
   {
-    title: 'Wantedly Visit iOS',
-    when: '2018',
-    preview: 'visit_ios.jpg',
+    title: 'hsfp.tokyo',
+    when: '2026',
     description: (
       <>
         <p>
-          Wantedly is a technology company which offers a social recruiting and
-          employer branding platform.
+          A calculator to estimate your points for the Highly Skilled Foreign
+          Professional visa in Japan.
         </p>
         <p>
-          In 2018 they wanted to revamp their iOS app in order to increase the
-          monthly active users. I was part of the team that built the new Visit
-          app.
-        </p>
-        <p>
-          My main contributions were towards the onboarding flow, LinkedIn &
-          Facebook authentication, and the profile screen.
-        </p>
-        <p>
-          The revamp was well received and lead to a significant increase in
-          people applying to jobs.
+          Available in four languages: English, Japanese, Simplified Chinese,
+          and Traditional Chinese.
         </p>
       </>
     ),
-    tags: [
-      'Swift',
-      'MVVM+Coordinator',
-      'RxSwift',
-      'ReactorKit',
-      'Moya',
-      'R.swift',
-      'Sourcery',
-      'Swinject',
-    ],
-    url: 'https://apps.apple.com/jp/app/wantedly-visit/id804727886',
-  },
-  {
-    title: 'Wantedly Visit',
-    when: '2016-2018',
-    preview: 'visit.jpg',
-    description: (
-      <>
-        <p>
-          Wantedly is a technology company which offers a social recruiting and
-          employer branding platform.
-        </p>
-        <p>
-          I was the first engineer on the international expansion product team.
-          I was responsible for the growth of the product in Singapore,
-          Indonesia, Hong Kong, and Germany.
-        </p>
-        <p>
-          I built a variety of features to support our international growth such
-          as an email template manager for marketers in local markets, online
-          payments in Singapore with Stripe, a new onboarding flow, and more. A
-          chunk of my time was spent analyzing user behavior. Those results were
-          then used to figure out what to focus on next.
-        </p>
-        <p>
-          Wantedly Visit is originally built as a monolithic Ruby on Rails
-          application. During my time there we slowly migrated to a microservice
-          architecture running on Kubernetes.
-        </p>
-      </>
-    ),
-    tags: [
-      'Ruby',
-      'Rails',
-      'Go',
-      'TypeScript',
-      'React',
-      'Redux',
-      'SCSS',
-      'CoffeeScript',
-      'JavaScript',
-      'i18n',
-      'microservice architecture',
-      'GCP Pub/Sub',
-      'gRPC',
-    ],
-    url: 'https://sg.wantedly.com',
+    tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS', 'next-i18n'],
+    source: 'https://github.com/antonve/hsfp.tokyo',
+    url: 'https://hsfp.tokyo/',
   },
 ]
 
@@ -157,18 +91,11 @@ const Page = () => (
       <title>Anton Van Eechaute :: Projects</title>
     </Head>
     <Header />
-    <h1 className="title mb-8">Projects</h1>
-    <ul className="space-y-20">
+    <h1 className="title mb-6 md:mb-8">Projects</h1>
+    <ul className="space-y-16 md:space-y-20">
       {projects.map(p => (
-        <li className="flex space-x-16" key={p.title}>
-          <Image
-            src={`/img/projects/${p.preview}`}
-            width={376}
-            height={240}
-            alt={`Screenshot - ${p.title}`}
-            className="mb-auto"
-          />
-          <div className="flex-1">
+        <li key={p.title}>
+          <div>
             <Link
               href={p.url}
               className="fancy font-serif !text-neutral-800 text-xl !underline"
@@ -189,7 +116,7 @@ const Page = () => (
         </li>
       ))}
     </ul>
-    <p className="text-center my-20 text-3xl">
+    <p className="text-center my-12 md:my-20 text-xl md:text-3xl">
       Want to see more? Let's have a{' '}
       <strong>
         <Link className="fancy" href={`mailto:mail@antonve.be`}>
