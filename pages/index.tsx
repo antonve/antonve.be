@@ -18,7 +18,7 @@ export default function Home() {
           <h2 className="text-xl font-bold font-serif mb-4">
             Recent writing
           </h2>
-          {posts.isLoading ? 'Loading...' : null}
+          {posts.isPending ? 'Loading...' : null}
           {posts.isError ? 'Failed to load recent posts.' : null}
           {posts.data && posts.data.total_size === 0 ? (
             <p>No posts published</p>
