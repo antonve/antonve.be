@@ -13,8 +13,8 @@ module.exports = {
         secondary: '#18D6CC',
       },
       fontFamily: {
-        sans: ['Open Sans', ...defaultTheme.fontFamily.sans],
-        serif: ['Merriweather', ...defaultTheme.fontFamily.serif]
+        sans: ['var(--font-open-sans)', ...defaultTheme.fontFamily.sans],
+        serif: ['var(--font-merriweather)', ...defaultTheme.fontFamily.serif]
       },
       minWidth: (theme) => ({
         ...theme('spacing'),
