@@ -129,7 +129,9 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u tadoku --password-stdin
           # Push images
           IMAGE_NAME=ghcr.io/antonve/antonve.be/web
+          docker tag antonve-site:test $IMAGE_NAME:prod
           docker tag antonve-site:test $IMAGE_NAME:latest
           docker tag antonve-site:test $IMAGE_NAME:$GITHUB_SHA
+          docker push $IMAGE_NAME:prod
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$GITHUB_SHA
