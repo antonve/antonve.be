@@ -10,7 +10,7 @@ export function Page() {
 
   const post = usePost(slug as string)
 
-  if (post.isLoading || post.isIdle) {
+  if (post.isLoading) {
     return 'Loading...'
   }
 

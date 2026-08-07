@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 const root = `https://tadoku.app/api/internal/content`
 const namespace = 'antonve'
