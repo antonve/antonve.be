@@ -70,7 +70,7 @@ export function Bio() {
         </div>
       </div>
       <Image
-        src={'/img/profile-pic.jpg'}
+        src="/img/profile-pic.jpg"
         alt="Headshot"
         width={110}
         height={110}

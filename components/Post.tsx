@@ -1,6 +1,6 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Post } from '@/app/api'
+import type { Post } from '@/lib/api'
 
 interface Props {
   post: Post
@@ -14,5 +14,5 @@ export const PostDetail = ({ post }: Props) => (
 )
 
 export const PostBody = ({ post }: Props) => (
-  <ReactMarkdown children={post.content} remarkPlugins={[remarkGfm]} />
+  <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
 )

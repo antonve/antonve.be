@@ -1,5 +1,5 @@
-import { Header } from '@/app/Header'
-import { Tags } from '@/app/Tags'
+import { Header } from '@/components/Header'
+import { Tags } from '@/components/Tags'
 import Head from 'next/head'
 import Link from 'next/link'
 
@@ -26,12 +26,12 @@ const projects = [
           <Link href="https://github.com/colinhacks/zod">zod</Link>,{' '}
           <Link href="https://react-hook-form.com/">React Hook form</Link>,{' '}
           <Link href="https://www.chartjs.org/">chart.js</Link>, and more.
-          There's also a <Link href="https://ui.tadoku.app">design system</Link>
-          .
+          There&apos;s also a{' '}
+          <Link href="https://ui.tadoku.app">design system</Link>.
         </p>
         <p>
           The backend services are written in Golang and built through Bazel.
-          The data is stored in a PostgreSQL database. It's deployed to a
+          The data is stored in a PostgreSQL database. It&apos;s deployed to a
           Kubernetes cluster on Linode via Argo CD.
         </p>
         <p>
@@ -117,7 +117,7 @@ const Page = () => (
       ))}
     </ul>
     <p className="text-center my-12 md:my-20 text-xl md:text-3xl">
-      Want to see more? Let's have a{' '}
+      Want to see more? Let&apos;s have a{' '}
       <strong>
         <Link className="fancy" href={`mailto:mail@antonve.be`}>
           chat

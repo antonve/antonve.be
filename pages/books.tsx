@@ -1,4 +1,4 @@
-import { Header } from '@/app/Header'
+import { Header } from '@/components/Header'
 import Head from 'next/head'
 import Link from 'next/link'
 
