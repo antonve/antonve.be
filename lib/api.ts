@@ -16,7 +16,7 @@ export type Post = z.infer<typeof Post>
 
 export const usePost = (slug: string) =>
   useQuery(['content_post', slug], async ({ queryKey }): Promise<Post> => {
-    const [_, slug] = queryKey
+    const [, slug] = queryKey
     const response = await fetch(`${root}/posts/${namespace}/${slug}`)
 
     if (response.status !== 200) {

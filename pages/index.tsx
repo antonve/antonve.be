@@ -1,6 +1,6 @@
-import { usePostList } from '@/app/api'
-import { Bio } from '@/app/Bio'
-import { Header } from '@/app/Header'
+import { usePostList } from '@/lib/api'
+import { Bio } from '@/components/Bio'
+import { Header } from '@/components/Header'
 import Link from 'next/link'
 
 export default function Home() {

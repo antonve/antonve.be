@@ -1,8 +1,8 @@
-import { PostDetail } from '@/app/Post'
+import { PostDetail } from '@/components/Post'
 import { useRouter } from 'next/router'
-import { usePost } from '@/app/api'
+import { usePost } from '@/lib/api'
 import Head from 'next/head'
-import { Header } from '@/app/Header'
+import { Header } from '@/components/Header'
 
 export function Page() {
   const router = useRouter()
