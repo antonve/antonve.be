@@ -9,25 +9,38 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <div className="h-stack space-x-16">
-        <Bio />
-        <div className="flex-grow">
-          <h2 className="title mb-4">Recent posts</h2>
+      <div className="space-y-12">
+        <section>
+          <Bio />
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold font-serif mb-4">
+            Recent writing
+          </h2>
           {posts.isLoading ? 'Loading...' : null}
           {posts.isError ? 'Failed to load recent posts.' : null}
           {posts.data && posts.data.total_size === 0 ? (
             <p>No posts published</p>
           ) : null}
           {posts.data ? (
-            <ul>
+            <ul className="space-y-4">
               {posts.data.posts.map(post => (
                 <li key={post.id}>
-                  <Link href={`/posts/${post.slug}`}>{post.title}</Link>
+                  <Link href={`/posts/${post.slug}`} className="fancy text-lg">
+                    {post.title}
+                  </Link>
+                  <p className="text-sm text-black/40 mt-1">
+                    {new Date(post.published_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                    })}
+                  </p>
                 </li>
               ))}
             </ul>
           ) : null}
-        </div>
+        </section>
       </div>
     </div>
   )
