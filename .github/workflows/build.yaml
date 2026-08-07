@@ -69,17 +69,29 @@ jobs:
 
       - name: Smoke test non-root runtime
         run: |
+          set -euo pipefail
           container_id=$(docker run --detach --publish 3000:3000 antonve-site:test)
-          trap 'docker logs "$container_id"; docker rm --force "$container_id"' EXIT
+          trap 'docker logs "$container_id" || true; docker rm --force "$container_id" >/dev/null || true' EXIT
           test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = nextjs
           test "$(docker exec "$container_id" id -u)" = 1001
+          ready=false
           for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:3000/ >/dev/null; then
-              exit 0
+            if curl --fail --silent --show-error http://127.0.0.1:3000/ >/dev/null; then
+              ready=true
+              break
             fi
             sleep 1
           done
-          exit 1
+          test "$ready" = true
+          curl --fail --silent --show-error http://127.0.0.1:3000/projects >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/books >/dev/null
+          missing_status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/this-route-does-not-exist)
+          test "$missing_status" = 404
+          image_content_type=$(curl --fail --silent --show-error --output /dev/null --write-out '%{content_type}' 'http://127.0.0.1:3000/_next/image?url=%2Fimg%2Fprofile-pic.jpg&w=256&q=75')
+          case "$image_content_type" in
+            image/*) ;;
+            *) echo "Unexpected image content type: $image_content_type"; exit 1 ;;
+          esac
 
   publish:
     name: Publish Image
