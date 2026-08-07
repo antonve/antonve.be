@@ -15,15 +15,17 @@ const Post = z.object({
 export type Post = z.infer<typeof Post>
 
 export const usePost = (slug: string) =>
-  useQuery(['content_post', slug], async ({ queryKey }): Promise<Post> => {
-    const [, slug] = queryKey
-    const response = await fetch(`${root}/posts/${namespace}/${slug}`)
+  useQuery({
+    queryKey: ['content_post', slug],
+    queryFn: async (): Promise<Post> => {
+      const response = await fetch(`${root}/posts/${namespace}/${slug}`)
 
-    if (response.status !== 200) {
-      throw new Error(response.status.toString())
-    }
+      if (response.status !== 200) {
+        throw new Error(response.status.toString())
+      }
 
-    return Post.parse(await response.json())
+      return Post.parse(await response.json())
+    },
   })
 
 const PostList = z.object({
@@ -41,10 +43,9 @@ export const usePostList = ({
   pageSize: number
   page: number
 }) =>
-  useQuery(
-    ['content_post', 'list', page],
-    async ({ queryKey }): Promise<PostList> => {
-      const page = queryKey[2]
+  useQuery({
+    queryKey: ['content_post', 'list', page],
+    queryFn: async (): Promise<PostList> => {
       const response = await fetch(
         `${root}/posts/${namespace}?page_size=${pageSize}&page=${page}`,
       )
@@ -55,4 +56,4 @@ export const usePostList = ({
 
       return PostList.parse(await response.json())
     },
-  )
+  })
