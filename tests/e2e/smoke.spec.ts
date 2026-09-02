@@ -1,32 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 
-const post = {
-  id: 'migration-plan',
-  slug: 'migration-plan',
-  title: 'A deterministic test post',
-  content: 'This content is supplied by the browser test.',
-  published_at: '2026-08-07T12:00:00+00:00',
-}
-
 const browserErrors = new WeakMap<Page, string[]>()
-
-async function mockContentApi(page: Page) {
-  await page.route(
-    'https://tadoku.app/api/internal/content/posts/antonve**',
-    async route => {
-      const url = new URL(route.request().url())
-
-      if (!url.searchParams.has('page_size')) {
-        await route.fulfill({ json: post })
-        return
-      }
-
-      await route.fulfill({
-        json: { posts: [post], next_page_token: '', total_size: 1 },
-      })
-    },
-  )
-}
 
 test.beforeEach(async ({ page }) => {
   const errors: string[] = []
@@ -39,17 +13,12 @@ test.beforeEach(async ({ page }) => {
   await page.route('https://fonts.googleapis.com/**', route =>
     route.fulfill({ contentType: 'text/css', body: '' }),
   )
-  await mockContentApi(page)
 })
 
 test.afterEach(async ({ page }, testInfo) => {
   const errors = browserErrors.get(page) ?? []
   const unexpected = errors.filter(
     message =>
-      !(
-        testInfo.title.includes('content API failure') &&
-        message.includes('503')
-      ) &&
       !(
         testInfo.title.includes('404') &&
         message.includes('status of 404')
@@ -110,8 +79,8 @@ test('home renders content, local images, and working navigation', async ({
     page.getByRole('heading', { name: /Anton Van Eechaute/ }),
   ).toBeVisible()
   await expect(
-    page.getByRole('link', { name: 'A deterministic test post' }),
-  ).toBeVisible()
+    page.getByRole('heading', { name: 'Recent writing' }),
+  ).not.toBeVisible()
 
   for (const name of ['Anton Van Eechaute', 'Headshot']) {
     const image = page.getByRole('img', { name })
@@ -142,22 +111,6 @@ test('home renders content, local images, and working navigation', async ({
   })
 })
 
-test('post detail preserves Pages Router behavior', async ({ page }) => {
-  await page.goto('/posts/migration-plan')
-
-  await expect(
-    page.getByRole('heading', { name: 'A deterministic test post' }),
-  ).toBeVisible()
-  await expect(
-    page.getByText('This content is supplied by the browser test.'),
-  ).toBeVisible()
-  await expect(page).toHaveTitle('Blog - A deterministic test post - Tadoku')
-  await expect(page).toHaveScreenshot('post.png', {
-    animations: 'disabled',
-    fullPage: true,
-  })
-})
-
 test('static routes, favicon, and 404 remain available', async ({ page }) => {
   for (const path of ['/projects', '/books']) {
     const response = await page.goto(path)
@@ -175,23 +128,8 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
     animations: 'disabled',
     fullPage: true,
   })
-})
 
-test('content API failure produces the existing fallback state', async ({
-  page,
-}) => {
-  await page.unroute('https://tadoku.app/api/internal/content/posts/antonve**')
-  await page.route(
-    'https://tadoku.app/api/internal/content/posts/antonve**',
-    route => route.fulfill({ status: 503, body: 'unavailable' }),
-  )
-
-  await page.goto('/')
-  await expect(page.getByText('Failed to load recent posts.')).toBeVisible({
-    timeout: 20_000,
-  })
-  await expect(page).toHaveScreenshot('content-api-failure.png', {
-    animations: 'disabled',
-    fullPage: true,
-  })
+  const removedPost = await page.goto('/posts/migration-plan')
+  expect(removedPost?.status()).toBe(404)
+  await expect(page.getByText('This page could not be found')).toBeVisible()
 })
