@@ -3,16 +3,16 @@ import Link from 'next/link'
 
 export function Header() {
   return (
-    <header className="my-10 md:my-20 flex flex-col md:flex-row gap-4 md:gap-0 md:justify-between items-center">
+    <header className="mt-10 mb-10 flex max-w-xl flex-col items-start gap-4 md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-8">
       <Image
         src="/img/logo.png"
         alt="Anton Van Eechaute"
         width={232}
         height={38}
         unoptimized={true}
-        className="w-[180px] md:w-[232px] h-auto"
+        className="h-auto w-[180px]"
       />
-      <nav className="text-xl md:text-2xl space-x-5 md:space-x-7">
+      <nav className="space-x-5 text-xl">
         <Link href="/" className="fancy !text-neutral-800">
           Home
         </Link>
