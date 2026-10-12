@@ -1,5 +1,5 @@
 # Builder image
-FROM docker.io/node:24.18.0-alpine AS build
+FROM docker.io/node:24.21.0-alpine AS build
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN pnpm install --frozen-lockfile --offline
 RUN pnpm run build
 
 # Runtime image
-FROM docker.io/node:24.18.0-alpine AS release
+FROM docker.io/node:24.21.0-alpine AS release
 
 ENV PORT=3000
 
