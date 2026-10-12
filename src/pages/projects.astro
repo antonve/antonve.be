@@ -73,17 +73,15 @@ const projects = [
     {
       projects.map(p => (
         <li>
-          <div>
-            <a href={p.url} class="fancy font-serif !text-neutral-800 text-xl !underline">{p.title}</a>
-            <h3 class="subtitle text-xs">{p.when}</h3>
-            {p.description.map(html => <p set:html={html} />)}
-            {p.source ? (
-              <p>
-                <a class="fancy" href={p.source}>View source code</a>
-              </p>
-            ) : null}
-            <Tags list={p.tags} />
-          </div>
+          <a href={p.url} class="fancy font-serif text-neutral-800! text-xl underline!">{p.title}</a>
+          <h3 class="subtitle text-xs">{p.when}</h3>
+          {p.description.map(html => <p set:html={html} />)}
+          {p.source ? (
+            <p>
+              <a class="fancy" href={p.source}>View source code</a>
+            </p>
+          ) : null}
+          <Tags list={p.tags} />
         </li>
       ))
     }

@@ -1,15 +1,17 @@
 import { defineConfig, devices } from '@playwright/test'
 
+if (!process.env.E2E_BASE_URL || !process.env.E2E_ERROR_BASE_URL) {
+  throw new Error('Run pnpm test:e2e to start the production image and error fixture.')
+}
+
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI
-    ? [['html', { open: 'never' }], ['github']]
-    : 'list',
+  reporter: [['html', { open: 'never' }], [process.env.CI ? 'github' : 'list']],
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: process.env.E2E_BASE_URL,
     screenshot: 'on',
     trace: 'retain-on-failure',
   },
@@ -23,12 +25,4 @@ export default defineConfig({
       use: { ...devices['Pixel 7'] },
     },
   ],
-  // Tests run against the production image. CI starts it before the tests.
-  webServer: {
-    command:
-      'docker build --tag antonve-site:local . && docker run --rm --publish 127.0.0.1:3000:3000 antonve-site:local',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: true,
-    timeout: 300_000,
-  },
 })

@@ -3,11 +3,10 @@ import Header from '../components/Header.astro'
 import Layout from '../layouts/Layout.astro'
 
 type Book = {
-  yearRead: number | 'Unknown'
+  yearRead: number
   title: string
   url: string
   status?: 'reading'
-  reviewUrl?: string
 }
 
 const books: Book[] = [
@@ -488,13 +487,7 @@ const books: Book[] = [
   },
 ]
 
-const years = books.reduce<Book['yearRead'][]>((result, book) => {
-  if (!result.includes(book.yearRead)) {
-    result.push(book.yearRead)
-  }
-
-  return result
-}, [])
+const years = [...new Set(books.map(book => book.yearRead))]
 ---
 
 <Layout title="Anton Van Eechaute :: Bookshelf">
@@ -527,10 +520,8 @@ const years = books.reduce<Book['yearRead'][]>((result, book) => {
                 .map(book => (
                   <li class="leading-relaxed">
                     {/* Keep these adjacent: whitespace between them would render as a space. */}
-                    <a href={book.url} target="_blank" rel="noreferrer" class="text-neutral-800 hover:text-primary">{book.title}</a>{book.status === 'reading' ? (
+                    <a href={book.url} target="_blank" rel="noreferrer" class="text-neutral-800 hover:text-primary focus:text-primary active:text-primary">{book.title}</a>{book.status === 'reading' ? (
                       <span class="ml-2 text-sm text-neutral-500">[reading]</span>
-                    ) : null}{book.reviewUrl ? (
-                      <>{' '}<span class="text-neutral-400">/</span>{' '}<a href={book.reviewUrl} target="_blank" rel="noreferrer" class="fancy text-sm">Review</a></>
                     ) : null}
                   </li>
                 ))}
