@@ -116,7 +116,7 @@ const Page = () => (
         </li>
       ))}
     </ul>
-    <p className="text-center my-12 md:my-20 text-xl md:text-3xl">
+    <p className="text-center my-12 md:my-20 pb-[50px] text-xl md:text-3xl">
       Want to see more? Let&apos;s have a{' '}
       <strong>
         <Link className="fancy" href={`mailto:mail@antonve.be`}>
