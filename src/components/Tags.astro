@@ -1,0 +1,11 @@
+---
+interface Props {
+  list: string[]
+}
+
+const { list: items } = Astro.props
+---
+
+<ul class="h-stack flex-wrap">
+  {items.map(it => <li class="highlighted text-sm mr-3">{it}</li>)}
+</ul>

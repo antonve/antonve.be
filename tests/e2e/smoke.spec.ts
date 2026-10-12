@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 const browserErrors = new WeakMap<Page, string[]>()
+const scriptRequests = new WeakMap<Page, string[]>()
 
 test.beforeEach(async ({ page }) => {
   const errors: string[] = []
@@ -9,6 +10,12 @@ test.beforeEach(async ({ page }) => {
     if (message.type() === 'error') errors.push(message.text())
   })
   page.on('pageerror', error => errors.push(error.message))
+
+  const scripts: string[] = []
+  scriptRequests.set(page, scripts)
+  page.on('request', request => {
+    if (request.resourceType() === 'script') scripts.push(request.url())
+  })
 
   await page.route('https://fonts.googleapis.com/**', route =>
     route.fulfill({ contentType: 'text/css', body: '' }),
@@ -25,6 +32,7 @@ test.afterEach(async ({ page }, testInfo) => {
       ),
   )
   expect(unexpected, 'unexpected browser console/page errors').toEqual([])
+  expect(scriptRequests.get(page), 'script requests').toEqual([])
 })
 
 test('self-hosts Open Sans and Merriweather', async ({ page }) => {
@@ -40,12 +48,12 @@ test('self-hosts Open Sans and Merriweather', async ({ page }) => {
   const fontState = await page.evaluate(async () => {
     await document.fonts.ready
 
-    const app = document.querySelector<HTMLElement>('#__next > div')
+    const app = document.querySelector<HTMLElement>('body > div')
     const heading = document.querySelector<HTMLElement>('h1')
     const resources = performance
       .getEntriesByType('resource')
       .map(entry => entry.name)
-      .filter(url => /\/_next\/static\/media\/.*\.woff2(?:\?|$)/.test(url))
+      .filter(url => /\/_astro\/.*\.woff2(?:\?|$)/.test(url))
 
     return {
       appFamily: app ? getComputedStyle(app).fontFamily : '',
@@ -117,6 +125,10 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
     expect(response?.status()).toBe(200)
   }
 
+  const trailingSlash = await page.goto('/projects/')
+  expect(trailingSlash?.status()).toBe(200)
+  await expect(page).toHaveURL(/\/projects$/)
+
   const favicon = await page.request.get('/favicon.ico')
   expect(favicon.status()).toBe(200)
   expect(favicon.headers()['content-type']).toContain('image')
@@ -124,6 +136,7 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
   const missing = await page.goto('/this-route-does-not-exist')
   expect(missing?.status()).toBe(404)
   await expect(page.getByText('This page could not be found')).toBeVisible()
+  await expect(page.locator('script')).toHaveCount(0)
   await expect(page).toHaveScreenshot('404.png', {
     animations: 'disabled',
     fullPage: true,
@@ -132,4 +145,46 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
   const removedPost = await page.goto('/posts/migration-plan')
   expect(removedPost?.status()).toBe(404)
   await expect(page.getByText('This page could not be found')).toBeVisible()
+})
+
+test('ships no JavaScript and works with it disabled', async ({
+  page,
+  browser,
+}) => {
+  for (const path of ['/', '/projects', '/books']) {
+    await page.goto(path)
+    await expect(page.locator('script')).toHaveCount(0)
+  }
+
+  const context = await browser.newContext({ javaScriptEnabled: false })
+  const noScript = await context.newPage()
+  await noScript.goto('/')
+  await expect(noScript.getByRole('img', { name: 'Headshot' })).toBeVisible()
+  await noScript.getByRole('link', { name: 'Projects', exact: true }).click()
+  await expect(noScript.getByRole('heading', { name: 'Projects' })).toBeVisible()
+  await noScript.getByRole('link', { name: 'Bookshelf', exact: true }).click()
+  await expect(noScript.getByRole('heading', { name: 'Bookshelf' })).toBeVisible()
+  const missing = await noScript.goto('/this-route-does-not-exist')
+  expect(missing?.status()).toBe(404)
+  await context.close()
+})
+
+test('keyboard navigation, hover state, and contact link', async ({ page }) => {
+  await page.goto('/')
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeFocused()
+  await page.keyboard.press('Tab')
+  const projects = page.getByRole('link', { name: 'Projects', exact: true })
+  await expect(projects).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/projects$/)
+
+  const chat = page.getByRole('link', { name: 'chat' })
+  await expect(chat).toHaveAttribute('href', 'mailto:mail@antonve.be')
+  await expect(chat).toHaveCSS('color', 'rgb(255, 34, 90)')
+  await chat.hover()
+  await expect(chat).toHaveCSS('color', 'rgb(38, 38, 38)')
+  await expect
+    .poll(() => chat.evaluate(link => getComputedStyle(link, '::after').transform))
+    .toBe('matrix(1, 0, 0, 1, 0, 0)')
 })

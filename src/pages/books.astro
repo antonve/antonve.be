@@ -1,6 +1,6 @@
-import { Header } from '@/components/Header'
-import Head from 'next/head'
-import Link from 'next/link'
+---
+import Header from '../components/Header.astro'
+import Layout from '../layouts/Layout.astro'
 
 type Book = {
   yearRead: number | 'Unknown'
@@ -495,81 +495,49 @@ const years = books.reduce<Book['yearRead'][]>((result, book) => {
 
   return result
 }, [])
+---
 
-const Page = () => (
-  <>
-    <Head>
-      <title>Anton Van Eechaute :: Bookshelf</title>
-    </Head>
-    <Header />
-    <main className="pb-16">
-      <h1 className="title mb-3">Bookshelf</h1>
-      <p className="mb-3 text-neutral-700">
-        A reading log of books that have helped shape how I think about building
-        software, running teams, career, and personal finance. I mostly read in
-        English, with some Japanese mixed in.
-      </p>
-      <p className="mb-3 text-neutral-700">
-        Inclusion here is not an endorsement. It is a log of what I read, and my
-        views have changed over time; some books may no longer reflect what I
-        recommend, or may simply be outdated now.
-      </p>
-      <p className="mb-8 text-neutral-700">
-        This page is limited to non-fiction. Most of the fiction I read is in
-        Japanese, and I track that separately on{' '}
-        <Link
-          href="https://bookmeter.com/users/445442/books/read"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Bookmeter
-        </Link>
-        .
-      </p>
-      <div className="space-y-10">
-        {years.map(year => (
-          <section key={year}>
-            <h2 className="subtitle mb-3">{year}</h2>
-            <ul className="list-disc pl-6 space-y-2">
+<Layout title="Anton Van Eechaute :: Bookshelf">
+  <Header />
+  <main class="pb-16">
+    <h1 class="title mb-3">Bookshelf</h1>
+    <p class="mb-3 text-neutral-700">
+      A reading log of books that have helped shape how I think about building
+      software, running teams, career, and personal finance. I mostly read in
+      English, with some Japanese mixed in.
+    </p>
+    <p class="mb-3 text-neutral-700">
+      Inclusion here is not an endorsement. It is a log of what I read, and my
+      views have changed over time; some books may no longer reflect what I
+      recommend, or may simply be outdated now.
+    </p>
+    <p class="mb-8 text-neutral-700">
+      This page is limited to non-fiction. Most of the fiction I read is in
+      Japanese, and I track that separately on{' '}
+      <a href="https://bookmeter.com/users/445442/books/read" target="_blank" rel="noreferrer">Bookmeter</a>.
+    </p>
+    <div class="space-y-10">
+      {
+        years.map(year => (
+          <section>
+            <h2 class="subtitle mb-3">{year}</h2>
+            <ul class="list-disc pl-6 space-y-2">
               {books
                 .filter(book => book.yearRead === year)
                 .map(book => (
-                  <li key={`${year}-${book.title}`} className="leading-relaxed">
-                    <Link
-                      href={book.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-neutral-800 hover:text-primary"
-                    >
-                      {book.title}
-                    </Link>
-                    {book.status === 'reading' ? (
-                      <span className="ml-2 text-sm text-neutral-500">
-                        [reading]
-                      </span>
-                    ) : null}
-                    {book.reviewUrl ? (
-                      <>
-                        {' '}
-                        <span className="text-neutral-400">/</span>{' '}
-                        <Link
-                          href={book.reviewUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="fancy text-sm"
-                        >
-                          Review
-                        </Link>
-                      </>
+                  <li class="leading-relaxed">
+                    {/* Keep these adjacent: whitespace between them would render as a space. */}
+                    <a href={book.url} target="_blank" rel="noreferrer" class="text-neutral-800 hover:text-primary">{book.title}</a>{book.status === 'reading' ? (
+                      <span class="ml-2 text-sm text-neutral-500">[reading]</span>
+                    ) : null}{book.reviewUrl ? (
+                      <>{' '}<span class="text-neutral-400">/</span>{' '}<a href={book.reviewUrl} target="_blank" rel="noreferrer" class="fancy text-sm">Review</a></>
                     ) : null}
                   </li>
                 ))}
             </ul>
           </section>
-        ))}
-      </div>
-    </main>
-  </>
-)
-
-export default Page
+        ))
+      }
+    </div>
+  </main>
+</Layout>

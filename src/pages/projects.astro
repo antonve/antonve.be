@@ -1,0 +1,95 @@
+---
+import Header from '../components/Header.astro'
+import Tags from '../components/Tags.astro'
+import Layout from '../layouts/Layout.astro'
+
+const projects = [
+  {
+    title: 'Tadoku',
+    when: '2019 — present',
+    // Paragraphs are trusted HTML rendered with set:html.
+    description: [
+      `Tadoku is a friendly foreign-language immersion contest and tracking
+      platform aimed at building a habit of reading and listening in your
+      non-native languages.`,
+      `A minimal viable product was tested in 2019 and the website officially
+      launched in 2020. About 100 people participate per official contest, a
+      number which is steadily growing.`,
+      `On the frontend we have a collection of TypeScript Next.js apps using
+      <a href="https://tailwindcss.com/">TailwindCSS</a>,
+      <a href="https://tanstack.com/query/latest">React Query</a>,
+      <a href="https://github.com/colinhacks/zod">zod</a>,
+      <a href="https://react-hook-form.com/">React Hook form</a>,
+      <a href="https://www.chartjs.org/">chart.js</a>, and more.
+      There's also a <a href="https://ui.tadoku.app">design system</a>.`,
+      `The backend services are written in Golang and built through Bazel.
+      The data is stored in a PostgreSQL database. It's deployed to a
+      Kubernetes cluster on Linode via Argo CD.`,
+      `User management is handled by
+      <a href="https://www.ory.sh/kratos/">Ory Kratos</a> and requests
+      are authorized by
+      <a href="https://www.ory.sh/oathkeeper/">Ory Oathkeeper</a>.`,
+      `Local development environment is built with
+      <a href="https://tilt.dev/">Tilt</a>, a tool to run a local
+      development environment in Kubernetes.`,
+    ],
+    tags: [
+      'Go',
+      'PostgreSQL',
+      'sqlc',
+      'Kubernetes',
+      'Docker',
+      'Bazel',
+      'Tilt',
+      'TypeScript',
+      'React',
+      'Next.js',
+      'TailwindCSS',
+      'Data visualization',
+    ],
+    source: 'https://github.com/tadoku',
+    url: 'https://tadoku.app',
+  },
+  {
+    title: 'hsfp.tokyo',
+    when: '2026',
+    description: [
+      `A calculator to estimate your points for the Highly Skilled Foreign
+      Professional visa in Japan.`,
+      `Available in four languages: English, Japanese, Simplified Chinese,
+      and Traditional Chinese.`,
+    ],
+    tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS', 'next-i18n'],
+    source: 'https://github.com/antonve/hsfp.tokyo',
+    url: 'https://hsfp.tokyo/',
+  },
+]
+---
+
+<Layout title="Anton Van Eechaute :: Projects">
+  <Header />
+  <h1 class="title mb-6 md:mb-8">Projects</h1>
+  <ul class="space-y-16 md:space-y-20">
+    {
+      projects.map(p => (
+        <li>
+          <div>
+            <a href={p.url} class="fancy font-serif !text-neutral-800 text-xl !underline">{p.title}</a>
+            <h3 class="subtitle text-xs">{p.when}</h3>
+            {p.description.map(html => <p set:html={html} />)}
+            {p.source ? (
+              <p>
+                <a class="fancy" href={p.source}>View source code</a>
+              </p>
+            ) : null}
+            <Tags list={p.tags} />
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="text-center my-12 md:my-20 pb-[50px] text-xl md:text-3xl">
+    Want to see more? Let's have a{' '}
+    <strong><a class="fancy" href="mailto:mail@antonve.be">chat</a></strong>!
+  </p>
+</Layout>
