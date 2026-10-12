@@ -135,16 +135,38 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
 
   const missing = await page.goto('/this-route-does-not-exist')
   expect(missing?.status()).toBe(404)
-  await expect(page.getByText('This page could not be found')).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Page not found', exact: true }),
+  ).toBeVisible()
+  await expect(page).toHaveTitle('404: Page not found :: Anton Van Eechaute')
+  await expect(page.getByRole('navigation')).toBeVisible()
   await expect(page.locator('script')).toHaveCount(0)
   await expect(page).toHaveScreenshot('404.png', {
     animations: 'disabled',
     fullPage: true,
   })
 
-  const removedPost = await page.goto('/posts/migration-plan')
-  expect(removedPost?.status()).toBe(404)
-  await expect(page.getByText('This page could not be found')).toBeVisible()
+  for (const path of [
+    '/posts/migration-plan',
+    '/nested/missing/page',
+    '/404',
+    '/50x',
+    '/404.html',
+    '/50x.html',
+  ]) {
+    const response = await page.goto(path)
+    expect(response?.status()).toBe(404)
+    await expect(
+      page.getByRole('heading', { name: 'Page not found', exact: true }),
+    ).toBeVisible()
+  }
+
+  await page.getByRole('link', { name: 'Back to home', exact: true }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/$/)
+  await expect(
+    page.getByRole('heading', { name: /Anton Van Eechaute/ }),
+  ).toBeVisible()
 })
 
 test('ships no JavaScript and works with it disabled', async ({
@@ -166,6 +188,11 @@ test('ships no JavaScript and works with it disabled', async ({
   await expect(noScript.getByRole('heading', { name: 'Bookshelf' })).toBeVisible()
   const missing = await noScript.goto('/this-route-does-not-exist')
   expect(missing?.status()).toBe(404)
+  await expect(
+    noScript.getByRole('heading', { name: 'Page not found', exact: true }),
+  ).toBeVisible()
+  await noScript.getByRole('link', { name: 'Back to home', exact: true }).click()
+  await expect(noScript).toHaveURL(/\/$/)
   await context.close()
 })
 
