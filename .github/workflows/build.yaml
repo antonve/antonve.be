@@ -21,19 +21,29 @@ jobs:
       - name: Build and check the production image
         run: docker build --label org.opencontainers.image.revision="$GITHUB_SHA" --tag antonve-site:test .
 
-      - name: Install browser tooling and audit all dependencies
+      - name: Install browser tooling
         run: |
           PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
           docker run --rm \
             --volume "$GITHUB_WORKSPACE:/work" --workdir /work \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-            bash -lc 'corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store && pnpm audit --json > dependency-audit.json'
+            bash -lc 'corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store'
 
       - name: Test the exact production image
         env:
           SITE_IMAGE: antonve-site:test
           TMPDIR: ${{ runner.temp }}
         run: bash tests/e2e/run.sh
+
+      - name: Record full dependency audit
+        if: always()
+        continue-on-error: true
+        run: |
+          PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/work" --workdir /work \
+            "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
+            bash -c 'corepack pnpm audit --json > dependency-audit.json'
 
       - name: Upload verification artifacts
         if: always()

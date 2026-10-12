@@ -520,7 +520,7 @@ const years = [...new Set(books.map(book => book.yearRead))]
                 .map(book => (
                   <li class="leading-relaxed">
                     {/* Keep these adjacent: whitespace between them would render as a space. */}
-                    <a href={book.url} target="_blank" rel="noreferrer" class="text-neutral-800 hover:text-primary">{book.title}</a>{book.status === 'reading' ? (
+                    <a href={book.url} target="_blank" rel="noreferrer" class="text-neutral-800 hover:text-primary focus:text-primary active:text-primary">{book.title}</a>{book.status === 'reading' ? (
                       <span class="ml-2 text-sm text-neutral-500">[reading]</span>
                     ) : null}
                   </li>

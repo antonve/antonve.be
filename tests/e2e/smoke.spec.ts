@@ -244,4 +244,10 @@ test('keyboard navigation, hover state, and contact link', async ({ page }) => {
   await expect
     .poll(() => chat.evaluate(link => getComputedStyle(link, '::after').transform))
     .toBe('matrix(1, 0, 0, 1, 0, 0)')
+
+  await page.goto('/books')
+  const book = page.locator('main section li a').first()
+  await book.focus()
+  await expect(book).toBeFocused()
+  await expect(book).toHaveCSS('color', 'rgb(255, 34, 90)')
 })

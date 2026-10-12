@@ -5,21 +5,30 @@ cd "$(dirname "$0")/../.."
 scratch=$(mktemp -d "${TMPDIR:-/tmp}/antonve-e2e.XXXXXX")
 site_container=
 error_container=
+site_image=${SITE_IMAGE:-antonve-site:e2e-$(basename "$scratch")}
+built_image=false
 cleanup() {
   for container in "$site_container" "$error_container"; do
     if [ -n "$container" ]; then
-      docker rm --force "$container" >/dev/null
+      docker rm --force "$container" >/dev/null || true
     fi
   done
+  if [ "$built_image" = true ]; then
+    docker image rm "$site_image" >/dev/null || true
+  fi
   rm -rf "$scratch"
 }
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-site_image=${SITE_IMAGE:-antonve-site:e2e-$(basename "$scratch")}
 if [ -z "${SITE_IMAGE:-}" ]; then
-  docker build --tag "$site_image" .
+  revision=$(git rev-parse HEAD)
+  if [ -n "$(git status --porcelain)" ]; then
+    revision="$revision-dirty"
+  fi
+  built_image=true
+  docker build --label "org.opencontainers.image.revision=$revision" --tag "$site_image" .
 fi
 # Own fresh containers on Docker-assigned ports, so another checkout cannot be reused.
 site_container=$(docker run --detach --publish 127.0.0.1::3000 "$site_image")
@@ -49,7 +58,8 @@ docker run --rm --ipc=host --network host --user "$(id -u):$(id -g)" --env HOME=
 mkdir -p test-results
 docker cp "$site_container:/srv/www" "$scratch/dist"
 image_id=$(docker image inspect "$site_image" --format '{{.Id}}')
-node --input-type=module - "$scratch/dist" "$image_id" "$(git rev-parse HEAD)" <<'JS' > test-results/runtime.json
+image_revision=$(docker image inspect "$site_image" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')
+node --input-type=module - "$scratch/dist" "$image_id" "$image_revision" <<'JS' > test-results/runtime.json
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
@@ -58,7 +68,7 @@ const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry => 
 });
 const paths = files(process.argv[2]);
 console.log(JSON.stringify({
-  revision: process.argv[4],
+  revision: process.argv[4] || null,
   imageId: process.argv[3],
   files: paths.length,
   bytes: paths.reduce((sum, path) => sum + statSync(path).size, 0),

@@ -27,8 +27,12 @@ built from this checkout; CI uses this to test the exact image it publishes.
 The browser image version comes from the pinned Playwright dependency.
 `playwright-report/` and `test-results/` retain the HTML report, screenshots,
 failure traces, and the tested image ID, revision, and static artifact size.
+The revision comes from the image label; local builds mark uncommitted changes
+with `-dirty`, and images without a revision label report `null`. Locally built
+test images are removed after the run; supplied `SITE_IMAGE` images are retained.
 The Docker build checks types and rejects JavaScript in the shipped output.
-CI also records a full dependency audit, including build tooling.
+CI also records a full dependency audit, including build tooling, in a separate
+non-blocking step that runs even when verification fails.
 
 Tailwind 4 requires Safari 16.4+, Chrome 111+, or Firefox 128+. Font files,
 fallback metrics, and the site's original colors are preserved across the
