@@ -1,0 +1,24 @@
+---
+import Header from '../components/Header.astro'
+import Layout from './Layout.astro'
+
+interface Props {
+  label: string
+  title: string
+  description: string
+}
+
+const { label, title, description } = Astro.props
+---
+
+<Layout title={`${label}: ${title} :: Anton Van Eechaute`}>
+  <Header />
+  <main class="max-w-xl pb-16">
+    <p class="subtitle mb-3">{label}</p>
+    <h1 class="title">{title}</h1>
+    <p class="mt-4 leading-relaxed text-neutral-700">{description}</p>
+    <p class="mt-6">
+      <a href="/" class="fancy inline-flex min-h-11 items-center">Back to home</a>
+    </p>
+  </main>
+</Layout>
