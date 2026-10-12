@@ -19,7 +19,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 24.18.0
+          node-version: 24.21.0
           cache: pnpm
 
       - name: Install dependencies
@@ -39,8 +39,8 @@ jobs:
           docker run --rm --ipc=host \
             --volume "$GITHUB_WORKSPACE:/work" \
             --workdir /work \
-            mcr.microsoft.com/playwright:v1.62.1-noble \
-            bash -lc 'corepack enable && corepack prepare pnpm@10.30.3 --activate >/dev/null && pnpm run test:e2e'
+            mcr.microsoft.com/playwright:v1.64.0-noble \
+            bash -lc 'corepack enable && corepack prepare pnpm@10.34.6 --activate >/dev/null && pnpm run test:e2e'
 
       - name: Record production audit
         if: always()
