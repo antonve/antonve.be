@@ -17,9 +17,6 @@ test.beforeEach(async ({ page }) => {
     if (request.resourceType() === 'script') scripts.push(request.url())
   })
 
-  await page.route('https://fonts.googleapis.com/**', route =>
-    route.fulfill({ contentType: 'text/css', body: '' }),
-  )
 })
 
 test.afterEach(async ({ page }, testInfo) => {
@@ -27,8 +24,8 @@ test.afterEach(async ({ page }, testInfo) => {
   const unexpected = errors.filter(
     message =>
       !(
-        testInfo.title.includes('404') &&
-        message.includes('status of 404')
+        (testInfo.title.includes('404') && message.includes('status of 404')) ||
+        (testInfo.title.includes('5xx') && /status of 50[0234]/.test(message))
       ),
   )
   expect(unexpected, 'unexpected browser console/page errors').toEqual([])
@@ -83,6 +80,7 @@ test('home renders content, local images, and working navigation', async ({
 }) => {
   await page.goto('/')
 
+  await expect(page).toHaveTitle('Anton Van Eechaute')
   await expect(
     page.getByRole('heading', { name: /Anton Van Eechaute/ }),
   ).toBeVisible()
@@ -133,6 +131,20 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
   expect(favicon.status()).toBe(200)
   expect(favicon.headers()['content-type']).toContain('image')
 
+  const redirect = await page.request.get('/projects/?from=nav', {
+    maxRedirects: 0,
+  })
+  expect(redirect.status()).toBe(308)
+  expect(redirect.headers().location).toBe('/projects?from=nav')
+
+  await page.goto('/')
+  const headshot = await page.getByRole('img', { name: 'Headshot' }).getAttribute('src')
+  expect(headshot).toMatch(/^\/_astro\/.+\.webp$/)
+  const image = await page.request.get(headshot!)
+  expect(image.status()).toBe(200)
+  expect(image.headers()['content-type']).toBe('image/webp')
+  expect(image.headers()['cache-control']).toBe('public, max-age=31536000, immutable')
+
   const missing = await page.goto('/this-route-does-not-exist')
   expect(missing?.status()).toBe(404)
   await expect(
@@ -153,6 +165,8 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
     '/50x',
     '/404.html',
     '/50x.html',
+    '/index',
+    '/projects.html',
   ]) {
     const response = await page.goto(path)
     expect(response?.status()).toBe(404)
@@ -169,6 +183,19 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
   ).toBeVisible()
 })
 
+test('5xx error pages preserve statuses and working navigation', async ({ page }) => {
+  for (const status of [500, 502, 503, 504]) {
+    const response = await page.goto(`${process.env.E2E_ERROR_BASE_URL}/__test/${status}`)
+    expect(response?.status()).toBe(status)
+    await expect(page.getByRole('heading', { name: 'Something went wrong', exact: true })).toBeVisible()
+    await expect(page).toHaveTitle('Server error: Something went wrong :: Anton Van Eechaute')
+    await expect(page.getByRole('navigation')).toBeVisible()
+    await expect(page.locator('script')).toHaveCount(0)
+  }
+  await page.getByRole('link', { name: 'Back to home', exact: true }).click()
+  await expect(page.getByRole('heading', { name: /Anton Van Eechaute/ })).toBeVisible()
+})
+
 test('ships no JavaScript and works with it disabled', async ({
   page,
   browser,
@@ -178,7 +205,10 @@ test('ships no JavaScript and works with it disabled', async ({
     await expect(page.locator('script')).toHaveCount(0)
   }
 
-  const context = await browser.newContext({ javaScriptEnabled: false })
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    baseURL: process.env.E2E_BASE_URL,
+  })
   const noScript = await context.newPage()
   await noScript.goto('/')
   await expect(noScript.getByRole('img', { name: 'Headshot' })).toBeVisible()

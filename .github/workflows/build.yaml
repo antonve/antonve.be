@@ -3,6 +3,8 @@ on:
   push:
     branches: [master]
   pull_request:
+permissions:
+  contents: read
 jobs:
   build:
     name: Verify
@@ -11,95 +13,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          run_install: false
-
       - name: Install Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 24.21.0
-          cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Build and check the production image
+        run: docker build --label org.opencontainers.image.revision="$GITHUB_SHA" --tag antonve-site:test .
 
-      - name: Typecheck
-        run: pnpm run typecheck
-
-      - name: Build project
-        run: pnpm run build
-
-      - name: Check build output has no JavaScript
+      - name: Install browser tooling and audit all dependencies
         run: |
-          test -z "$(find dist -name '*.js' -o -name '*.mjs')"
-          test -z "$(grep -rl '<script' dist)"
+          PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/work" --workdir /work \
+            "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
+            bash -lc 'corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store && pnpm audit --json > dependency-audit.json'
 
-      - name: Build image
-        run: docker build --tag antonve-site:test .
+      - name: Test the exact production image
+        env:
+          SITE_IMAGE: antonve-site:test
+          TMPDIR: ${{ runner.temp }}
+        run: bash tests/e2e/run.sh
 
-      - name: Run browser smoke tests against the image
-        run: |
-          docker run --detach --publish 127.0.0.1:3000:3000 antonve-site:test
-          curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 1 --output /dev/null http://127.0.0.1:3000/
-          docker run --rm --ipc=host --network host \
-            --volume "$GITHUB_WORKSPACE:/work" \
-            --workdir /work \
-            mcr.microsoft.com/playwright:v1.64.0-noble \
-            bash -lc 'corepack enable && corepack prepare pnpm@10.34.6 --activate >/dev/null && pnpm run test:e2e'
-
-      - name: Record production audit
-        if: always()
-        run: pnpm audit --prod --json > production-audit.json || true
-
-      - name: Upload browser and audit artifacts
+      - name: Upload verification artifacts
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: migration-baseline
+          name: verification
           path: |
             playwright-report/
             test-results/
-            production-audit.json
+            dependency-audit.json
           if-no-files-found: ignore
-
-  container:
-    name: Container
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Build image
-        run: docker build --tag antonve-site:test .
-
-      - name: Smoke test non-root runtime
-        run: |
-          set -euo pipefail
-          container_id=$(docker run --detach --publish 3000:3000 antonve-site:test)
-          trap 'docker logs "$container_id" || true; docker rm --force "$container_id" >/dev/null || true' EXIT
-          test "$(docker exec "$container_id" id -u)" -ne 0
-          ready=false
-          for attempt in $(seq 1 30); do
-            if curl --fail --silent --show-error http://127.0.0.1:3000/ >/dev/null; then
-              ready=true
-              break
-            fi
-            sleep 1
-          done
-          test "$ready" = true
-          curl --fail --silent --show-error http://127.0.0.1:3000/projects >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:3000/books >/dev/null
-          curl --fail --silent --show-error http://127.0.0.1:3000/favicon.ico >/dev/null
-          missing_status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/this-route-does-not-exist)
-          test "$missing_status" = 404
-          redirect=$(curl --silent --show-error --output /dev/null --write-out '%{http_code} %{redirect_url}' http://127.0.0.1:3000/projects/)
-          test "$redirect" = "308 http://127.0.0.1:3000/projects"
-          image_path=$(curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -o 'src="/_astro/profile-pic[^"]*"' | cut -d '"' -f 2)
-          image_headers=$(curl --fail --silent --show-error --head "http://127.0.0.1:3000$image_path")
-          grep -qi '^content-type: image/webp' <<<"$image_headers"
-          grep -qi '^cache-control: public, max-age=31536000, immutable' <<<"$image_headers"
 
       - name: Save tested image
         if: github.ref == 'refs/heads/master'
@@ -119,9 +64,12 @@ jobs:
 
   publish:
     name: Publish Image
-    needs: [build, container]
+    needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Download tested image
         uses: actions/download-artifact@v8
@@ -132,14 +80,15 @@ jobs:
         run: gunzip --stdout antonve-site-test.tar.gz | docker load
 
       - name: Push images
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Setup credentials for GitHub packages
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u tadoku --password-stdin
-          # Push images
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
           IMAGE_NAME=ghcr.io/antonve/antonve.be/web
-          docker tag antonve-site:test $IMAGE_NAME:prod
-          docker tag antonve-site:test $IMAGE_NAME:latest
-          docker tag antonve-site:test $IMAGE_NAME:$GITHUB_SHA
-          docker push $IMAGE_NAME:prod
-          docker push $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$GITHUB_SHA
+          docker image inspect antonve-site:test --format '{{.Id}}'
+          docker tag antonve-site:test "$IMAGE_NAME:prod"
+          docker tag antonve-site:test "$IMAGE_NAME:latest"
+          docker tag antonve-site:test "$IMAGE_NAME:$GITHUB_SHA"
+          docker push "$IMAGE_NAME:prod"
+          docker push "$IMAGE_NAME:latest"
+          docker push "$IMAGE_NAME:$GITHUB_SHA"

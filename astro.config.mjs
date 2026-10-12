@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   // Emit projects.html rather than projects/index.html so the static server can
@@ -8,5 +9,8 @@ export default defineConfig({
   server: { allowedHosts: ['.lab'] },
   // Keep every font subset as a separate, cacheable file instead of inlining
   // the small ones into the stylesheet.
-  vite: { build: { assetsInlineLimit: 0 } },
+  vite: {
+    plugins: [tailwindcss()],
+    build: { assetsInlineLimit: 0 },
+  },
 })
