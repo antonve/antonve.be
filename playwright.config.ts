@@ -23,10 +23,12 @@ export default defineConfig({
       use: { ...devices['Pixel 7'] },
     },
   ],
+  // Tests run against the production image. CI starts it before the tests.
   webServer: {
-    command: 'pnpm start',
+    command:
+      'docker build --tag antonve-site:local . && docker run --rm --publish 127.0.0.1:3000:3000 antonve-site:local',
     url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    reuseExistingServer: true,
+    timeout: 300_000,
   },
 })

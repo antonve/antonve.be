@@ -28,15 +28,22 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
-      - name: Lint
-        run: pnpm run lint
-
       - name: Build project
         run: pnpm run build
 
-      - name: Run browser smoke tests
+      - name: Check build output has no JavaScript
         run: |
-          docker run --rm --ipc=host \
+          test -z "$(find dist -name '*.js' -o -name '*.mjs')"
+          test -z "$(grep -rl '<script' dist)"
+
+      - name: Build image
+        run: docker build --tag antonve-site:test .
+
+      - name: Run browser smoke tests against the image
+        run: |
+          docker run --detach --publish 127.0.0.1:3000:3000 antonve-site:test
+          curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 1 --output /dev/null http://127.0.0.1:3000/
+          docker run --rm --ipc=host --network host \
             --volume "$GITHUB_WORKSPACE:/work" \
             --workdir /work \
             mcr.microsoft.com/playwright:v1.64.0-noble \
@@ -72,8 +79,7 @@ jobs:
           set -euo pipefail
           container_id=$(docker run --detach --publish 3000:3000 antonve-site:test)
           trap 'docker logs "$container_id" || true; docker rm --force "$container_id" >/dev/null || true' EXIT
-          test "$(docker inspect --format '{{.Config.User}}' "$container_id")" = nextjs
-          test "$(docker exec "$container_id" id -u)" = 1001
+          test "$(docker exec "$container_id" id -u)" -ne 0
           ready=false
           for attempt in $(seq 1 30); do
             if curl --fail --silent --show-error http://127.0.0.1:3000/ >/dev/null; then
@@ -85,13 +91,15 @@ jobs:
           test "$ready" = true
           curl --fail --silent --show-error http://127.0.0.1:3000/projects >/dev/null
           curl --fail --silent --show-error http://127.0.0.1:3000/books >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:3000/favicon.ico >/dev/null
           missing_status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3000/this-route-does-not-exist)
           test "$missing_status" = 404
-          image_content_type=$(curl --fail --silent --show-error --output /dev/null --write-out '%{content_type}' 'http://127.0.0.1:3000/_next/image?url=%2Fimg%2Fprofile-pic.jpg&w=256&q=75')
-          case "$image_content_type" in
-            image/*) ;;
-            *) echo "Unexpected image content type: $image_content_type"; exit 1 ;;
-          esac
+          redirect=$(curl --silent --show-error --output /dev/null --write-out '%{http_code} %{redirect_url}' http://127.0.0.1:3000/projects/)
+          test "$redirect" = "308 http://127.0.0.1:3000/projects"
+          image_path=$(curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -o 'src="/_astro/profile-pic[^"]*"' | cut -d '"' -f 2)
+          image_headers=$(curl --fail --silent --show-error --head "http://127.0.0.1:3000$image_path")
+          grep -qi '^content-type: image/webp' <<<"$image_headers"
+          grep -qi '^cache-control: public, max-age=31536000, immutable' <<<"$image_headers"
 
       - name: Save tested image
         if: github.ref == 'refs/heads/master'

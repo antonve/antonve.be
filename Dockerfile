@@ -13,21 +13,10 @@ COPY . .
 RUN pnpm install --frozen-lockfile --offline
 RUN pnpm run build
 
-# Runtime image
-FROM docker.io/node:24.21.0-alpine AS release
+# Runtime image: static files served by nginx as a non-root user (uid 101)
+FROM docker.io/nginxinc/nginx-unprivileged:1.31.6-alpine AS release
 
-ENV PORT=3000
-
-WORKDIR /app
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=build --chown=nextjs:nodejs /app/public ./public
-
-USER nextjs
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /srv/www
 
 EXPOSE 3000
-
-CMD ["node", "server.js"]
