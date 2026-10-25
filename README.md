@@ -62,8 +62,10 @@ notifications in your GitHub notification settings to receive failed-run alerts.
 checks npm/pnpm dependencies, Docker images, and GitHub Actions weekly. Minor
 and patch updates are grouped per ecosystem; the pre-1.0 npm dependencies
 `@astrojs/check` and `sharp` group only patches. Other updates get individual
-PRs. Review each PR and require passing CI before merging; no automatic merge
-is configured.
+PRs, except TypeScript and Node type major upgrades, which are excluded from
+routine proposals to keep TypeScript 6 and the supported Node 24 types aligned.
+Review each PR and require passing CI before merging; no automatic merge is
+configured.
 Enable the dependency graph, Dependabot alerts, and Dependabot security updates
 in repository settings for advisory-driven security PRs between version checks.
 When reviewing Node updates, keep `.node-version`, both workflows, and the
