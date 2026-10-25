@@ -1,5 +1,5 @@
 # Builder image
-FROM docker.io/node:24.22.1-alpine AS build
+FROM docker.io/node:26.12.1-alpine AS build
 
 WORKDIR /app
 
