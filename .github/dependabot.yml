@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm-compatible:
+        patterns: ['*']
+        exclude-patterns: ['@astrojs/check', 'sharp']
+        update-types: [minor, patch]
+      npm-pre-one-patches:
+        patterns: ['@astrojs/check', 'sharp']
+        update-types: [patch]
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      docker-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]

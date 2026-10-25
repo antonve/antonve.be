@@ -1,0 +1,33 @@
+name: Dependency audit
+on:
+  schedule:
+    - cron: '23 7 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    name: Audit all dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.22.1
+
+      - name: Audit the full lockfile
+        shell: bash
+        run: corepack pnpm audit --json | tee dependency-audit.json
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-audit
+          path: dependency-audit.json
+          retention-days: 30
+          if-no-files-found: error

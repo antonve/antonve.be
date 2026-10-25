@@ -1,5 +1,5 @@
 # Builder image
-FROM docker.io/node:24.21.0-alpine AS build
+FROM docker.io/node:24.22.1-alpine AS build
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN test -z "$(find dist -name '*.js' -o -name '*.mjs')" \
     && ! grep -rl '<script' dist
 
 # Runtime image: static files served by nginx as a non-root user (uid 101)
-FROM docker.io/nginxinc/nginx-unprivileged:1.31.6-alpine AS release
+FROM docker.io/nginxinc/nginx-unprivileged:1.31.7-alpine AS release
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /srv/www
