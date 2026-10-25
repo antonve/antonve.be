@@ -11,7 +11,7 @@ interface Props {
 const { label, title, description } = Astro.props
 ---
 
-<Layout title={`${label}: ${title} :: Anton Van Eechaute`}>
+<Layout title={`${label}: ${title} :: Anton Van Eechaute`} description={description} noindex>
   <Header />
   <main class="max-w-xl pb-16">
     <p class="subtitle mb-3">{label}</p>

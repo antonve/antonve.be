@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=24.22.1 <25"
   },
   "packageManager": "pnpm@10.34.6",
   "scripts": {
@@ -19,12 +19,12 @@
     ]
   },
   "dependencies": {
-    "astro": "7.3.8",
+    "astro": "7.4.2",
     "sharp": "0.35.5"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.10",
-    "@playwright/test": "1.64.0",
+    "@astrojs/check": "0.9.12",
+    "@playwright/test": "1.64.1",
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "24.19.2",
     "tailwindcss": "4.3.3",

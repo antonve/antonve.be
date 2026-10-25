@@ -3,8 +3,11 @@
 A static [Astro](https://docs.astro.build/) site styled with Tailwind CSS 4. It
 ships HTML, CSS, self-hosted fonts, and images, with no client-side JavaScript.
 
+Use Node.js 24.22.1 and the pnpm version pinned in `package.json`.
+
 ```bash
-pnpm install
+corepack enable
+pnpm install --frozen-lockfile
 pnpm dev          # development server
 pnpm build        # static output in dist/
 pnpm typecheck    # astro check
@@ -37,3 +40,31 @@ non-blocking step that runs even when verification fails.
 Tailwind 4 requires Safari 16.4+, Chrome 111+, or Firefox 128+. Font files,
 fallback metrics, and the site's original colors are preserved across the
 styling upgrade.
+
+## Dependency maintenance
+
+Run `corepack pnpm audit --json` to audit all production and development
+dependencies in the lockfile without installing or building the site. The
+separate **Dependency audit** workflow runs daily at 07:23 UTC on the default
+branch and can be started from **Actions → Dependency audit → Run workflow**.
+Advisories or registry errors fail the run. The JSON report is visible in the
+log and retained as the `dependency-audit` artifact for 30 days, including on
+audit failure. This workflow has read-only repository permissions and cannot
+publish a production image.
+
+The workflow becomes available after it reaches the default branch. GitHub
+may delay scheduled runs and [disables schedules in public repositories after
+60 days without activity](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule);
+re-enable the workflow in Actions if that happens. Enable Actions failure
+notifications in your GitHub notification settings to receive failed-run alerts.
+
+[Dependabot](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
+checks npm/pnpm dependencies, Docker images, and GitHub Actions weekly. Minor
+and patch updates are grouped per ecosystem; the pre-1.0 npm dependencies
+`@astrojs/check` and `sharp` group only patches. Other updates get individual
+PRs. Review each PR and require passing CI before merging; no automatic merge
+is configured.
+Enable the dependency graph, Dependabot alerts, and Dependabot security updates
+in repository settings for advisory-driven security PRs between version checks.
+When reviewing Node updates, keep `.node-version`, both workflows, and the
+Docker builder aligned on the supported Node 24 release.

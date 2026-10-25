@@ -490,7 +490,10 @@ const books: Book[] = [
 const years = [...new Set(books.map(book => book.yearRead))]
 ---
 
-<Layout title="Anton Van Eechaute :: Bookshelf">
+<Layout
+  title="Anton Van Eechaute :: Bookshelf"
+  description="Anton Van Eechaute’s reading log: books on software engineering, teams, careers, and personal finance, read in English and Japanese."
+>
   <Header />
   <main class="pb-16">
     <h1 class="title mb-3">Bookshelf</h1>
