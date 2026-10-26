@@ -1,11 +1,12 @@
 # Builder image
-FROM docker.io/node:24.22.1-alpine AS build
+FROM docker.io/node:26.12.1-alpine AS build
 
 WORKDIR /app
 
 # Set up pnpm
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm config set store-dir .pnpm-store
+# Node 25+ no longer bundles corepack.
+RUN npm install --global corepack@0.36.0 && corepack enable && pnpm config set store-dir .pnpm-store
 RUN pnpm fetch
 
 # Build
