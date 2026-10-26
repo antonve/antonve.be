@@ -1,0 +1,13 @@
+---
+interface Props {
+  date: Date
+}
+
+const { date } = Astro.props
+// Frontmatter dates parse as UTC midnight; format in UTC so the day never shifts.
+const format = (options: Intl.DateTimeFormatOptions) => date.toLocaleDateString('en-US', { ...options, timeZone: 'UTC' })
+---
+
+<time datetime={date.toISOString().slice(0, 10)} title={format({ dateStyle: 'long' })}>
+  {format({ year: 'numeric', month: 'long' })}
+</time>

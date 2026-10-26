@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content'
+import Header from '../components/Header.astro'
+import PostDate from '../components/PostDate.astro'
+import Layout from '../layouts/Layout.astro'
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+---
+
+<Layout title="Anton Van Eechaute :: Blog" description="Articles and notes by Anton Van Eechaute.">
+  <Header />
+  <main class="max-w-2xl pb-16">
+    <h1 class="title mb-6 md:mb-8">Blog</h1>
+    {
+      posts.length === 0 ? (
+        <p>No posts yet.</p>
+      ) : (
+        <ul class="space-y-10">
+          {posts.map(post => (
+            <li>
+              <a href={`/blog/${post.id}`} class="fancy font-serif text-xl text-neutral-800!">{post.data.title}</a>
+              <p class="subtitle mt-1 mb-2 text-xs"><PostDate date={post.data.date} /></p>
+              <p class="my-0 leading-relaxed text-neutral-700">{post.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+</Layout>

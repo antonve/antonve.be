@@ -109,4 +109,78 @@
     content: '';
     @apply bg-secondary absolute -z-10 top-[0.7em] left-[0.3em] w-[99%] h-[0.7em] opacity-10;
   }
+
+  /* Rendered Markdown and MDX in blog posts. */
+  .post-content {
+    @apply text-[1.0625rem] leading-[1.85] text-neutral-800 sm:text-lg sm:leading-[1.85];
+  }
+
+  .post-content > * {
+    @apply my-0;
+  }
+
+  .post-content > * + * {
+    @apply mt-6;
+  }
+
+  .post-content h2 {
+    @apply mt-12 text-2xl leading-snug font-bold;
+  }
+
+  .post-content h3 {
+    @apply mt-10 text-xl leading-snug font-bold;
+  }
+
+  .post-content :is(h2, h3) + * {
+    @apply mt-3;
+  }
+
+  .post-content a:not(.fancy) {
+    @apply underline decoration-primary/50 underline-offset-2 hover:decoration-primary;
+  }
+
+  /* Markdown lists have no class; leave component lists to their own styles. */
+  .post-content ul:not([class]) {
+    @apply list-disc pl-6;
+  }
+
+  .post-content ol:not([class]) {
+    @apply list-decimal pl-6;
+  }
+
+  .post-content :is(ul, ol):not([class]) > li + li {
+    @apply mt-2;
+  }
+
+  .post-content :is(ul, ol):not([class]) > li::marker {
+    @apply text-neutral-400;
+  }
+
+  .post-content blockquote {
+    @apply border-l-4 border-secondary pl-5 text-neutral-600 italic;
+  }
+
+  .post-content :not(pre) > code {
+    @apply rounded bg-black/5 px-1.5 py-0.5 text-[0.875em];
+  }
+
+  .post-content pre {
+    @apply overflow-x-auto rounded-md p-4 text-sm leading-relaxed;
+  }
+
+  .post-content img {
+    @apply h-auto max-w-full rounded-md;
+  }
+
+  .post-content hr {
+    @apply my-12 border-black/10;
+  }
+
+  .post-content table {
+    @apply w-full border-collapse text-base;
+  }
+
+  .post-content :is(th, td) {
+    @apply border-b border-black/10 px-3 py-2 text-left align-top;
+  }
 }

@@ -1,3 +1,10 @@
+---
+import { getCollection } from 'astro:content'
+
+// Keep Blog out of the navigation until there is something to read.
+const hasPosts = (await getCollection('blog')).length > 0
+---
+
 <header class="mt-10 mb-10 flex max-w-xl flex-col items-start gap-4 md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-8">
   <img
     src="/img/logo.png"
@@ -8,8 +15,10 @@
     decoding="async"
     class="h-auto w-[180px]"
   />
-  <nav class="space-x-5 text-xl">
+  {/* Four links need 390px at text-xl; step down on narrower phones and wrap as a last resort. */}
+  <nav class="flex flex-wrap gap-x-5 gap-y-1 text-xl max-[400px]:gap-x-4 max-[400px]:text-lg">
     <a href="/" class="fancy text-neutral-800!">Home</a>
+    {hasPosts && <a href="/blog" class="fancy text-neutral-800!">Blog</a>}
     <a href="/projects" class="fancy text-neutral-800!">Projects</a>
     <a href="/books" class="fancy text-neutral-800!">Bookshelf</a>
   </nav>

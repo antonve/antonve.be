@@ -13,6 +13,28 @@ pnpm build        # static output in dist/
 pnpm typecheck    # astro check
 ```
 
+## Writing a blog post
+
+Add one `.md` or `.mdx` file per post to `src/content/blog/`. The file name
+sets the URL: `hello-world.md` is served at `/blog/hello-world`. Each post
+needs this frontmatter, which the build validates:
+
+```yaml
+---
+title: Hello world
+description: One sentence for search results and share previews.
+date: 2026-10-25
+---
+```
+
+Plain Markdown can include raw HTML. Use `.mdx` to import and render Astro
+components inside a post. Components render at build time; never give one a
+`client:*` directive. Images referenced by relative path are optimized during
+the build. The Blog navigation link appears once at least one post exists, so
+the first post changes every page's header; regenerate the screenshot
+baselines in that change with `pnpm test:e2e --update-snapshots`.
+Run `pnpm dev` and open `/blog/<file-name>` to preview a post while you write.
+
 The production image (`Dockerfile`) builds the site and serves `dist/` with a
 non-root nginx on port 3000; `nginx.conf` keeps extensionless URLs, redirects
 trailing slashes, and returns a real 404 for unknown paths. Missing pages use
