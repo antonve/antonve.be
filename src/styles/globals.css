@@ -36,6 +36,13 @@
     padding: 0;
   }
 
+  /* The homepage avatar peeks in from the corner of at least a full screen;
+     flow-root keeps the header's top margin from adding a scroll. */
+  body:has(.peek) {
+    display: flow-root;
+    min-height: 100%;
+  }
+
   ::selection {
     background: var(--color-secondary);
     color: var(--color-neutral-50);

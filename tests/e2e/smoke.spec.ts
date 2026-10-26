@@ -96,20 +96,20 @@ test('home renders content, local images, and working navigation', async ({
     page.getByRole('heading', { name: 'Recent writing' }),
   ).not.toBeVisible()
 
-  for (const name of ['Anton Van Eechaute', 'Headshot']) {
-    const image = page.getByRole('img', { name })
+  // The cartoon avatar is decorative, so it has no accessible name.
+  for (const image of [page.getByRole('img', { name: 'Anton Van Eechaute' }), page.locator('main img')]) {
+    await image.scrollIntoViewIfNeeded()
     await expect(image).toBeVisible()
     await expect(image).toHaveJSProperty('complete', true)
     expect(await image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
   }
 
-  // Even the smallest headshot must hold up at 2x: browsers can keep showing a
-  // cached smaller candidate on sharp screens, which smears the face.
-  const headshot = await page.getByRole('img', { name: 'Headshot' }).evaluate(element => ({
+  // The avatar must hold up at 2x, or the drawing smears on sharp screens.
+  const avatar = await page.locator('main img').evaluate(element => ({
     natural: (element as HTMLImageElement).naturalWidth,
     rendered: element.getBoundingClientRect().width,
   }))
-  expect(headshot.natural).toBeGreaterThanOrEqual(2 * headshot.rendered)
+  expect(avatar.natural).toBeGreaterThanOrEqual(2 * avatar.rendered)
 
   await expect(page).toHaveScreenshot('home.png', {
     animations: 'disabled',
@@ -154,11 +154,12 @@ test('static routes, favicon, and 404 remain available', async ({ page, isMobile
   expect(redirect.headers().location).toBe('/projects?from=nav')
 
   await page.goto('/')
-  const headshot = await page.getByRole('img', { name: 'Headshot' }).getAttribute('src')
-  expect(headshot).toMatch(/^\/_astro\/.+\.webp$/)
-  const image = await page.request.get(headshot!)
+  const avatar = await page.locator('main img').getAttribute('src')
+  expect(avatar).toMatch(/^\/_astro\/.+\.webp$/)
+  const image = await page.request.get(avatar!)
   expect(image.status()).toBe(200)
   expect(image.headers()['content-type']).toBe('image/webp')
+  expect((await image.body()).length, 'avatar bytes').toBeLessThan(15_000)
   expect(image.headers()['cache-control']).toBe('public, max-age=31536000, immutable')
 
   const missing = await page.goto('/this-route-does-not-exist')
@@ -284,6 +285,28 @@ test('desktop keeps the navigation inline', async ({ page }) => {
   await expect(nav.getByRole('link')).toContainText(['Home', 'Projects', 'Bookshelf'])
 })
 
+test('the avatar peeks in from the bottom-left corner without covering text', async ({ page }) => {
+  for (const [width, height] of [[360, 740], [1024, 768], [1280, 720], [1920, 1080]]) {
+    await page.setViewportSize({ width, height })
+    await page.goto('/')
+    const placement = await page.locator('main img').evaluate(element => {
+      const box = element.getBoundingClientRect()
+      const text = [...document.querySelectorAll('main :is(h1, h2, p, dt, dd)')].map(node => node.getBoundingClientRect())
+      return {
+        left: box.left,
+        bottom: box.bottom + scrollY,
+        pageHeight: document.documentElement.scrollHeight,
+        covered: text.filter(r => r.left < box.right && box.left < r.right && r.top < box.bottom && box.top < r.bottom).length,
+      }
+    })
+    expect(placement.left, `${width}x${height}`).toBe(0)
+    expect(placement.bottom, `${width}x${height}`).toBeCloseTo(placement.pageHeight, 0)
+    expect(placement.covered, `${width}x${height}`).toBe(0)
+    // A screen taller than the content keeps the avatar in its corner without scrolling.
+    if (height === 1080) expect(placement.pageHeight).toBe(height)
+  }
+})
+
 test('5xx error pages preserve statuses and working navigation', async ({ page, isMobile }) => {
   for (const status of [500, 502, 503, 504]) {
     const response = await page.goto(`${process.env.E2E_ERROR_BASE_URL}/__test/${status}`)
@@ -309,7 +332,7 @@ test.describe('with JavaScript disabled', () => {
 
   test('navigation and the 404 page still work', async ({ page, isMobile }) => {
     await page.goto('/')
-    await expect(page.getByRole('img', { name: 'Headshot' })).toBeVisible()
+    await expect(page.locator('main img')).toBeVisible()
     await (await openMenu(page, isMobile)).getByRole('link', { name: 'Projects', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible()
     await (await openMenu(page, isMobile)).getByRole('link', { name: 'Bookshelf', exact: true }).click()

@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets'
-import profilePic from '../assets/profile-pic.jpg'
+import avatar from '../assets/avatar.webp'
 
 const workHistory = [
   { company: 'Indeed', role: 'Inference Platform' },
@@ -10,21 +10,10 @@ const workHistory = [
 ]
 ---
 
-<main class="grid gap-x-16 pb-16 text-neutral-800 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)]">
-  <div class="mb-8 flex max-w-xl items-center gap-4 sm:gap-5 lg:mb-10">
-    {/* One 2x file only: browsers can keep a smaller srcset candidate on sharp screens, which smears the face. */}
-    <Image
-      src={profilePic}
-      alt="Headshot"
-      width={192}
-      height={192}
-      quality={75}
-      class="size-14 shrink-0 rounded-full outline outline-1 -outline-offset-1 outline-black/10 sm:size-[4.5rem]"
-    />
-    <h1 class="text-2xl leading-snug tracking-tight sm:text-[1.875rem] [text-wrap:balance]">
-      Hello! I'm <strong>Anton Van Eechaute</strong>.
-    </h1>
-  </div>
+<main class="grid gap-x-16 pb-40 text-neutral-800 sm:pb-48 xl:pb-16 lg:grid-cols-[minmax(0,36rem)_minmax(0,1fr)]">
+  <h1 class="mb-8 max-w-xl text-2xl leading-snug tracking-tight sm:text-[1.875rem] lg:mb-10 [text-wrap:balance]">
+    Hello! I'm <strong>Anton Van Eechaute</strong>.
+  </h1>
   <div class="max-w-xl lg:col-start-1 lg:row-start-2">
     <div class="text-[1.0625rem] leading-[1.85] sm:text-lg sm:leading-[1.85] [&_p]:my-0 [&_p+p]:mt-7">
       <p>
@@ -75,4 +64,7 @@ const workHistory = [
       }
     </dl>
   </section>
+
+  {/* Easter egg peeking in from the page's bottom-left corner; the bottom padding keeps it clear of the text. */}
+  <Image src={avatar} alt="" width={256} quality={75} class="peek absolute bottom-0 left-0 h-auto w-24 sm:w-32" />
 </main>
