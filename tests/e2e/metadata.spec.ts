@@ -7,7 +7,7 @@ const pages = [
     path: '/',
     name: 'Home',
     title: 'Anton Van Eechaute',
-    description: 'Anton Van Eechaute is a full-stack software engineer from Belgium, based in Tokyo, building AI systems and tools that help others build software.',
+    description: 'Anton Van Eechaute is a software engineer from Belgium, based in Tokyo, building AI systems and tools that help others build software.',
   },
   {
     path: '/projects',
@@ -20,6 +20,12 @@ const pages = [
     name: 'Bookshelf',
     title: 'Anton Van Eechaute :: Bookshelf',
     description: 'Anton Van Eechaute’s reading log: books on software engineering, teams, careers, and personal finance, read in English and Japanese.',
+  },
+  {
+    path: '/blog',
+    name: 'Blog',
+    title: 'Anton Van Eechaute :: Blog',
+    description: 'Articles and notes by Anton Van Eechaute.',
   },
 ]
 

@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets'
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import profilePic from '../../assets/profile-pic.jpg'
+import Header from '../../components/Header.astro'
+import PostDate from '../../components/PostDate.astro'
+import Layout from '../../layouts/Layout.astro'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog')
+  return posts.map(post => ({ params: { id: post.id }, props: { post } }))
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+---
+
+<Layout title={`${post.data.title} :: Anton Van Eechaute`} description={post.data.description}>
+  <Header />
+  <main class="max-w-2xl pb-16">
+    <article>
+      <h1 class="title leading-tight text-balance sm:text-4xl">{post.data.title}</h1>
+      <p class="subtitle mt-2 mb-10 text-xs"><PostDate date={post.data.date} /></p>
+      <div class="post-content">
+        <Content />
+      </div>
+    </article>
+    <section aria-label="About the author" class="mt-16 flex items-start gap-4 border-t border-black/10 pt-8 sm:gap-5">
+      <Image
+        src={profilePic}
+        alt=""
+        width={64}
+        height={64}
+        densities={[1, 2]}
+        quality={75}
+        class="h-12 w-12 shrink-0 rounded-full outline outline-1 -outline-offset-1 outline-black/10 sm:h-16 sm:w-16"
+      />
+      <div>
+        <p class="my-0 leading-relaxed text-neutral-700">
+          <strong class="text-neutral-800">Anton Van Eechaute</strong> is a Belgian software engineer in Tokyo, building AI
+          systems at <a href="https://third-intelligence.com" class="fancy">Third Intelligence</a>.
+        </p>
+        <p class="mt-3 mb-0 text-sm text-neutral-600">
+          Find me on{' '}
+          <a href="https://x.com/antonve_be" target="_blank" rel="noreferrer" class="fancy">Twitter</a>,{' '}
+          <a href="https://github.com/antonve" target="_blank" rel="noreferrer" class="fancy">GitHub</a>, or{' '}
+          <a href="https://www.linkedin.com/in/antonve/" target="_blank" rel="noreferrer" class="fancy">LinkedIn</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>

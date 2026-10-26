@@ -1,8 +1,10 @@
 import { defineConfig } from 'astro/config'
+import mdx from '@astrojs/mdx'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://antonve.be',
+  integrations: [mdx()],
   // Emit projects.html rather than projects/index.html so the static server can
   // keep the extensionless, no-trailing-slash URLs that Next.js served.
   build: { format: 'file' },

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 
 const browserErrors = new WeakMap<Page, string[]>()
 const scriptRequests = new WeakMap<Page, string[]>()
@@ -183,6 +183,68 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
   ).toBeVisible()
 })
 
+// Posts show "October 2026"; the native tooltip reveals "October 25, 2026".
+async function expectMonthWithFullDateOnHover(dates: Locator, count: number) {
+  await expect(dates).toHaveCount(count)
+  for (const date of await dates.all()) {
+    await expect(date).toHaveText(/^[A-Z][a-z]+ \d{4}$/)
+    await expect(date).toHaveAttribute('title', /^[A-Z][a-z]+ \d{1,2}, \d{4}$/)
+    await expect(date).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/)
+  }
+}
+
+test('blog index links to every post, and each post renders', async ({ page }) => {
+  const response = await page.goto('/blog')
+  expect(response?.status()).toBe(200)
+  await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeVisible()
+
+  const posts = await page.locator('main li > a').evaluateAll(links =>
+    links.map(link => ({ path: link.getAttribute('href')!, title: link.textContent!.trim() })),
+  )
+  // The navigation only offers Blog once there is something to read.
+  await expect(page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })).toHaveCount(posts.length ? 1 : 0)
+  if (posts.length === 0) await expect(page.getByText('No posts yet.')).toBeVisible()
+  await expectMonthWithFullDateOnHover(page.locator('main li time'), posts.length)
+
+  for (const { path, title } of posts) {
+    const post = await page.goto(path)
+    expect(post?.status()).toBe(200)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
+    await expect(page).toHaveTitle(`${title} :: Anton Van Eechaute`)
+    await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', `https://antonve.be${path}`)
+    await expect(page.locator('script')).toHaveCount(0)
+    await expectMonthWithFullDateOnHover(page.locator('article time'), 1)
+    const author = page.getByRole('region', { name: 'About the author' })
+    await expect(author).toBeVisible()
+    await expect(author).toContainText('Anton Van Eechaute is a Belgian software engineer in Tokyo, building AI systems at Third Intelligence.')
+    await expect(author.getByRole('link', { name: 'Third Intelligence' })).toHaveAttribute('href', 'https://third-intelligence.com')
+    await expect(author.getByRole('link')).toHaveText(['Third Intelligence', 'Twitter', 'GitHub', 'LinkedIn'])
+    await expect(author.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/antonve')
+    for (const image of await page.locator('main img').all()) {
+      await image.scrollIntoViewIfNeeded()
+      await expect(image).toHaveJSProperty('complete', true)
+      expect(await image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+    }
+    await page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true }).click()
+    await expect(page).toHaveURL(/\/blog$/)
+  }
+})
+
+test('navigation fits on a 360px-wide phone', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 })
+  await page.goto('/blog')
+  const posts = await page.locator('main li > a').evaluateAll(links => links.map(link => link.getAttribute('href')!))
+  for (const path of ['/', '/projects', '/books', '/blog', ...posts]) {
+    await page.goto(path)
+    const overflow = await page.locator('nav a').evaluateAll(links => {
+      const container = document.querySelector<HTMLElement>('body > div')!
+      const right = container.getBoundingClientRect().right - parseFloat(getComputedStyle(container).paddingRight)
+      return links.filter(link => link.getBoundingClientRect().right > right + 0.5).map(link => link.textContent)
+    })
+    expect(overflow, `nav links past the page edge on ${path}`).toEqual([])
+  }
+})
+
 test('5xx error pages preserve statuses and working navigation', async ({ page }) => {
   for (const status of [500, 502, 503, 504]) {
     const response = await page.goto(`${process.env.E2E_ERROR_BASE_URL}/__test/${status}`)
@@ -200,7 +262,7 @@ test('ships no JavaScript and works with it disabled', async ({
   page,
   browser,
 }) => {
-  for (const path of ['/', '/projects', '/books']) {
+  for (const path of ['/', '/projects', '/books', '/blog']) {
     await page.goto(path)
     await expect(page.locator('script')).toHaveCount(0)
   }
@@ -230,6 +292,12 @@ test('keyboard navigation, hover state, and contact link', async ({ page }) => {
   await page.goto('/')
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeFocused()
+  // Blog sits next to Home once there are posts.
+  const blog = page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })
+  if (await blog.count()) {
+    await page.keyboard.press('Tab')
+    await expect(blog).toBeFocused()
+  }
   await page.keyboard.press('Tab')
   const projects = page.getByRole('link', { name: 'Projects', exact: true })
   await expect(projects).toBeFocused()
