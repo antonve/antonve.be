@@ -3,9 +3,11 @@
 A static [Astro](https://docs.astro.build/) site styled with Tailwind CSS 4. It
 ships HTML, CSS, self-hosted fonts, and images, with no client-side JavaScript.
 
-Use Node.js 24.22.1 and the pnpm version pinned in `package.json`.
+Use Node.js 26.12.1 and the pnpm version pinned in `package.json`. Node 25 and
+later no longer bundle corepack, so install it first.
 
 ```bash
+npm install --global corepack@0.36.0
 corepack enable
 pnpm install --frozen-lockfile
 pnpm dev          # development server
@@ -85,10 +87,12 @@ checks npm/pnpm dependencies, Docker images, and GitHub Actions weekly. Minor
 and patch updates are grouped per ecosystem; the pre-1.0 npm dependencies
 `@astrojs/check` and `sharp` group only patches. Other updates get individual
 PRs, except TypeScript and Node type major upgrades, which are excluded from
-routine proposals to keep TypeScript 6 and the supported Node 24 types aligned.
+routine proposals to keep TypeScript 6 and Node 24 types aligned; Node 24 is the
+oldest runtime in use, inside the Playwright test image.
 Review each PR and require passing CI before merging; no automatic merge is
 configured.
 Enable the dependency graph, Dependabot alerts, and Dependabot security updates
 in repository settings for advisory-driven security PRs between version checks.
 When reviewing Node updates, keep `.node-version`, both workflows, and the
-Docker builder aligned on the supported Node 24 release.
+Docker builder aligned on the same Node 26 release. The `engines` range also
+admits the Node 24 release bundled in the Playwright image used by the tests.
