@@ -29,7 +29,7 @@ const { Content } = await render(post)
         <Content />
       </div>
     </article>
-    <section aria-label="About the author" class="mt-16 flex items-start gap-4 border-t border-black/10 pt-8 sm:gap-5">
+    <section aria-label="About the author" class="mt-16 flex items-start gap-4 border-t border-black/10 pt-8 dark:border-white/10 sm:gap-5">
       <Image
         src={profilePic}
         alt=""
@@ -37,7 +37,7 @@ const { Content } = await render(post)
         height={64}
         densities={[1, 2]}
         quality={75}
-        class="h-12 w-12 shrink-0 rounded-full outline outline-1 -outline-offset-1 outline-black/10 sm:h-16 sm:w-16"
+        class="h-12 w-12 shrink-0 rounded-full outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 sm:h-16 sm:w-16"
       />
       <div>
         <p class="my-0 leading-relaxed text-neutral-700">

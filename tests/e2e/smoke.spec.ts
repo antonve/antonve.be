@@ -347,6 +347,73 @@ test.describe('with JavaScript disabled', () => {
   })
 })
 
+// Runs in the page, so it must be self-contained. Text is checked against the page
+// background and against any ::after highlight drawn behind it, such as a hovered link's bar.
+function readability() {
+  // Painting onto a canvas resolves color-mix(), alpha, and opacity against the page background.
+  const context = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!
+  const luminance = (...layers: [color: string, opacity: number][]) => {
+    for (const [color, opacity] of layers) {
+      context.globalAlpha = opacity
+      context.fillStyle = color
+      context.fillRect(0, 0, 1, 1)
+    }
+    const [r, g, b] = [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)].map(value => {
+      const channel = value / 255
+      return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+    })
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+  }
+
+  const page: [string, number] = [getComputedStyle(document.body).backgroundColor, 1]
+  const lowContrast: string[] = []
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+  while (walker.nextNode()) {
+    const text = walker.currentNode.textContent!.trim()
+    const element = walker.currentNode.parentElement!
+    // Unrendered text, such as the closed phone menu, reports misleading highlight styles.
+    if (!text || !element.checkVisibility()) continue
+    const highlight = getComputedStyle(element, '::after')
+    const backdrops = [[page]]
+    if (highlight.content !== 'none' && new DOMMatrix(highlight.transform).a > 0) {
+      backdrops.push([page, [highlight.backgroundColor, Number(highlight.opacity)]])
+    }
+    for (const backdrop of backdrops) {
+      const back = luminance(...backdrop)
+      const front = luminance(...backdrop, [getComputedStyle(element).color, 1])
+      const ratio = (Math.max(front, back) + 0.05) / (Math.min(front, back) + 0.05)
+      if (ratio < 4.5) lowContrast.push(`${text.slice(0, 40)} (${ratio.toFixed(2)}:1)`)
+    }
+  }
+  return { background: luminance(page), lowContrast }
+}
+
+test.describe('with a dark color scheme', () => {
+  test.use({ colorScheme: 'dark' })
+
+  test('every page, including 404, turns dark with readable text', async ({ page }) => {
+    for (const [path, name] of [
+      ['/', 'home'],
+      ['/projects', 'projects'],
+      ['/books', 'books'],
+      ['/blog', 'blog'],
+      ['/this-route-does-not-exist', '404'],
+    ]) {
+      await page.goto(path)
+      const { background, lowContrast } = await page.evaluate(readability)
+      expect(background, `${path} background luminance`).toBeLessThan(0.05)
+      expect(lowContrast, `${path} text below WCAG AA contrast`).toEqual([])
+      await expect(page).toHaveScreenshot(`${name}-dark.png`, { animations: 'disabled', fullPage: true })
+    }
+
+    await page.goto('/')
+    const link = page.getByRole('link', { name: 'Third Intelligence' })
+    await link.hover()
+    await link.evaluate(element => Promise.all(element.getAnimations({ subtree: true }).map(animation => animation.finished)))
+    expect((await page.evaluate(readability)).lowContrast, 'hovered link text below WCAG AA contrast').toEqual([])
+  })
+})
+
 test('keyboard navigation, hover state, and contact link', async ({ page, isMobile }) => {
   await page.goto('/')
   await page.keyboard.press('Tab')
