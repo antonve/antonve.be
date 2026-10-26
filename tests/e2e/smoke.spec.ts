@@ -32,6 +32,13 @@ test.afterEach(async ({ page }, testInfo) => {
   expect(scriptRequests.get(page), 'script requests').toEqual([])
 })
 
+// Phones fold the navigation behind a Menu disclosure.
+async function openMenu(page: Page, isMobile: boolean) {
+  const nav = page.getByRole('navigation')
+  if (isMobile) await nav.locator('summary').click()
+  return nav
+}
+
 test('self-hosts Open Sans and Merriweather', async ({ page }) => {
   const externalFontRequests: string[] = []
   page.on('request', request => {
@@ -77,6 +84,7 @@ test('self-hosts Open Sans and Merriweather', async ({ page }) => {
 
 test('home renders content, local images, and working navigation', async ({
   page,
+  isMobile,
 }) => {
   await page.goto('/')
 
@@ -95,12 +103,20 @@ test('home renders content, local images, and working navigation', async ({
     expect(await image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
   }
 
+  // Even the smallest headshot must hold up at 2x: browsers can keep showing a
+  // cached smaller candidate on sharp screens, which smears the face.
+  const headshot = await page.getByRole('img', { name: 'Headshot' }).evaluate(element => ({
+    natural: (element as HTMLImageElement).naturalWidth,
+    rendered: element.getBoundingClientRect().width,
+  }))
+  expect(headshot.natural).toBeGreaterThanOrEqual(2 * headshot.rendered)
+
   await expect(page).toHaveScreenshot('home.png', {
     animations: 'disabled',
     fullPage: true,
   })
 
-  await page.getByRole('link', { name: 'Projects', exact: true }).click()
+  await (await openMenu(page, isMobile)).getByRole('link', { name: 'Projects', exact: true }).click()
   await expect(page).toHaveURL(/\/projects$/)
   await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible()
   await expect(page).toHaveScreenshot('projects.png', {
@@ -108,7 +124,7 @@ test('home renders content, local images, and working navigation', async ({
     fullPage: true,
   })
 
-  await page.getByRole('link', { name: 'Bookshelf', exact: true }).click()
+  await (await openMenu(page, isMobile)).getByRole('link', { name: 'Bookshelf', exact: true }).click()
   await expect(page).toHaveURL(/\/books$/)
   await expect(page.getByRole('heading', { name: 'Bookshelf' })).toBeVisible()
   await expect(page).toHaveScreenshot('books.png', {
@@ -117,7 +133,7 @@ test('home renders content, local images, and working navigation', async ({
   })
 })
 
-test('static routes, favicon, and 404 remain available', async ({ page }) => {
+test('static routes, favicon, and 404 remain available', async ({ page, isMobile }) => {
   for (const path of ['/projects', '/books']) {
     const response = await page.goto(path)
     expect(response?.status()).toBe(200)
@@ -151,12 +167,12 @@ test('static routes, favicon, and 404 remain available', async ({ page }) => {
     page.getByRole('heading', { name: 'Page not found', exact: true }),
   ).toBeVisible()
   await expect(page).toHaveTitle('404: Page not found :: Anton Van Eechaute')
-  await expect(page.getByRole('navigation')).toBeVisible()
   await expect(page.locator('script')).toHaveCount(0)
   await expect(page).toHaveScreenshot('404.png', {
     animations: 'disabled',
     fullPage: true,
   })
+  await expect((await openMenu(page, isMobile)).getByRole('link', { name: 'Home', exact: true })).toBeVisible()
 
   for (const path of [
     '/posts/migration-plan',
@@ -193,7 +209,7 @@ async function expectMonthWithFullDateOnHover(dates: Locator, count: number) {
   }
 }
 
-test('blog index links to every post, and each post renders', async ({ page }) => {
+test('blog index links to every post, and each post renders', async ({ page, isMobile }) => {
   const response = await page.goto('/blog')
   expect(response?.status()).toBe(200)
   await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeVisible()
@@ -202,7 +218,7 @@ test('blog index links to every post, and each post renders', async ({ page }) =
     links.map(link => ({ path: link.getAttribute('href')!, title: link.textContent!.trim() })),
   )
   // The navigation only offers Blog once there is something to read.
-  await expect(page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })).toHaveCount(posts.length ? 1 : 0)
+  await expect((await openMenu(page, isMobile)).getByRole('link', { name: 'Blog', exact: true })).toHaveCount(posts.length ? 1 : 0)
   if (posts.length === 0) await expect(page.getByText('No posts yet.')).toBeVisible()
   await expectMonthWithFullDateOnHover(page.locator('main li time'), posts.length)
 
@@ -225,72 +241,97 @@ test('blog index links to every post, and each post renders', async ({ page }) =
       await expect(image).toHaveJSProperty('complete', true)
       expect(await image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
     }
-    await page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true }).click()
+    await (await openMenu(page, isMobile)).getByRole('link', { name: 'Blog', exact: true }).click()
     await expect(page).toHaveURL(/\/blog$/)
   }
 })
 
-test('navigation fits on a 360px-wide phone', async ({ page }) => {
+test('phones fold the navigation into a menu that fits a 360px screen', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 })
   await page.goto('/blog')
   const posts = await page.locator('main li > a').evaluateAll(links => links.map(link => link.getAttribute('href')!))
+  const labels = posts.length ? ['Home', 'Blog', 'Projects', 'Bookshelf'] : ['Home', 'Projects', 'Bookshelf']
   for (const path of ['/', '/projects', '/books', '/blog', ...posts]) {
     await page.goto(path)
-    const overflow = await page.locator('nav a').evaluateAll(links => {
-      const container = document.querySelector<HTMLElement>('body > div')!
-      const right = container.getBoundingClientRect().right - parseFloat(getComputedStyle(container).paddingRight)
-      return links.filter(link => link.getBoundingClientRect().right > right + 0.5).map(link => link.textContent)
-    })
-    expect(overflow, `nav links past the page edge on ${path}`).toEqual([])
+    const nav = page.getByRole('navigation')
+    const menu = nav.locator('summary')
+    await expect(menu).toHaveAccessibleName('Menu')
+    await expect(nav.getByRole('link')).toHaveCount(0)
+
+    await menu.click()
+    await expect(nav.getByRole('link')).toHaveText(labels)
+    const edge = await page.locator('body > div').evaluate(
+      container => container.getBoundingClientRect().right - parseFloat(getComputedStyle(container).paddingRight),
+    )
+    for (const link of await nav.getByRole('link').all()) {
+      const box = (await link.boundingBox())!
+      expect(box.x + box.width, `${await link.textContent()} past the page edge on ${path}`).toBeLessThanOrEqual(edge + 0.5)
+    }
+    const button = (await menu.boundingBox())!
+    expect(button.x + button.width, `menu button past the screen on ${path}`).toBeLessThanOrEqual(360)
+    if (path === '/') await expect(page).toHaveScreenshot('menu-open.png', { animations: 'disabled' })
+
+    await menu.click()
+    await expect(nav.getByRole('link')).toHaveCount(0)
   }
 })
 
-test('5xx error pages preserve statuses and working navigation', async ({ page }) => {
+test('desktop keeps the navigation inline', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 740 })
+  await page.goto('/')
+  const nav = page.getByRole('navigation')
+  await expect(nav.locator('summary')).toBeHidden()
+  await expect(nav.getByRole('link')).toContainText(['Home', 'Projects', 'Bookshelf'])
+})
+
+test('5xx error pages preserve statuses and working navigation', async ({ page, isMobile }) => {
   for (const status of [500, 502, 503, 504]) {
     const response = await page.goto(`${process.env.E2E_ERROR_BASE_URL}/__test/${status}`)
     expect(response?.status()).toBe(status)
     await expect(page.getByRole('heading', { name: 'Something went wrong', exact: true })).toBeVisible()
     await expect(page).toHaveTitle('Server error: Something went wrong :: Anton Van Eechaute')
-    await expect(page.getByRole('navigation')).toBeVisible()
+    await expect((await openMenu(page, isMobile)).getByRole('link', { name: 'Home', exact: true })).toBeVisible()
     await expect(page.locator('script')).toHaveCount(0)
   }
   await page.getByRole('link', { name: 'Back to home', exact: true }).click()
   await expect(page.getByRole('heading', { name: /Anton Van Eechaute/ })).toBeVisible()
 })
 
-test('ships no JavaScript and works with it disabled', async ({
-  page,
-  browser,
-}) => {
+test('ships no JavaScript', async ({ page }) => {
   for (const path of ['/', '/projects', '/books', '/blog']) {
     await page.goto(path)
     await expect(page.locator('script')).toHaveCount(0)
   }
-
-  const context = await browser.newContext({
-    javaScriptEnabled: false,
-    baseURL: process.env.E2E_BASE_URL,
-  })
-  const noScript = await context.newPage()
-  await noScript.goto('/')
-  await expect(noScript.getByRole('img', { name: 'Headshot' })).toBeVisible()
-  await noScript.getByRole('link', { name: 'Projects', exact: true }).click()
-  await expect(noScript.getByRole('heading', { name: 'Projects' })).toBeVisible()
-  await noScript.getByRole('link', { name: 'Bookshelf', exact: true }).click()
-  await expect(noScript.getByRole('heading', { name: 'Bookshelf' })).toBeVisible()
-  const missing = await noScript.goto('/this-route-does-not-exist')
-  expect(missing?.status()).toBe(404)
-  await expect(
-    noScript.getByRole('heading', { name: 'Page not found', exact: true }),
-  ).toBeVisible()
-  await noScript.getByRole('link', { name: 'Back to home', exact: true }).click()
-  await expect(noScript).toHaveURL(/\/$/)
-  await context.close()
 })
 
-test('keyboard navigation, hover state, and contact link', async ({ page }) => {
+test.describe('with JavaScript disabled', () => {
+  test.use({ javaScriptEnabled: false })
+
+  test('navigation and the 404 page still work', async ({ page, isMobile }) => {
+    await page.goto('/')
+    await expect(page.getByRole('img', { name: 'Headshot' })).toBeVisible()
+    await (await openMenu(page, isMobile)).getByRole('link', { name: 'Projects', exact: true }).click()
+    await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible()
+    await (await openMenu(page, isMobile)).getByRole('link', { name: 'Bookshelf', exact: true }).click()
+    await expect(page.getByRole('heading', { name: 'Bookshelf' })).toBeVisible()
+    const missing = await page.goto('/this-route-does-not-exist')
+    expect(missing?.status()).toBe(404)
+    await expect(
+      page.getByRole('heading', { name: 'Page not found', exact: true }),
+    ).toBeVisible()
+    await page.getByRole('link', { name: 'Back to home', exact: true }).click()
+    await expect(page).toHaveURL(/\/$/)
+  })
+})
+
+test('keyboard navigation, hover state, and contact link', async ({ page, isMobile }) => {
   await page.goto('/')
   await page.keyboard.press('Tab')
+  if (isMobile) {
+    await expect(page.getByRole('navigation').locator('summary')).toBeFocused()
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('Tab')
+  }
   await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeFocused()
   // Blog sits next to Home once there are posts.
   const blog = page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })

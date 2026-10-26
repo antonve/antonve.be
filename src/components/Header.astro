@@ -3,9 +3,15 @@ import { getCollection } from 'astro:content'
 
 // Keep Blog out of the navigation until there is something to read.
 const hasPosts = (await getCollection('blog')).length > 0
+const links = [
+  { href: '/', label: 'Home' },
+  ...(hasPosts ? [{ href: '/blog', label: 'Blog' }] : []),
+  { href: '/projects', label: 'Projects' },
+  { href: '/books', label: 'Bookshelf' },
+]
 ---
 
-<header class="mt-10 mb-10 flex max-w-xl flex-col items-start gap-4 md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-8">
+<header class="relative mt-10 mb-10 flex max-w-xl flex-col items-start md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-8">
   <img
     src="/img/logo.png"
     alt="Anton Van Eechaute"
@@ -15,11 +21,24 @@ const hasPosts = (await getCollection('blog')).length > 0
     decoding="async"
     class="h-auto w-[180px]"
   />
-  {/* Four links need 390px at text-xl; step down on narrower phones and wrap as a last resort. */}
-  <nav class="flex flex-wrap gap-x-5 gap-y-1 text-xl max-[400px]:gap-x-4 max-[400px]:text-lg">
-    <a href="/" class="fancy text-neutral-800!">Home</a>
-    {hasPosts && <a href="/blog" class="fancy text-neutral-800!">Blog</a>}
-    <a href="/projects" class="fancy text-neutral-800!">Projects</a>
-    <a href="/books" class="fancy text-neutral-800!">Bookshelf</a>
+  <nav class="text-xl">
+    {/* Phones fold the links into a native disclosure; its button sits on the logo's row. */}
+    <details class="group md:hidden">
+      <summary class="absolute -top-2 -right-3 flex size-11 cursor-pointer list-none items-center justify-center text-neutral-800 transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+        <span class="sr-only">Menu</span>
+        <svg viewBox="0 0 24 24" class="size-6 group-open:hidden" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+        <svg viewBox="0 0 24 24" class="hidden size-6 group-open:block" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+          <path d="M5 5l14 14M19 5L5 19" />
+        </svg>
+      </summary>
+      <div class="mt-6 flex flex-col items-start gap-4">
+        {links.map(({ href, label }) => <a href={href} class="fancy text-neutral-800!">{label}</a>)}
+      </div>
+    </details>
+    <div class="hidden gap-x-5 md:flex">
+      {links.map(({ href, label }) => <a href={href} class="fancy text-neutral-800!">{label}</a>)}
+    </div>
   </nav>
 </header>
