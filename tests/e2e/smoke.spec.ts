@@ -460,7 +460,8 @@ test('keyboard navigation, hover state, and contact link', async ({ page, isMobi
 
   await page.goto('/books')
   const book = page.locator('main section li a').first()
-  await expect(book).toHaveCSS('text-decoration-line', 'underline')
+  // The title carries the underline; a subtitle, when present, stays plain.
+  await expect(book.locator('span').first()).toHaveCSS('text-decoration-line', 'underline')
   // Tailwind only applies hover: on devices that can hover.
   if (!isMobile) {
     await book.hover()

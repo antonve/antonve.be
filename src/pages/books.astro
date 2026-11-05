@@ -487,9 +487,10 @@ const books: Book[] = [
   },
 ]
 
-// "Title: Subtitle" renders the subtitle quieter so the shelf scans by title.
+// "Title: Subtitle" renders the subtitle quieter so the shelf scans by title. Split
+// at the last colon so titles like "Terraform: Up & Running" stay whole.
 const shelve = ({ title, url }: Book) => {
-  const at = title.indexOf(': ')
+  const at = title.lastIndexOf(': ')
   return at === -1 ? { title, subtitle: '', url } : { title: title.slice(0, at), subtitle: title.slice(at + 2), url }
 }
 
@@ -532,13 +533,13 @@ const shelves = [
       {
         shelves.map(shelf => (
           <section aria-labelledby={shelf.id} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[7.5rem_1fr]">
-            <h2 id={shelf.id} class="font-sans text-base leading-relaxed font-semibold whitespace-nowrap tabular-nums">{shelf.label}</h2>
+            <h2 id={shelf.id} class="font-serif text-lg leading-relaxed font-bold whitespace-nowrap tabular-nums sm:font-sans sm:text-base sm:font-semibold">{shelf.label}</h2>
             <ul class="space-y-3">
               {shelf.books.map(({ title, subtitle, url }) => (
-                <li class="leading-relaxed">
-                  {/* Keep the spans adjacent: whitespace between them would render as a space. */}
-                  <a href={url} class="group font-medium underline decoration-fg-subtle/75 decoration-1 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">
-                    {title}{subtitle ? <span class="font-normal text-fg-muted group-hover:text-accent">: {subtitle}</span> : null}
+                <li class="leading-relaxed text-pretty">
+                  {/* Only the title is underlined, so long subtitles don't stripe the list. Keep the spans adjacent. */}
+                  <a href={url} class="group font-medium hover:text-accent">
+                    <span class="underline decoration-fg-subtle/75 decoration-1 underline-offset-[0.2em] group-hover:decoration-accent">{title}</span>{subtitle ? <span class="font-normal text-fg-muted group-hover:text-accent">: {subtitle}</span> : null}
                   </a>
                 </li>
               ))}

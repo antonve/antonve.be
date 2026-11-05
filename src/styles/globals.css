@@ -135,6 +135,10 @@
     @apply my-0;
   }
 
+  .prose :is(p, li, blockquote) {
+    text-wrap: pretty;
+  }
+
   .prose > * + * {
     @apply mt-5;
   }
@@ -177,8 +181,9 @@
     @apply rounded bg-fg/[0.07] px-1.5 py-0.5 text-[0.875em];
   }
 
+  /* Phones wrap code rather than hide it behind a scroll with no visible cue. */
   .prose pre {
-    @apply overflow-x-auto rounded-md border border-line p-4 text-sm leading-relaxed;
+    @apply overflow-x-auto rounded-md border border-line p-4 text-sm leading-relaxed max-sm:break-words max-sm:whitespace-pre-wrap;
   }
 
   .prose img {
