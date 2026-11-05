@@ -94,13 +94,21 @@ const projects = [
             </p>
             <div class="prose">
               {p.description.map(html => <p set:html={html} />)}
-              {p.details ? (
-                <>
-                  <h3 class="!mt-8 font-sans text-base font-semibold">How it's built</h3>
-                  {p.details.map(html => <p set:html={html} />)}
-                </>
-              ) : null}
             </div>
+            {/* Native disclosure keeps the stack write-up from pushing the next project out of reach. */}
+            {p.details ? (
+              <details class="group mt-5">
+                <summary class="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 font-semibold transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
+                  <svg viewBox="0 0 16 16" class="size-4 text-fg-subtle transition-transform group-open:rotate-90" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 3.5 10.5 8 6 12.5" />
+                  </svg>
+                  How it's built
+                </summary>
+                <div class="prose mt-2">
+                  {p.details.map(html => <p set:html={html} />)}
+                </div>
+              </details>
+            ) : null}
             <Tags list={p.tags} />
           </article>
         ))

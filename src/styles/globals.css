@@ -50,7 +50,6 @@
     font-family: var(--font-sans);
     margin: 0;
     padding: 0;
-    text-rendering: optimizeLegibility;
     @variant dark {
       /* Light-on-dark text blooms with subpixel smoothing; greyscale keeps it crisp. */
       -webkit-font-smoothing: antialiased;
@@ -169,9 +168,9 @@
     @apply text-fg-subtle;
   }
 
-  /* Upright: the fonts ship no italic, and a synthesised slant looks broken. */
+  /* Upright serif sets quotes apart: the fonts ship no italic, and a synthesised slant looks broken. */
   .prose blockquote {
-    @apply border-l-2 border-mark pl-5 text-fg-muted;
+    @apply border-l-2 border-mark pl-5 font-serif text-[1.0625em] leading-[1.7];
   }
 
   .prose :not(pre) > code {

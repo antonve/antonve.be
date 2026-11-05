@@ -300,7 +300,8 @@ test('the avatar peeks in from the bottom-left corner without covering text', as
       }
     })
     expect(placement.left, `${width}x${height}`).toBe(0)
-    expect(placement.bottom, `${width}x${height}`).toBeCloseTo(placement.pageHeight, 0)
+    // scrollHeight is a whole number while the layout can land on half pixels.
+    expect(Math.abs(placement.bottom - placement.pageHeight), `${width}x${height}`).toBeLessThanOrEqual(1)
     expect(placement.covered, `${width}x${height}`).toBe(0)
     // A screen taller than the content keeps the avatar in its corner without scrolling.
     if (height === 1080) expect(placement.pageHeight).toBe(height)

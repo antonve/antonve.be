@@ -487,13 +487,19 @@ const books: Book[] = [
   },
 ]
 
+// "Title: Subtitle" renders the subtitle quieter so the shelf scans by title.
+const shelve = ({ title, url }: Book) => {
+  const at = title.indexOf(': ')
+  return at === -1 ? { title, subtitle: '', url } : { title: title.slice(0, at), subtitle: title.slice(at + 2), url }
+}
+
 // Books in progress get their own group ahead of the finished years.
 const shelves = [
-  { id: 'reading', label: 'Reading now', books: books.filter(book => book.status === 'reading') },
+  { id: 'reading', label: 'Reading now', books: books.filter(book => book.status === 'reading').map(shelve) },
   ...[...new Set(books.filter(book => !book.status).map(book => book.yearRead))].map(year => ({
     id: `y${year}`,
     label: String(year),
-    books: books.filter(book => !book.status && book.yearRead === year),
+    books: books.filter(book => !book.status && book.yearRead === year).map(shelve),
   })),
 ]
 ---
@@ -525,12 +531,15 @@ const shelves = [
     <div class="mt-12 divide-y divide-line border-t border-line">
       {
         shelves.map(shelf => (
-          <section aria-labelledby={shelf.id} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[5.5rem_1fr]">
-            <h2 id={shelf.id} class="font-sans text-base leading-relaxed font-semibold tabular-nums">{shelf.label}</h2>
+          <section aria-labelledby={shelf.id} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[7.5rem_1fr]">
+            <h2 id={shelf.id} class="font-sans text-base leading-relaxed font-semibold whitespace-nowrap tabular-nums">{shelf.label}</h2>
             <ul class="space-y-3">
-              {shelf.books.map(book => (
+              {shelf.books.map(({ title, subtitle, url }) => (
                 <li class="leading-relaxed">
-                  <a href={book.url} class="underline decoration-fg-subtle/75 decoration-1 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">{book.title}</a>
+                  {/* Keep the spans adjacent: whitespace between them would render as a space. */}
+                  <a href={url} class="group font-medium underline decoration-fg-subtle/75 decoration-1 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">
+                    {title}{subtitle ? <span class="font-normal text-fg-muted group-hover:text-accent">: {subtitle}</span> : null}
+                  </a>
                 </li>
               ))}
             </ul>

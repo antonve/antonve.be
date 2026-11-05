@@ -6,7 +6,7 @@ export default defineConfig({
   site: 'https://antonve.be',
   integrations: [mdx()],
   // Highlight code for both schemes; globals.css swaps to the dark one.
-  markdown: { shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } } },
+  markdown: { shikiConfig: { themes: { light: 'github-light-default', dark: 'github-dark-default' } } },
   // Emit projects.html rather than projects/index.html so the static server can
   // keep the extensionless, no-trailing-slash URLs that Next.js served.
   build: { format: 'file' },

@@ -13,19 +13,23 @@ const links = [
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/^\/index$/, '/')
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`))
 const linkClass =
-  'border-b-2 border-transparent py-0.5 text-fg-muted transition-colors hover:text-fg aria-[current=page]:border-mark aria-[current=page]:text-fg'
+  'inline-flex min-h-11 items-center text-fg-muted decoration-mark decoration-2 underline-offset-[0.45em] transition-colors hover:text-fg aria-[current=page]:text-fg aria-[current=page]:underline'
 ---
 
 <header class="relative mt-10 mb-12 flex max-w-xl flex-col items-start md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-10">
   <a href="/" class="block rounded-sm">
-    <img
-      src="/img/logo.png"
-      alt="Anton Van Eechaute, home"
-      width="232"
-      height="38"
-      decoding="async"
-      class="h-auto w-[180px]"
-    />
+    {/* The dark logo makes the translucent teal stripes opaque so they don't turn murky on the dark page. */}
+    <picture>
+      <source srcset="/img/logo-dark.png" media="(prefers-color-scheme: dark)" />
+      <img
+        src="/img/logo.png"
+        alt="Anton Van Eechaute, home"
+        width="232"
+        height="38"
+        decoding="async"
+        class="h-auto w-[180px]"
+      />
+    </picture>
   </a>
   <nav aria-label="Main" class="text-[1.0625rem] font-semibold">
     {/* Phones fold the links into a native disclosure; its button sits on the logo's row. */}
@@ -39,7 +43,7 @@ const linkClass =
           <path d="M6 6l12 12M18 6L6 18" />
         </svg>
       </summary>
-      <div class="mt-6 flex flex-col items-start gap-3 text-xl">
+      <div class="mt-4 flex flex-col items-start text-xl">
         {links.map(({ href, label }) => <a href={href} class={linkClass} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>)}
       </div>
     </details>
