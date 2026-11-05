@@ -529,11 +529,16 @@ const shelves = [
         <a href="https://bookmeter.com/users/445442/books/read">Bookmeter</a>.
       </p>
     </div>
-    <div class="mt-12 divide-y divide-line border-t border-line">
+    <nav aria-label="Shelves" class="meta mt-8 flex flex-wrap gap-x-3 gap-y-1">
+      {shelves.map(shelf => (
+        <a href={`#${shelf.id}`} class="inline-flex min-h-8 items-center underline decoration-fg-subtle/75 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">{shelf.label}</a>
+      ))}
+    </nav>
+    <div class="mt-8 divide-y divide-line border-t border-line">
       {
         shelves.map(shelf => (
           <section aria-labelledby={shelf.id} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[7.5rem_1fr]">
-            <h2 id={shelf.id} class="font-serif text-lg leading-relaxed font-bold whitespace-nowrap tabular-nums sm:font-sans sm:text-base sm:font-semibold">{shelf.label}</h2>
+            <h2 id={shelf.id} class="scroll-mt-6 font-serif text-lg leading-relaxed font-bold whitespace-nowrap tabular-nums">{shelf.label}</h2>
             <ul class="space-y-3">
               {shelf.books.map(({ title, subtitle, url }) => (
                 <li class="leading-relaxed text-pretty">

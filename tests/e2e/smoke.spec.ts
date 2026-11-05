@@ -34,7 +34,7 @@ test.afterEach(async ({ page }, testInfo) => {
 
 // Phones fold the navigation behind a Menu disclosure.
 async function openMenu(page: Page, isMobile: boolean) {
-  const nav = page.getByRole('navigation')
+  const nav = page.getByRole('navigation', { name: 'Main' })
   if (isMobile) await nav.locator('summary').click()
   return nav
 }
@@ -254,7 +254,7 @@ test('phones fold the navigation into a menu that fits a 360px screen', async ({
   const labels = posts.length ? ['Home', 'Blog', 'Projects', 'Bookshelf'] : ['Home', 'Projects', 'Bookshelf']
   for (const path of ['/', '/projects', '/books', '/blog', ...posts]) {
     await page.goto(path)
-    const nav = page.getByRole('navigation')
+    const nav = page.getByRole('navigation', { name: 'Main' })
     const menu = nav.locator('summary')
     await expect(menu).toHaveAccessibleName('Menu')
     await expect(nav.getByRole('link')).toHaveCount(0)
@@ -280,7 +280,7 @@ test('phones fold the navigation into a menu that fits a 360px screen', async ({
 test('desktop keeps the navigation inline', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 740 })
   await page.goto('/')
-  const nav = page.getByRole('navigation')
+  const nav = page.getByRole('navigation', { name: 'Main' })
   await expect(nav.locator('summary')).toBeHidden()
   await expect(nav.getByRole('link')).toContainText(['Home', 'Projects', 'Bookshelf'])
 })
@@ -430,15 +430,15 @@ test('keyboard navigation, hover state, and contact link', async ({ page, isMobi
   await expect(logo).toHaveCSS('outline-style', 'solid')
   await page.keyboard.press('Tab')
   if (isMobile) {
-    await expect(page.getByRole('navigation').locator('summary')).toBeFocused()
+    await expect(page.getByRole('navigation', { name: 'Main' }).locator('summary')).toBeFocused()
     await page.keyboard.press('Enter')
     await page.keyboard.press('Tab')
   }
-  const home = page.getByRole('navigation').getByRole('link', { name: 'Home', exact: true })
+  const home = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Home', exact: true })
   await expect(home).toBeFocused()
   await expect(home).toHaveAttribute('aria-current', 'page')
   // Blog sits next to Home once there are posts.
-  const blog = page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })
+  const blog = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Blog', exact: true })
   if (await blog.count()) {
     await page.keyboard.press('Tab')
     await expect(blog).toBeFocused()

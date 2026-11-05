@@ -181,9 +181,14 @@
     @apply rounded bg-fg/[0.07] px-1.5 py-0.5 text-[0.875em];
   }
 
-  /* Phones wrap code rather than hide it behind a scroll with no visible cue. */
+  /* Phones wrap code rather than hide it behind a scroll with no visible cue;
+     a hanging indent keeps a wrapped line from reading as a new one. */
   .prose pre {
     @apply overflow-x-auto rounded-md border border-line p-4 text-sm leading-relaxed max-sm:break-words max-sm:whitespace-pre-wrap;
+  }
+
+  .prose pre .line {
+    @apply max-sm:inline-block max-sm:pl-[2ch] max-sm:-indent-[2ch];
   }
 
   .prose img {

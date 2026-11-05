@@ -18,7 +18,7 @@ const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf()
         <ul class="divide-y divide-line">
           {posts.map(post => (
             <li class="py-8 first:pt-0">
-              <h2 class="text-xl leading-snug font-bold sm:text-2xl">
+              <h2 class="text-xl leading-snug font-bold text-balance sm:text-2xl">
                 <a href={`/blog/${post.id}`} class="heading-link">{post.data.title}</a>
               </h2>
               <p class="meta mt-1 mb-3"><PostDate date={post.data.date} /></p>
