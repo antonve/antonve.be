@@ -23,13 +23,13 @@ const { Content } = await render(post)
   <Header />
   <main class="max-w-2xl pb-16">
     <article>
-      <h1 class="title leading-tight text-balance sm:text-4xl">{post.data.title}</h1>
-      <p class="subtitle mt-2 mb-10 text-xs"><PostDate date={post.data.date} /></p>
-      <div class="post-content">
+      <h1 class="title sm:text-[2.5rem]">{post.data.title}</h1>
+      <p class="meta mt-3 mb-10"><PostDate date={post.data.date} /></p>
+      <div class="prose">
         <Content />
       </div>
     </article>
-    <section aria-label="About the author" class="mt-16 flex items-start gap-4 border-t border-black/10 pt-8 dark:border-white/10 sm:gap-5">
+    <section aria-label="About the author" class="mt-16 flex items-start gap-4 border-t border-line pt-8 sm:gap-5">
       <Image
         src={profilePic}
         alt=""
@@ -37,18 +37,18 @@ const { Content } = await render(post)
         height={64}
         densities={[1, 2]}
         quality={75}
-        class="h-12 w-12 shrink-0 rounded-full outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 sm:h-16 sm:w-16"
+        class="h-12 w-12 shrink-0 rounded-full outline outline-1 -outline-offset-1 outline-line sm:h-16 sm:w-16"
       />
       <div>
-        <p class="my-0 leading-relaxed text-neutral-700">
-          <strong class="text-neutral-800">Anton Van Eechaute</strong> is a Belgian software engineer in Tokyo, building AI
-          systems at <a href="https://third-intelligence.com" class="fancy">Third Intelligence</a>.
+        <p class="my-0 leading-relaxed text-fg-muted">
+          <strong class="font-semibold text-fg">Anton Van Eechaute</strong> is a Belgian software engineer in Tokyo, building AI
+          systems at <a href="https://third-intelligence.com">Third Intelligence</a>.
         </p>
-        <p class="mt-3 mb-0 text-sm text-neutral-600">
+        <p class="mt-3 mb-0 text-sm text-fg-muted">
           Find me on{' '}
-          <a href="https://x.com/antonve_be" target="_blank" rel="noreferrer" class="fancy">Twitter</a>,{' '}
-          <a href="https://github.com/antonve" target="_blank" rel="noreferrer" class="fancy">GitHub</a>, or{' '}
-          <a href="https://www.linkedin.com/in/antonve/" target="_blank" rel="noreferrer" class="fancy">LinkedIn</a>.
+          <a href="https://x.com/antonve_be" target="_blank" rel="noreferrer">Twitter</a>,{' '}
+          <a href="https://github.com/antonve" target="_blank" rel="noreferrer">GitHub</a>, or{' '}
+          <a href="https://www.linkedin.com/in/antonve/" target="_blank" rel="noreferrer">LinkedIn</a>.
         </p>
       </div>
     </section>

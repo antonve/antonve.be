@@ -416,13 +416,21 @@ test.describe('with a dark color scheme', () => {
 
 test('keyboard navigation, hover state, and contact link', async ({ page, isMobile }) => {
   await page.goto('/')
+  // The logo is the first stop and leads home; the current page is marked in the navigation.
+  await page.keyboard.press('Tab')
+  const logo = page.getByRole('link', { name: 'Anton Van Eechaute, home' })
+  await expect(logo).toBeFocused()
+  await expect(logo).toHaveAttribute('href', '/')
+  await expect(logo).toHaveCSS('outline-style', 'solid')
   await page.keyboard.press('Tab')
   if (isMobile) {
     await expect(page.getByRole('navigation').locator('summary')).toBeFocused()
     await page.keyboard.press('Enter')
     await page.keyboard.press('Tab')
   }
-  await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeFocused()
+  const home = page.getByRole('navigation').getByRole('link', { name: 'Home', exact: true })
+  await expect(home).toBeFocused()
+  await expect(home).toHaveAttribute('aria-current', 'page')
   // Blog sits next to Home once there are posts.
   const blog = page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })
   if (await blog.count()) {
@@ -434,19 +442,22 @@ test('keyboard navigation, hover state, and contact link', async ({ page, isMobi
   await expect(projects).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL(/\/projects$/)
+  await expect((await openMenu(page, isMobile)).getByRole('link', { name: 'Projects', exact: true })).toHaveAttribute('aria-current', 'page')
 
+  // Links read as text with an accent underline and turn accent on hover.
   const chat = page.getByRole('link', { name: 'chat' })
   await expect(chat).toHaveAttribute('href', 'mailto:mail@antonve.be')
-  await expect(chat).toHaveCSS('color', 'rgb(255, 34, 90)')
+  await expect(chat).toHaveCSS('color', 'rgb(28, 26, 25)')
+  await expect(chat).toHaveCSS('text-decoration-line', 'underline')
   await chat.hover()
-  await expect(chat).toHaveCSS('color', 'rgb(38, 38, 38)')
-  await expect
-    .poll(() => chat.evaluate(link => getComputedStyle(link, '::after').transform))
-    .toBe('matrix(1, 0, 0, 1, 0, 0)')
+  await expect(chat).toHaveCSS('color', 'rgb(200, 18, 74)')
 
   await page.goto('/books')
   const book = page.locator('main section li a').first()
-  await book.focus()
-  await expect(book).toBeFocused()
-  await expect(book).toHaveCSS('color', 'rgb(255, 34, 90)')
+  await expect(book).toHaveCSS('text-decoration-line', 'underline')
+  // Tailwind only applies hover: on devices that can hover.
+  if (!isMobile) {
+    await book.hover()
+    await expect(book).toHaveCSS('color', 'rgb(200, 18, 74)')
+  }
 })

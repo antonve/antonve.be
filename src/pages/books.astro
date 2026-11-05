@@ -495,36 +495,38 @@ const years = [...new Set(books.map(book => book.yearRead))]
   description="Anton Van Eechaute’s reading log: books on software engineering, teams, careers, and personal finance, read in English and Japanese."
 >
   <Header />
-  <main class="pb-16">
-    <h1 class="title mb-3">Bookshelf</h1>
-    <p class="mb-3 text-neutral-700">
-      A reading log of books that have helped shape how I think about building
-      software, running teams, career, and personal finance. I mostly read in
-      English, with some Japanese mixed in.
-    </p>
-    <p class="mb-3 text-neutral-700">
-      Inclusion here is not an endorsement. It is a log of what I read, and my
-      views have changed over time; some books may no longer reflect what I
-      recommend, or may simply be outdated now.
-    </p>
-    <p class="mb-8 text-neutral-700">
-      This page is limited to non-fiction. Most of the fiction I read is in
-      Japanese, and I track that separately on{' '}
-      <a href="https://bookmeter.com/users/445442/books/read" target="_blank" rel="noreferrer">Bookmeter</a>.
-    </p>
-    <div class="space-y-10">
+  <main class="max-w-2xl pb-20">
+    <h1 class="title mb-6">Bookshelf</h1>
+    <div class="prose text-fg-muted">
+      <p>
+        A reading log of books that have helped shape how I think about building
+        software, running teams, career, and personal finance. I mostly read in
+        English, with some Japanese mixed in.
+      </p>
+      <p>
+        Inclusion here is not an endorsement. It is a log of what I read, and my
+        views have changed over time; some books may no longer reflect what I
+        recommend, or may simply be outdated now.
+      </p>
+      <p>
+        This page is limited to non-fiction. Most of the fiction I read is in
+        Japanese, and I track that separately on{' '}
+        <a href="https://bookmeter.com/users/445442/books/read" target="_blank" rel="noreferrer">Bookmeter</a>.
+      </p>
+    </div>
+    <div class="mt-12 divide-y divide-line border-t border-line">
       {
         years.map(year => (
-          <section>
-            <h2 class="subtitle mb-3">{year}</h2>
-            <ul class="list-disc pl-6 space-y-2">
+          <section aria-labelledby={`y${year}`} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[5rem_1fr]">
+            <h2 id={`y${year}`} class="font-sans text-lg font-semibold tabular-nums">{year}</h2>
+            <ul class="space-y-3">
               {books
                 .filter(book => book.yearRead === year)
                 .map(book => (
                   <li class="leading-relaxed">
                     {/* Keep these adjacent: whitespace between them would render as a space. */}
-                    <a href={book.url} target="_blank" rel="noreferrer" class="text-neutral-800 hover:text-primary focus:text-primary active:text-primary">{book.title}</a>{book.status === 'reading' ? (
-                      <span class="ml-2 text-sm text-neutral-500">[reading]</span>
+                    <a href={book.url} target="_blank" rel="noreferrer" class="underline decoration-fg-subtle/50 decoration-1 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">{book.title}</a>{book.status === 'reading' ? (
+                      <span class="ml-2 inline-block rounded-full border border-line px-2 align-[0.1em] text-xs font-semibold text-fg-muted">Reading</span>
                     ) : null}
                   </li>
                 ))}

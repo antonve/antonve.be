@@ -71,26 +71,35 @@ const projects = [
   description="Software projects by Anton Van Eechaute, including Tadoku, a language immersion platform, and hsfp.tokyo, a Japanese visa points calculator."
 >
   <Header />
-  <h1 class="title mb-6 md:mb-8">Projects</h1>
-  <ul class="space-y-16 md:space-y-20">
-    {
-      projects.map(p => (
-        <li>
-          <a href={p.url} class="fancy font-serif text-neutral-800! text-xl underline!">{p.title}</a>
-          <h3 class="subtitle text-xs">{p.when}</h3>
-          {p.description.map(html => <p set:html={html} />)}
-          {p.source ? (
-            <p>
-              <a class="fancy" href={p.source}>View source code</a>
+  <main class="max-w-2xl pb-20">
+    <h1 class="title mb-10 md:mb-12">Projects</h1>
+    <div class="divide-y divide-line">
+      {
+        projects.map(p => (
+          <article class="py-10 first:pt-0">
+            <h2 class="text-2xl leading-snug font-bold">
+              <a href={p.url} class="hover:text-accent">{p.title}</a>
+            </h2>
+            <p class="meta mt-1 mb-5">
+              {p.when}
+              {p.source ? (
+                <>
+                  <span aria-hidden="true"> · </span>
+                  <a href={p.source} class="font-semibold text-fg-muted hover:text-accent">Source code</a>
+                </>
+              ) : null}
             </p>
-          ) : null}
-          <Tags list={p.tags} />
-        </li>
-      ))
-    }
-  </ul>
-  <p class="text-center my-12 md:my-20 pb-[50px] text-xl md:text-3xl">
-    Want to see more? Let's have a{' '}
-    <strong><a class="fancy" href="mailto:mail@antonve.be">chat</a></strong>!
-  </p>
+            <div class="prose">
+              {p.description.map(html => <p set:html={html} />)}
+            </div>
+            <Tags list={p.tags} />
+          </article>
+        ))
+      }
+    </div>
+    <p class="mt-6 border-t border-line pt-10 text-lg text-fg-muted">
+      Want to see more? Let's have a{' '}
+      <a href="mailto:mail@antonve.be">chat</a>.
+    </p>
+  </main>
 </Layout>

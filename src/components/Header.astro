@@ -9,36 +9,42 @@ const links = [
   { href: '/projects', label: 'Projects' },
   { href: '/books', label: 'Bookshelf' },
 ]
+// File-format builds report /projects.html; posts live under /blog/.
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/^\/index$/, '/')
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`))
+const linkClass =
+  'border-b-2 border-transparent py-0.5 text-fg-muted transition-colors hover:text-fg aria-[current=page]:border-mark aria-[current=page]:text-fg'
 ---
 
-<header class="relative mt-10 mb-10 flex max-w-xl flex-col items-start md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-8">
-  <img
-    src="/img/logo.png"
-    alt="Anton Van Eechaute"
-    width="232"
-    height="38"
-    loading="lazy"
-    decoding="async"
-    class="h-auto w-[180px]"
-  />
-  <nav class="text-xl">
+<header class="relative mt-10 mb-12 flex max-w-xl flex-col items-start md:mt-20 md:mb-16 md:flex-row md:items-center md:gap-10">
+  <a href="/" class="block rounded-sm">
+    <img
+      src="/img/logo.png"
+      alt="Anton Van Eechaute, home"
+      width="232"
+      height="38"
+      decoding="async"
+      class="h-auto w-[180px]"
+    />
+  </a>
+  <nav aria-label="Main" class="text-[1.0625rem] font-semibold">
     {/* Phones fold the links into a native disclosure; its button sits on the logo's row. */}
     <details class="group md:hidden">
-      <summary class="absolute -top-2 -right-3 flex size-11 cursor-pointer list-none items-center justify-center text-neutral-800 transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+      <summary class="absolute -top-2 -right-3 flex size-11 cursor-pointer list-none items-center justify-center rounded-md text-fg transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
         <span class="sr-only">Menu</span>
-        <svg viewBox="0 0 24 24" class="size-6 group-open:hidden" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-          <path d="M3 6h18M3 12h18M3 18h18" />
+        <svg viewBox="0 0 24 24" class="size-6 group-open:hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
-        <svg viewBox="0 0 24 24" class="hidden size-6 group-open:block" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-          <path d="M5 5l14 14M19 5L5 19" />
+        <svg viewBox="0 0 24 24" class="hidden size-6 group-open:block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
         </svg>
       </summary>
-      <div class="mt-6 flex flex-col items-start gap-4">
-        {links.map(({ href, label }) => <a href={href} class="fancy text-neutral-800!">{label}</a>)}
+      <div class="mt-6 flex flex-col items-start gap-3 text-xl">
+        {links.map(({ href, label }) => <a href={href} class={linkClass} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>)}
       </div>
     </details>
-    <div class="hidden gap-x-5 md:flex">
-      {links.map(({ href, label }) => <a href={href} class="fancy text-neutral-800!">{label}</a>)}
+    <div class="hidden gap-x-7 md:flex">
+      {links.map(({ href, label }) => <a href={href} class={linkClass} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>)}
     </div>
   </nav>
 </header>
