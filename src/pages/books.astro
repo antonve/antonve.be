@@ -487,7 +487,15 @@ const books: Book[] = [
   },
 ]
 
-const years = [...new Set(books.map(book => book.yearRead))]
+// Books in progress get their own group ahead of the finished years.
+const shelves = [
+  { id: 'reading', label: 'Reading now', books: books.filter(book => book.status === 'reading') },
+  ...[...new Set(books.filter(book => !book.status).map(book => book.yearRead))].map(year => ({
+    id: `y${year}`,
+    label: String(year),
+    books: books.filter(book => !book.status && book.yearRead === year),
+  })),
+]
 ---
 
 <Layout
@@ -495,7 +503,7 @@ const years = [...new Set(books.map(book => book.yearRead))]
   description="Anton Van Eechaute’s reading log: books on software engineering, teams, careers, and personal finance, read in English and Japanese."
 >
   <Header />
-  <main class="max-w-2xl pb-20">
+  <main id="main" class="max-w-[38rem] pb-20">
     <h1 class="title mb-6">Bookshelf</h1>
     <div class="prose text-fg-muted">
       <p>
@@ -511,25 +519,20 @@ const years = [...new Set(books.map(book => book.yearRead))]
       <p>
         This page is limited to non-fiction. Most of the fiction I read is in
         Japanese, and I track that separately on{' '}
-        <a href="https://bookmeter.com/users/445442/books/read" target="_blank" rel="noreferrer">Bookmeter</a>.
+        <a href="https://bookmeter.com/users/445442/books/read">Bookmeter</a>.
       </p>
     </div>
     <div class="mt-12 divide-y divide-line border-t border-line">
       {
-        years.map(year => (
-          <section aria-labelledby={`y${year}`} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[5rem_1fr]">
-            <h2 id={`y${year}`} class="font-sans text-lg font-semibold tabular-nums">{year}</h2>
+        shelves.map(shelf => (
+          <section aria-labelledby={shelf.id} class="grid gap-x-8 gap-y-3 py-8 sm:grid-cols-[5.5rem_1fr]">
+            <h2 id={shelf.id} class="font-sans text-base leading-relaxed font-semibold tabular-nums">{shelf.label}</h2>
             <ul class="space-y-3">
-              {books
-                .filter(book => book.yearRead === year)
-                .map(book => (
-                  <li class="leading-relaxed">
-                    {/* Keep these adjacent: whitespace between them would render as a space. */}
-                    <a href={book.url} target="_blank" rel="noreferrer" class="underline decoration-fg-subtle/50 decoration-1 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">{book.title}</a>{book.status === 'reading' ? (
-                      <span class="ml-2 inline-block rounded-full border border-line px-2 align-[0.1em] text-xs font-semibold text-fg-muted">Reading</span>
-                    ) : null}
-                  </li>
-                ))}
+              {shelf.books.map(book => (
+                <li class="leading-relaxed">
+                  <a href={book.url} class="underline decoration-fg-subtle/75 decoration-1 underline-offset-[0.2em] hover:text-accent hover:decoration-accent">{book.title}</a>
+                </li>
+              ))}
             </ul>
           </section>
         ))

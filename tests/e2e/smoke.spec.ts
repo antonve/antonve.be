@@ -416,7 +416,12 @@ test.describe('with a dark color scheme', () => {
 
 test('keyboard navigation, hover state, and contact link', async ({ page, isMobile }) => {
   await page.goto('/')
-  // The logo is the first stop and leads home; the current page is marked in the navigation.
+  // A skip link comes first, then the logo, which leads home; the current page is marked in the navigation.
+  await page.keyboard.press('Tab')
+  const skip = page.getByRole('link', { name: 'Skip to content' })
+  await expect(skip).toBeFocused()
+  await expect(skip).toBeInViewport()
+  await expect(skip).toHaveAttribute('href', '#main')
   await page.keyboard.press('Tab')
   const logo = page.getByRole('link', { name: 'Anton Van Eechaute, home' })
   await expect(logo).toBeFocused()

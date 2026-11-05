@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro'
 const projects = [
   {
     title: 'Tadoku',
-    when: '2019 — present',
+    when: '2019–present',
     // Paragraphs are trusted HTML rendered with set:html.
     description: [
       `Tadoku is a friendly foreign-language immersion contest and tracking
@@ -15,6 +15,9 @@ const projects = [
       `A minimal viable product was tested in 2019 and the website officially
       launched in 2020. About 100 people participate per official contest, a
       number which is steadily growing.`,
+    ],
+    // How it's built, kept apart so the overview reads first.
+    details: [
       `On the frontend we have a collection of TypeScript Next.js apps using
       <a href="https://tailwindcss.com/">TailwindCSS</a>,
       <a href="https://tanstack.com/query/latest">React Query</a>,
@@ -71,14 +74,14 @@ const projects = [
   description="Software projects by Anton Van Eechaute, including Tadoku, a language immersion platform, and hsfp.tokyo, a Japanese visa points calculator."
 >
   <Header />
-  <main class="max-w-2xl pb-20">
+  <main id="main" class="max-w-[38rem] pb-20">
     <h1 class="title mb-10 md:mb-12">Projects</h1>
     <div class="divide-y divide-line">
       {
         projects.map(p => (
           <article class="py-10 first:pt-0">
             <h2 class="text-2xl leading-snug font-bold">
-              <a href={p.url} class="hover:text-accent">{p.title}</a>
+              <a href={p.url} class="heading-link">{p.title}</a>
             </h2>
             <p class="meta mt-1 mb-5">
               {p.when}
@@ -91,6 +94,12 @@ const projects = [
             </p>
             <div class="prose">
               {p.description.map(html => <p set:html={html} />)}
+              {p.details ? (
+                <>
+                  <h3 class="!mt-8 font-sans text-base font-semibold">How it's built</h3>
+                  {p.details.map(html => <p set:html={html} />)}
+                </>
+              ) : null}
             </div>
             <Tags list={p.tags} />
           </article>

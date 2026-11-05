@@ -21,7 +21,7 @@ const { Content } = await render(post)
 
 <Layout title={`${post.data.title} :: Anton Van Eechaute`} description={post.data.description}>
   <Header />
-  <main class="max-w-2xl pb-16">
+  <main id="main" class="max-w-[38rem] pb-16">
     <article>
       <h1 class="title sm:text-[2.5rem]">{post.data.title}</h1>
       <p class="meta mt-3 mb-10"><PostDate date={post.data.date} /></p>
@@ -46,9 +46,9 @@ const { Content } = await render(post)
         </p>
         <p class="mt-3 mb-0 text-sm text-fg-muted">
           Find me on{' '}
-          <a href="https://x.com/antonve_be" target="_blank" rel="noreferrer">Twitter</a>,{' '}
-          <a href="https://github.com/antonve" target="_blank" rel="noreferrer">GitHub</a>, or{' '}
-          <a href="https://www.linkedin.com/in/antonve/" target="_blank" rel="noreferrer">LinkedIn</a>.
+          <a href="https://x.com/antonve_be">Twitter</a>,{' '}
+          <a href="https://github.com/antonve">GitHub</a>, or{' '}
+          <a href="https://www.linkedin.com/in/antonve/">LinkedIn</a>.
         </p>
       </div>
     </section>

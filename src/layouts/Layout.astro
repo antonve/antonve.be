@@ -53,6 +53,7 @@ const shareImageURL = new URL(shareImage.src, Astro.site).href
     <link rel="preload" href={merriweatherLatin} as="font" type="font/woff2" crossorigin="anonymous" />
   </head>
   <body>
+    <a href="#main" class="sr-only rounded-md font-semibold focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:bg-fg focus:px-4 focus:py-2 focus:text-bg">Skip to content</a>
     <div class="font-sans max-w-4xl mx-auto px-4 md:px-6">
       <slot />
     </div>
