@@ -542,8 +542,9 @@ const shelves = [
             <ul class="space-y-3">
               {shelf.books.map(({ title, subtitle, url }) => (
                 <li class="leading-relaxed text-pretty">
-                  {/* Only the title is underlined, so long subtitles don't stripe the list. Keep the spans adjacent. */}
-                  <a href={url} class="group font-medium hover:text-accent">
+                  {/* Only the title is underlined, so long subtitles don't stripe the list. Keep the spans adjacent.
+                      inline-block makes the leading between wrapped lines part of the link, so hover doesn't flicker. */}
+                  <a href={url} class="group inline-block font-medium hover:text-accent">
                     <span class="underline decoration-fg-subtle/75 decoration-1 underline-offset-[0.2em] group-hover:decoration-accent">{title}</span>{subtitle ? <span class="font-normal text-fg-muted group-hover:text-accent">: {subtitle}</span> : null}
                   </a>
                 </li>

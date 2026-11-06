@@ -466,5 +466,18 @@ test('keyboard navigation, hover state, and contact link', async ({ page, isMobi
   if (!isMobile) {
     await book.hover()
     await expect(book).toHaveCSS('color', 'rgb(200, 18, 74)')
+
+    // A wrapped entry stays hovered in the leading between its lines.
+    const wrapped = page.locator('main section li a').filter({ hasText: 'Generative AI on Kubernetes' })
+    await wrapped.scrollIntoViewIfNeeded()
+    const gap = await wrapped.evaluate(a => {
+      const rects = [...a.querySelectorAll('span')].flatMap(s => [...s.getClientRects()]).sort((x, y) => x.top - y.top)
+      const next = rects.find(r => r.top >= rects[0].bottom)
+      return next && { x: rects[0].left + 20, y: (rects[0].bottom + next.top) / 2 }
+    })
+    expect(gap, 'entry should wrap onto a second line').toBeTruthy()
+    await page.mouse.move(0, 0)
+    await page.mouse.move(gap!.x, gap!.y)
+    await expect(wrapped).toHaveCSS('color', 'rgb(200, 18, 74)')
   }
 })

@@ -67,6 +67,9 @@ const projects = [
     url: 'https://hsfp.tokyo/',
   },
 ]
+
+const metaLink =
+  'font-semibold text-fg-muted underline decoration-fg-subtle/75 underline-offset-[0.2em] hover:text-accent hover:decoration-accent'
 ---
 
 <Layout
@@ -80,17 +83,13 @@ const projects = [
       {
         projects.map(p => (
           <article class="py-10 first:pt-0">
-            <h2 class="text-2xl leading-snug font-bold">
-              <a href={p.url} class="heading-link">{p.title}</a>
-            </h2>
+            <h2 class="text-2xl leading-snug font-bold">{p.title}</h2>
             <p class="meta mt-1 mb-5">
               {p.when}
-              {p.source ? (
-                <>
-                  <span aria-hidden="true"> · </span>
-                  <a href={p.source} class="font-semibold text-fg-muted hover:text-accent">Source code</a>
-                </>
-              ) : null}
+              <span aria-hidden="true"> · </span>
+              <a href={p.url} class={metaLink}>Visit site</a>
+              <span aria-hidden="true"> · </span>
+              <a href={p.source} class={metaLink}>GitHub</a>
             </p>
             <div class="prose">
               {p.description.map(html => <p set:html={html} />)}
