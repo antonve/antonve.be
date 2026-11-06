@@ -13,44 +13,38 @@ const projects = [
       platform aimed at building a habit of reading and listening in your
       non-native languages.`,
       `A minimal viable product was tested in 2019 and the website officially
-      launched in 2020. About 100 people participate per official contest, a
-      number which is steadily growing.`,
+      launched in 2020. Since then it has hosted 40+ official contest rounds,
+      with up to 130 participants in a single round.`,
     ],
     // How it's built, kept apart so the overview reads first.
     details: [
-      `On the frontend we have a collection of TypeScript Next.js apps using
-      <a href="https://tailwindcss.com/">TailwindCSS</a>,
-      <a href="https://tanstack.com/query/latest">React Query</a>,
-      <a href="https://github.com/colinhacks/zod">zod</a>,
-      <a href="https://react-hook-form.com/">React Hook form</a>,
-      <a href="https://www.chartjs.org/">chart.js</a>, and more.
-      There's also a <a href="https://ui.tadoku.app">design system</a>.`,
-      `The backend services are written in Golang and built through Bazel.
-      The data is stored in a PostgreSQL database. It's deployed to a
-      Kubernetes cluster on Linode via Argo CD.`,
-      `User management is handled by
-      <a href="https://www.ory.sh/kratos/">Ory Kratos</a> and requests
-      are authorized by
-      <a href="https://www.ory.sh/oathkeeper/">Ory Oathkeeper</a>.`,
-      `Local development environment is built with
-      <a href="https://tilt.dev/">Tilt</a>, a tool to run a local
-      development environment in Kubernetes.`,
+      `The frontend is a set of TypeScript apps built with Next.js and
+      <a href="https://tanstack.com/start/latest">TanStack Start</a>, styled
+      with <a href="https://tailwindcss.com/">TailwindCSS</a>. There's also a
+      <a href="https://ui.tadoku.app">design system</a>.`,
+      `The backend is a Go API on PostgreSQL, with
+      <a href="https://valkey.io/">Valkey</a> caching the leaderboards.
+      Everything lives in one Bazel monorepo and is deployed to Kubernetes on
+      Linode via Argo CD.`,
     ],
     tags: [
       'Go',
       'PostgreSQL',
       'sqlc',
+      'Valkey',
+      'OpenAPI',
       'Kubernetes',
       'Docker',
+      'Argo CD',
       'Bazel',
-      'Tilt',
       'TypeScript',
       'React',
       'Next.js',
+      'TanStack',
       'TailwindCSS',
       'Data visualization',
     ],
-    source: 'https://github.com/tadoku',
+    source: 'https://github.com/tadoku/tadoku',
     url: 'https://tadoku.app',
   },
   {
