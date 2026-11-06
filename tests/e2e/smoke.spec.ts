@@ -168,7 +168,7 @@ test('static routes, favicon, and 404 remain available', async ({ page, isMobile
     page.getByRole('heading', { name: 'Page not found', exact: true }),
   ).toBeVisible()
   await expect(page).toHaveTitle('404: Page not found :: Anton Van Eechaute')
-  await expect(page.locator('script')).toHaveCount(0)
+  await expect(page.locator('script:not([src])')).toHaveCount(1)
   await expect(page).toHaveScreenshot('404.png', {
     animations: 'disabled',
     fullPage: true,
@@ -229,7 +229,7 @@ test('blog index links to every post, and each post renders', async ({ page, isM
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
     await expect(page).toHaveTitle(`${title} :: Anton Van Eechaute`)
     await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', `https://antonve.be${path}`)
-    await expect(page.locator('script')).toHaveCount(0)
+    await expect(page.locator('script:not([src])')).toHaveCount(1)
     await expectMonthWithFullDateOnHover(page.locator('article time'), 1)
     const author = page.getByRole('region', { name: 'About the author' })
     await expect(author).toBeVisible()
@@ -315,18 +315,51 @@ test('5xx error pages preserve statuses and working navigation', async ({ page, 
     await expect(page.getByRole('heading', { name: 'Something went wrong', exact: true })).toBeVisible()
     await expect(page).toHaveTitle('Server error: Something went wrong :: Anton Van Eechaute')
     await expect((await openMenu(page, isMobile)).getByRole('link', { name: 'Home', exact: true })).toBeVisible()
-    await expect(page.locator('script')).toHaveCount(0)
+    await expect(page.locator('script:not([src])')).toHaveCount(1)
   }
   await page.getByRole('link', { name: 'Back to home', exact: true }).click()
   await expect(page.getByRole('heading', { name: /Anton Van Eechaute/ })).toBeVisible()
 })
 
-test('ships no JavaScript', async ({ page }) => {
+// The only script is the inline theme toggle; nothing is fetched or bundled.
+test('ships only the inline theme script', async ({ page }) => {
   for (const path of ['/', '/projects', '/books', '/blog']) {
     await page.goto(path)
-    await expect(page.locator('script')).toHaveCount(0)
+    await expect(page.locator('script')).toHaveCount(1)
+    await expect(page.locator('script[src], script[type="module"]')).toHaveCount(0)
   }
 })
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test.describe(`with a ${colorScheme} system preference`, () => {
+    test.use({ colorScheme })
+
+    test('the theme toggle overrides it and remembers the choice', async ({ page }) => {
+      const flipped = colorScheme === 'dark' ? 'light' : 'dark'
+      const isDark = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor === 'rgb(21, 20, 19)')
+      const logo = () => page.getByRole('img', { name: 'Anton Van Eechaute, home' })
+
+      await page.goto('/')
+      expect(await isDark()).toBe(colorScheme === 'dark')
+      const toggle = page.getByRole('button', { name: `Switch to ${flipped} theme` })
+      await toggle.click()
+      expect(await isDark()).toBe(flipped === 'dark')
+      await expect(logo()).toHaveAttribute('src', flipped === 'dark' ? '/img/logo-dark.png' : '/img/logo.png')
+      await expect(page.getByRole('button', { name: `Switch to ${colorScheme} theme` })).toBeVisible()
+
+      // The choice follows the reader to other pages and survives a reload.
+      await page.goto('/projects')
+      expect(await isDark()).toBe(flipped === 'dark')
+      await page.reload()
+      expect(await isDark()).toBe(flipped === 'dark')
+      expect((await page.evaluate(readability)).lowContrast, 'text below WCAG AA contrast').toEqual([])
+
+      await page.getByRole('button', { name: `Switch to ${colorScheme} theme` }).click()
+      await page.goto('/books')
+      expect(await isDark()).toBe(colorScheme === 'dark')
+    })
+  })
+}
 
 test.describe('with JavaScript disabled', () => {
   test.use({ javaScriptEnabled: false })
@@ -345,6 +378,11 @@ test.describe('with JavaScript disabled', () => {
     ).toBeVisible()
     await page.getByRole('link', { name: 'Back to home', exact: true }).click()
     await expect(page).toHaveURL(/\/$/)
+  })
+
+  test('hides the theme toggle it cannot run', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('button', { name: /theme/ })).toHaveCount(0)
   })
 })
 

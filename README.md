@@ -1,7 +1,8 @@
 # antonve.be
 
 A static [Astro](https://docs.astro.build/) site styled with Tailwind CSS 4. It
-ships HTML, CSS, self-hosted fonts, and images, with no client-side JavaScript.
+ships HTML, CSS, self-hosted fonts, and images; its only JavaScript is a small
+inline script behind the light/dark theme toggle.
 
 Use Node.js 26.12.1 and the pnpm version pinned in `package.json`. Node 25 and
 later no longer bundle corepack, so install it first.
@@ -57,7 +58,8 @@ failure traces, and the tested image ID, revision, and static artifact size.
 The revision comes from the image label; local builds mark uncommitted changes
 with `-dirty`, and images without a revision label report `null`. Locally built
 test images are removed after the run; supplied `SITE_IMAGE` images are retained.
-The Docker build checks types and rejects JavaScript in the shipped output.
+The Docker build checks types and rejects script files and external scripts in
+the shipped output.
 CI also records a full dependency audit, including build tooling, in a separate
 non-blocking step that runs even when verification fails.
 
