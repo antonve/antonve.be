@@ -13,9 +13,10 @@ RUN pnpm fetch
 COPY . .
 RUN pnpm install --frozen-lockfile --offline
 RUN pnpm run typecheck && pnpm run build
-# Enforce the static site's no-JavaScript contract on the files we actually ship.
+# Enforce the static site's contract on the files we actually ship: no bundled or
+# external JavaScript, only the inline theme script.
 RUN test -z "$(find dist -name '*.js' -o -name '*.mjs')" \
-    && ! grep -rl '<script' dist
+    && ! grep -rlE '<script[^>]* (src|type)=' dist
 
 # Runtime image: static files served by nginx as a non-root user (uid 101)
 FROM docker.io/nginxinc/nginx-unprivileged:1.31.7-alpine AS release

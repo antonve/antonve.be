@@ -2,6 +2,19 @@
 
 /* Semantic tokens: every colour on the site comes from these, and dark mode
    redefines them below. Each text tone clears WCAG AA on its background. */
+/* Dark when the reader picks it with the toggle, or when their system prefers it
+   and they haven't picked light. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
 @theme {
   --color-bg: #fbfaf9;
   --color-fg: #1c1a19; /* 16.6:1 */
@@ -19,9 +32,10 @@
 
 @layer base {
   :root {
-    color-scheme: light dark;
+    color-scheme: light;
 
     @variant dark {
+      color-scheme: dark;
       --color-bg: #151413;
       --color-fg: #ebe7e4; /* 15.0:1 */
       --color-fg-muted: #b8b1ac; /* 8.7:1 */
@@ -217,15 +231,15 @@
   }
 }
 
-/* Shiki renders both themes; follow the reader's colour scheme, but sit code on
+/* Shiki renders both themes; follow the site's colour scheme, but sit code on
    the site's own warm neutrals rather than the themes' cool greys. */
 .astro-code {
   background-color: color-mix(in srgb, var(--color-fg) 4%, var(--color-bg)) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  .astro-code,
-  .astro-code span {
+.astro-code,
+.astro-code span {
+  @variant dark {
     color: var(--shiki-dark) !important;
   }
 }

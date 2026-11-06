@@ -42,7 +42,7 @@ for (const { path, name, title, description } of pages) {
     await expect(page.locator('head meta[name="description"]')).toHaveAttribute('content', description)
     await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', `https://antonve.be${path}`)
     await expect(page.locator('head meta[name="robots"]')).toHaveCount(0)
-    await expect(page.locator('script')).toHaveCount(0)
+    await expect(page.locator('script:not([src])')).toHaveCount(1)
 
     const openGraph = {
       'og:type': 'website',
@@ -100,7 +100,7 @@ test('404 pages are noindex and do not advertise canonical or social pages', asy
     await expect(page).toHaveTitle('404: Page not found :: Anton Van Eechaute')
     await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', 'noindex')
     await expect(page.locator('head link[rel="canonical"], head meta[property^="og:"], head meta[name^="twitter:"]')).toHaveCount(0)
-    await expect(page.locator('script')).toHaveCount(0)
+    await expect(page.locator('script:not([src])')).toHaveCount(1)
     await testInfo.attach(`${path.replaceAll('/', '_')}.html`, {
       body: await response!.body(),
       contentType: 'text/html',
@@ -115,7 +115,7 @@ test('5xx pages are noindex and do not advertise canonical or social pages', asy
     await expect(page).toHaveTitle('Server error: Something went wrong :: Anton Van Eechaute')
     await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', 'noindex')
     await expect(page.locator('head link[rel="canonical"], head meta[property^="og:"], head meta[name^="twitter:"]')).toHaveCount(0)
-    await expect(page.locator('script')).toHaveCount(0)
+    await expect(page.locator('script:not([src])')).toHaveCount(1)
     await testInfo.attach(`${status}.html`, {
       body: await response!.body(),
       contentType: 'text/html',
