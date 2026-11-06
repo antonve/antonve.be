@@ -15,3 +15,8 @@ this checkout and reuse it if it answers; otherwise start one with
 `pnpm dev --host 127.0.0.1 --port <free port>`. On T3 Code VMs, expose it with
 `t3-preview start <port>` (`astro.config.mjs` already allows `.lab` hosts).
 When your changes are ready, give the user the preview link.
+
+Stop the server once the work is finished: when its PR merges or closes, or
+when the user says they are done. Stop only the server you started or reused
+for this checkout (confirm its working directory first, never kill by name),
+and run `t3-preview stop <url>` for its link.
