@@ -1,16 +1,16 @@
 @import "tailwindcss" source("../");
 
+/* Semantic tokens: every colour on the site comes from these, and dark mode
+   redefines them below. Each text tone clears WCAG AA on its background. */
 @theme {
-  --color-primary: #ff225a;
-  --color-secondary: #18d6cc;
-  /* Preserve the site's Tailwind 3 colors through the tooling upgrade. */
-  --color-neutral-50: #fafafa;
-  --color-neutral-400: #a3a3a3;
-  --color-neutral-500: #737373;
-  --color-neutral-600: #525252;
-  --color-neutral-700: #404040;
-  --color-neutral-800: #262626;
-  --color-zinc-500: #71717a;
+  --color-bg: #fbfaf9;
+  --color-fg: #1c1a19; /* 16.6:1 */
+  --color-fg-muted: #4f4a47; /* 8.4:1 */
+  --color-fg-subtle: #6b6561; /* 5.5:1 */
+  --color-line: rgb(28 26 25 / 0.12);
+  --color-accent: #c8124a; /* 5.5:1, link text */
+  --color-mark: #0d8a82; /* the logo's teal, deepened to 4:1 for UI marks */
+  --color-selection: #b8efea;
   --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: var(--font-merriweather), ui-serif, Georgia, Cambria,
@@ -21,14 +21,15 @@
   :root {
     color-scheme: light dark;
 
-    /* Neutral steps are text tones, strongest at 800, so dark mode mirrors them. */
     @variant dark {
-      --color-neutral-400: #737373;
-      --color-neutral-500: #a3a3a3;
-      --color-neutral-600: #a3a3a3;
-      --color-neutral-700: #bdbdbd;
-      --color-neutral-800: #d4d4d4;
-      --color-zinc-500: #a1a1aa;
+      --color-bg: #151413;
+      --color-fg: #ebe7e4; /* 15.0:1 */
+      --color-fg-muted: #b8b1ac; /* 8.7:1 */
+      --color-fg-subtle: #948d88; /* 5.6:1 */
+      --color-line: rgb(235 231 228 / 0.12);
+      --color-accent: #ff7a98; /* 7.4:1, softer than the logo pink so it doesn't vibrate */
+      --color-mark: #18d6cc; /* the logo's teal as-is, 10:1 */
+      --color-selection: #0f4f4b;
     }
   }
 
@@ -44,15 +45,16 @@
   }
 
   body {
-    background: rgb(252, 250, 250);
-    @variant dark {
-      background: rgb(22, 20, 20);
-      /* Off-white rather than the browser's pure white, which glares on near-black. */
-      color: #e5e5e5;
-    }
+    background: var(--color-bg);
+    color: var(--color-fg);
     font-family: var(--font-sans);
     margin: 0;
     padding: 0;
+    @variant dark {
+      /* Light-on-dark text blooms with subpixel smoothing; greyscale keeps it crisp. */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
   }
 
   /* The homepage avatar peeks in from the corner of at least a full screen;
@@ -63,151 +65,167 @@
   }
 
   ::selection {
-    background: var(--color-secondary);
-    color: var(--color-neutral-50);
+    background: var(--color-selection);
+    color: var(--color-fg);
   }
 
   a {
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
   }
 
-  p a {
+  /* Inline links read as text with an accent underline, and turn accent on hover. */
+  p a,
+  a.fancy {
+    color: var(--color-fg);
+    font-weight: 500;
     text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.2em;
+  }
+
+  p a:hover,
+  a.fancy:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 
   p {
     @apply my-3;
   }
 
-  a.fancy {
-    @apply font-bold text-primary relative z-10 transition-colors;
-  }
-
-  a.fancy:hover,
-  a.fancy:active,
-  a.fancy:focus,
-  a.fancy.active {
-    @apply text-neutral-800! no-underline! outline-hidden!;
-  }
-
-  a.fancy::after {
-    content: '';
-    transition: transform 0.25s ease-out, background 0.25s ease-out;
-    transform-origin: right bottom;
-    transform: scaleX(0);
-    /* Dark mode dims the bar so hovered text keeps 4.5:1 contrast over it. */
-    @apply bg-secondary absolute -z-10 top-[0.7em] left-[0.3em] w-[99%] h-[0.7em] opacity-50 dark:opacity-40;
-  }
-
-  a.fancy:hover::after,
-  a.fancy:active::after,
-  a.fancy:focus::after,
-  a.fancy.active::after {
-    transform: scaleX(1);
-    transform-origin: left bottom;
-  }
-
-  a:hover,
-  a:active,
-  a:focus {
-    color: var(--color-primary);
-  }
-
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition: none !important;
+    }
   }
 }
 
 @layer components {
   .title {
-    @apply font-serif text-3xl font-bold;
+    @apply font-serif text-[2rem] leading-tight font-bold tracking-tight text-balance sm:text-[2.25rem];
   }
 
-  .subtitle {
-    @apply font-serif text-zinc-500 text-base font-bold tracking-wide;
+  /* Small metadata: dates, labels. */
+  .meta {
+    @apply font-sans text-sm text-fg-subtle tabular-nums;
   }
 
-  .highlighted {
-    @apply relative z-10 text-neutral-800;
+  .eyebrow {
+    @apply font-sans text-xs font-semibold uppercase tracking-[0.12em] text-fg-subtle;
   }
 
-  .highlighted::after {
-    content: '';
-    @apply bg-secondary absolute -z-10 top-[0.7em] left-[0.3em] w-[99%] h-[0.7em] opacity-10;
+  /* Long-form text: posts, project write-ups, page intros. */
+  .prose {
+    @apply text-[1.0625rem] leading-[1.75] sm:text-lg;
   }
 
-  /* Rendered Markdown and MDX in blog posts. */
-  .post-content {
-    @apply text-[1.0625rem] leading-[1.85] text-neutral-800 sm:text-lg sm:leading-[1.85];
-  }
-
-  .post-content > * {
+  .prose > * {
     @apply my-0;
   }
 
-  .post-content > * + * {
-    @apply mt-6;
+  .prose :is(p, li, blockquote) {
+    text-wrap: pretty;
   }
 
-  .post-content h2 {
+  .prose > * + * {
+    @apply mt-5;
+  }
+
+  .prose h2 {
     @apply mt-12 text-2xl leading-snug font-bold;
   }
 
-  .post-content h3 {
+  .prose h3 {
     @apply mt-10 text-xl leading-snug font-bold;
   }
 
-  .post-content :is(h2, h3) + * {
+  .prose :is(h2, h3) + * {
     @apply mt-3;
   }
 
-  .post-content a:not(.fancy) {
-    @apply underline decoration-primary/50 underline-offset-2 hover:decoration-primary;
-  }
-
   /* Markdown lists have no class; leave component lists to their own styles. */
-  .post-content ul:not([class]) {
+  .prose ul:not([class]) {
     @apply list-disc pl-6;
   }
 
-  .post-content ol:not([class]) {
+  .prose ol:not([class]) {
     @apply list-decimal pl-6;
   }
 
-  .post-content :is(ul, ol):not([class]) > li + li {
+  .prose :is(ul, ol):not([class]) > li + li {
     @apply mt-2;
   }
 
-  .post-content :is(ul, ol):not([class]) > li::marker {
-    @apply text-neutral-400;
+  .prose :is(ul, ol):not([class]) > li::marker {
+    @apply text-fg-subtle;
   }
 
-  .post-content blockquote {
-    @apply border-l-4 border-secondary pl-5 text-neutral-600 italic;
+  /* Upright serif sets quotes apart: the fonts ship no italic, and a synthesised slant looks broken. */
+  .prose blockquote {
+    @apply border-l-2 border-mark pl-5 font-serif text-[1.0625em] leading-[1.7];
   }
 
-  .post-content :not(pre) > code {
-    @apply rounded bg-black/5 px-1.5 py-0.5 text-[0.875em] dark:bg-white/10;
+  .prose :not(pre) > code {
+    @apply rounded bg-fg/[0.07] px-1.5 py-0.5 text-[0.875em];
   }
 
-  .post-content pre {
-    @apply overflow-x-auto rounded-md p-4 text-sm leading-relaxed;
+  /* Phones wrap code rather than hide it behind a scroll with no visible cue;
+     a hanging indent keeps a wrapped line from reading as a new one. */
+  .prose pre {
+    @apply overflow-x-auto rounded-md border border-line p-4 text-sm leading-relaxed max-sm:break-words max-sm:whitespace-pre-wrap;
   }
 
-  .post-content img {
+  .prose pre .line {
+    @apply max-sm:inline-block max-sm:pl-[2ch] max-sm:-indent-[2ch];
+  }
+
+  .prose img {
     @apply h-auto max-w-full rounded-md;
   }
 
-  .post-content hr {
-    @apply my-12 border-black/10 dark:border-white/10;
+  .prose hr {
+    @apply my-12 border-line;
   }
 
-  .post-content table {
-    @apply w-full border-collapse text-base;
+  .prose table {
+    @apply w-full border-collapse text-base tabular-nums;
   }
 
-  .post-content :is(th, td) {
-    @apply border-b border-black/10 px-3 dark:border-white/10 py-2 text-left align-top;
+  .prose th {
+    @apply font-semibold;
+  }
+
+  .prose :is(th, td) {
+    @apply border-b border-line px-3 py-2 text-left align-top first:pl-0 last:pr-0;
+  }
+
+  /* Headings that link somewhere: same affordance as inline links. */
+  .heading-link {
+    @apply underline decoration-accent/70 decoration-[1.5px] underline-offset-[0.18em] transition-colors hover:text-accent hover:decoration-accent;
+  }
+}
+
+/* Shiki renders both themes; follow the reader's colour scheme, but sit code on
+   the site's own warm neutrals rather than the themes' cool greys. */
+.astro-code {
+  background-color: color-mix(in srgb, var(--color-fg) 4%, var(--color-bg)) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark) !important;
   }
 }

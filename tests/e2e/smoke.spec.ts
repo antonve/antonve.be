@@ -34,7 +34,7 @@ test.afterEach(async ({ page }, testInfo) => {
 
 // Phones fold the navigation behind a Menu disclosure.
 async function openMenu(page: Page, isMobile: boolean) {
-  const nav = page.getByRole('navigation')
+  const nav = page.getByRole('navigation', { name: 'Main' })
   if (isMobile) await nav.locator('summary').click()
   return nav
 }
@@ -254,7 +254,7 @@ test('phones fold the navigation into a menu that fits a 360px screen', async ({
   const labels = posts.length ? ['Home', 'Blog', 'Projects', 'Bookshelf'] : ['Home', 'Projects', 'Bookshelf']
   for (const path of ['/', '/projects', '/books', '/blog', ...posts]) {
     await page.goto(path)
-    const nav = page.getByRole('navigation')
+    const nav = page.getByRole('navigation', { name: 'Main' })
     const menu = nav.locator('summary')
     await expect(menu).toHaveAccessibleName('Menu')
     await expect(nav.getByRole('link')).toHaveCount(0)
@@ -280,7 +280,7 @@ test('phones fold the navigation into a menu that fits a 360px screen', async ({
 test('desktop keeps the navigation inline', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 740 })
   await page.goto('/')
-  const nav = page.getByRole('navigation')
+  const nav = page.getByRole('navigation', { name: 'Main' })
   await expect(nav.locator('summary')).toBeHidden()
   await expect(nav.getByRole('link')).toContainText(['Home', 'Projects', 'Bookshelf'])
 })
@@ -300,7 +300,8 @@ test('the avatar peeks in from the bottom-left corner without covering text', as
       }
     })
     expect(placement.left, `${width}x${height}`).toBe(0)
-    expect(placement.bottom, `${width}x${height}`).toBeCloseTo(placement.pageHeight, 0)
+    // scrollHeight is a whole number while the layout can land on half pixels.
+    expect(Math.abs(placement.bottom - placement.pageHeight), `${width}x${height}`).toBeLessThanOrEqual(1)
     expect(placement.covered, `${width}x${height}`).toBe(0)
     // A screen taller than the content keeps the avatar in its corner without scrolling.
     if (height === 1080) expect(placement.pageHeight).toBe(height)
@@ -416,15 +417,28 @@ test.describe('with a dark color scheme', () => {
 
 test('keyboard navigation, hover state, and contact link', async ({ page, isMobile }) => {
   await page.goto('/')
+  // A skip link comes first, then the logo, which leads home; the current page is marked in the navigation.
+  await page.keyboard.press('Tab')
+  const skip = page.getByRole('link', { name: 'Skip to content' })
+  await expect(skip).toBeFocused()
+  await expect(skip).toBeInViewport()
+  await expect(skip).toHaveAttribute('href', '#main')
+  await page.keyboard.press('Tab')
+  const logo = page.getByRole('link', { name: 'Anton Van Eechaute, home' })
+  await expect(logo).toBeFocused()
+  await expect(logo).toHaveAttribute('href', '/')
+  await expect(logo).toHaveCSS('outline-style', 'solid')
   await page.keyboard.press('Tab')
   if (isMobile) {
-    await expect(page.getByRole('navigation').locator('summary')).toBeFocused()
+    await expect(page.getByRole('navigation', { name: 'Main' }).locator('summary')).toBeFocused()
     await page.keyboard.press('Enter')
     await page.keyboard.press('Tab')
   }
-  await expect(page.getByRole('link', { name: 'Home', exact: true })).toBeFocused()
+  const home = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Home', exact: true })
+  await expect(home).toBeFocused()
+  await expect(home).toHaveAttribute('aria-current', 'page')
   // Blog sits next to Home once there are posts.
-  const blog = page.getByRole('navigation').getByRole('link', { name: 'Blog', exact: true })
+  const blog = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Blog', exact: true })
   if (await blog.count()) {
     await page.keyboard.press('Tab')
     await expect(blog).toBeFocused()
@@ -434,19 +448,36 @@ test('keyboard navigation, hover state, and contact link', async ({ page, isMobi
   await expect(projects).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL(/\/projects$/)
+  await expect((await openMenu(page, isMobile)).getByRole('link', { name: 'Projects', exact: true })).toHaveAttribute('aria-current', 'page')
 
+  // Links read as text with an accent underline and turn accent on hover.
   const chat = page.getByRole('link', { name: 'chat' })
   await expect(chat).toHaveAttribute('href', 'mailto:mail@antonve.be')
-  await expect(chat).toHaveCSS('color', 'rgb(255, 34, 90)')
+  await expect(chat).toHaveCSS('color', 'rgb(28, 26, 25)')
+  await expect(chat).toHaveCSS('text-decoration-line', 'underline')
   await chat.hover()
-  await expect(chat).toHaveCSS('color', 'rgb(38, 38, 38)')
-  await expect
-    .poll(() => chat.evaluate(link => getComputedStyle(link, '::after').transform))
-    .toBe('matrix(1, 0, 0, 1, 0, 0)')
+  await expect(chat).toHaveCSS('color', 'rgb(200, 18, 74)')
 
   await page.goto('/books')
   const book = page.locator('main section li a').first()
-  await book.focus()
-  await expect(book).toBeFocused()
-  await expect(book).toHaveCSS('color', 'rgb(255, 34, 90)')
+  // The title carries the underline; a subtitle, when present, stays plain.
+  await expect(book.locator('span').first()).toHaveCSS('text-decoration-line', 'underline')
+  // Tailwind only applies hover: on devices that can hover.
+  if (!isMobile) {
+    await book.hover()
+    await expect(book).toHaveCSS('color', 'rgb(200, 18, 74)')
+
+    // A wrapped entry stays hovered in the leading between its lines.
+    const wrapped = page.locator('main section li a').filter({ hasText: 'Generative AI on Kubernetes' })
+    await wrapped.scrollIntoViewIfNeeded()
+    const gap = await wrapped.evaluate(a => {
+      const rects = [...a.querySelectorAll('span')].flatMap(s => [...s.getClientRects()]).sort((x, y) => x.top - y.top)
+      const next = rects.find(r => r.top >= rects[0].bottom)
+      return next && { x: rects[0].left + 20, y: (rects[0].bottom + next.top) / 2 }
+    })
+    expect(gap, 'entry should wrap onto a second line').toBeTruthy()
+    await page.mouse.move(0, 0)
+    await page.mouse.move(gap!.x, gap!.y)
+    await expect(wrapped).toHaveCSS('color', 'rgb(200, 18, 74)')
+  }
 })

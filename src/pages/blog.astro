@@ -9,18 +9,20 @@ const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf()
 
 <Layout title="Anton Van Eechaute :: Blog" description="Articles and notes by Anton Van Eechaute.">
   <Header />
-  <main class="max-w-2xl pb-16">
-    <h1 class="title mb-6 md:mb-8">Blog</h1>
+  <main id="main" class="max-w-[38rem] pb-16">
+    <h1 class="title mb-10 md:mb-12">Blog</h1>
     {
       posts.length === 0 ? (
-        <p>No posts yet.</p>
+        <p class="text-fg-muted">No posts yet.</p>
       ) : (
-        <ul class="space-y-10">
+        <ul class="divide-y divide-line">
           {posts.map(post => (
-            <li>
-              <a href={`/blog/${post.id}`} class="fancy font-serif text-xl text-neutral-800!">{post.data.title}</a>
-              <p class="subtitle mt-1 mb-2 text-xs"><PostDate date={post.data.date} /></p>
-              <p class="my-0 leading-relaxed text-neutral-700">{post.data.description}</p>
+            <li class="py-8 first:pt-0">
+              <h2 class="text-xl leading-snug font-bold text-balance sm:text-2xl">
+                <a href={`/blog/${post.id}`} class="heading-link">{post.data.title}</a>
+              </h2>
+              <p class="meta mt-1 mb-3"><PostDate date={post.data.date} /></p>
+              <p class="my-0 text-[1.0625rem] leading-relaxed text-fg-muted">{post.data.description}</p>
             </li>
           ))}
         </ul>

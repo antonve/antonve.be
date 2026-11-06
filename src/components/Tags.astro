@@ -6,6 +6,6 @@ interface Props {
 const { list: items } = Astro.props
 ---
 
-<ul class="flex flex-wrap">
-  {items.map(it => <li class="highlighted text-sm mr-3">{it}</li>)}
+<ul aria-label="Technologies" class="mt-6 flex flex-wrap gap-x-2 gap-y-1 text-sm text-fg-muted">
+  {items.map((it, i) => <li>{it}{i < items.length - 1 ? <span aria-hidden="true" class="ml-2">·</span> : null}</li>)}
 </ul>
