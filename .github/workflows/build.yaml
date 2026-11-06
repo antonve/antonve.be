@@ -27,7 +27,7 @@ jobs:
           docker run --rm \
             --volume "$GITHUB_WORKSPACE:/work" --workdir /work \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-            bash -lc 'corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store'
+            bash -lc 'npm install --global --force corepack@0.36.0 && corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store'
 
       - name: Test the exact production image
         env:
@@ -43,7 +43,7 @@ jobs:
           docker run --rm \
             --volume "$GITHUB_WORKSPACE:/work" --workdir /work \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-            bash -c 'corepack pnpm audit --json > dependency-audit.json'
+            bash -c 'npm install --global --force corepack@0.36.0 && corepack pnpm audit --json > dependency-audit.json'
 
       - name: Upload verification artifacts
         if: always()

@@ -53,7 +53,7 @@ docker run --rm --ipc=host --network host --user "$(id -u):$(id -g)" --env HOME=
   --env E2E_BASE_URL --env E2E_ERROR_BASE_URL \
   --volume "$PWD:/work" --workdir /work \
   "mcr.microsoft.com/playwright:v${playwright_version}-noble" \
-  bash -c 'corepack pnpm exec playwright test "$@"' bash "$@" || result=$?
+  bash -c 'node node_modules/@playwright/test/cli.js test "$@"' bash "$@" || result=$?
 
 mkdir -p test-results
 docker cp "$site_container:/srv/www" "$scratch/dist"
