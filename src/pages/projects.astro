@@ -60,6 +60,28 @@ const projects = [
     source: 'https://github.com/antonve/hsfp.tokyo',
     url: 'https://hsfp.tokyo/',
   },
+  {
+    title: 'dev-cli',
+    when: '2026',
+    description: [
+      `A command-line tool for trying a branch on a Kubernetes cluster that
+      already runs every service. It deploys only the services the branch
+      changed and gives the branch its own URL. Requests to services the
+      branch didn't touch go to the copies already running, so the branch
+      behaves like the full app.`,
+      `<strong>Development mode</strong> is for working on a branch. Frontend
+      edits sync into a running dev server with hot reloading, and backends
+      are rebuilt with Bazel and restarted in place as you edit.`,
+      `<strong>Production mode</strong> is for trying a finished change
+      against real infrastructure before it ships. It deploys a pushed commit
+      as release-identical images beside production, on the branch's own
+      hosts. Tadoku uses it to deploy labelled pull requests with their own
+      test tenant. Branches with database migrations are refused, and each
+      deploy expires after a few hours.`,
+    ],
+    tags: ['Go', 'Kubernetes', 'Bazel', 'Developer tooling'],
+    source: 'https://github.com/antonve/dev-cli',
+  },
 ]
 
 const metaLink =
@@ -80,8 +102,12 @@ const metaLink =
             <h2 class="text-2xl leading-snug font-bold">{p.title}</h2>
             <p class="meta mt-1 mb-5">
               {p.when}
-              <span aria-hidden="true"> · </span>
-              <a href={p.url} class={metaLink}>Visit site</a>
+              {p.url ? (
+                <>
+                  <span aria-hidden="true"> · </span>
+                  <a href={p.url} class={metaLink}>Visit site</a>
+                </>
+              ) : null}
               <span aria-hidden="true"> · </span>
               <a href={p.source} class={metaLink}>GitHub</a>
             </p>
