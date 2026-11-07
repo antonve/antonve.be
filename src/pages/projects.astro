@@ -74,9 +74,10 @@ const projects = [
       are rebuilt with Bazel and restarted in place as you edit.`,
       `<strong>Production mode</strong> is for trying a finished change
       against real infrastructure before it ships. It deploys a pushed commit
-      as release-identical images beside production, with its own hosts and
-      test tenant, and refuses branches with database migrations. Tadoku uses
-      it to deploy labelled pull requests, which expire after a few hours.`,
+      as release-identical images beside production, on the branch's own
+      hosts. Tadoku uses it to deploy labelled pull requests with their own
+      test tenant. Branches with database migrations are refused, and each
+      deploy expires after a few hours.`,
     ],
     tags: ['Go', 'Kubernetes', 'Bazel', 'Developer tooling'],
     source: 'https://github.com/antonve/dev-cli',
