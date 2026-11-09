@@ -215,7 +215,7 @@ test('blog index links to every post, and each post renders', async ({ page, isM
   expect(response?.status()).toBe(200)
   await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeVisible()
 
-  const posts = await page.locator('main li > a').evaluateAll(links =>
+  const posts = await page.locator('main li h2 > a').evaluateAll(links =>
     links.map(link => ({ path: link.getAttribute('href')!, title: link.textContent!.trim() })),
   )
   // The navigation only offers Blog once there is something to read.
@@ -250,7 +250,7 @@ test('blog index links to every post, and each post renders', async ({ page, isM
 test('phones fold the navigation into a menu that fits a 360px screen', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 })
   await page.goto('/blog')
-  const posts = await page.locator('main li > a').evaluateAll(links => links.map(link => link.getAttribute('href')!))
+  const posts = await page.locator('main li h2 > a').evaluateAll(links => links.map(link => link.getAttribute('href')!))
   const labels = posts.length ? ['Home', 'Blog', 'Projects', 'Bookshelf'] : ['Home', 'Projects', 'Bookshelf']
   for (const path of ['/', '/projects', '/books', '/blog', ...posts]) {
     await page.goto(path)
